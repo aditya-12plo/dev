@@ -180,6 +180,7 @@ public function gateout($act, $id){
 		if(!$this->input->post('ajax')){
 			$addsql .= " AND A.TGL_TIBA >= DATE_ADD(CURDATE(), INTERVAL -7 DAY)";
 		}
+
 		$SQL = "SELECT CONCAT(C.NAMA,'<BR>[',A.NM_ANGKUT,']') AS 'NAMA ANGKUT', 
 				A.NO_VOY_FLIGHT AS 'NO. VOYAGE/FLIGHT', 
 				DATE_FORMAT(A.TGL_TIBA,'%d-%m-%Y') AS 'TGL. TIBA', A.NO_BC11 AS 'NO. BC11',
@@ -201,6 +202,7 @@ public function gateout($act, $id){
 				LEFT JOIN reff_gudang B ON A.KD_TPS = B.KD_TPS AND A.KD_GUDANG = B.KD_GUDANG 
 				LEFT JOIN reff_kapal C ON A.KD_KAPAL = C.ID";
 				//WHERE A.KD_ASAL_BRG = '3'".$addsql;
+				
 		
 		$proses = array('ENTRY'  => array('ADD_MODAL',"gate/in_container/add", '0','',''),
 						'UPDATE' => array('GET',site_url()."/gate/in_container/update", '1','',''),

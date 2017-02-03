@@ -1,3 +1,6 @@
+    <link href="<?php echo base_url();?>assets/css/jquery.tagit.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo base_url();?>assets/css/tagit.ui-zendesk.css" rel="stylesheet" type="text/css">
+ <script src="<?php echo base_url();?>assets/js/tag-it.js" type="text/javascript" charset="utf-8"></script>
 <div class="card">
   <div class="card-block p-a-0">
     <div class="box-tab m-b-0" id="rootwizard">
@@ -25,6 +28,15 @@
               </div>
             </div>
             <br><br><br>
+                        <div class="form-group">
+              <label class="col-sm-3 control-label-left">No Kontainer *</label>              
+              <div class="col-sm-9"> 
+  <input type="hidden" class="form-control" name="tags" id="mySingleField" value=""  wajib="yes">
+<ul id="singleFieldTags"></ul>     
+
+
+              </div>
+            </div>
             <div class="form-group">
               <label class="col-sm-3 control-label-left">Nama Pemohon *</label>              
               <div class="col-sm-9"> 
@@ -43,7 +55,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label-left">Call Sign *</label>
                 <div class="col-sm-4">
-                  <input type="text" wajib="yes" name="CALL_SIGN" value="<?php echo $arrhdr['CALL_SIGN']; ?>" id="CALL_SIGN" class="form-control" placeholder="CALL SIGN" readonly="readonly">
+                  <input type="text" name="CALL_SIGN" value="<?php echo $arrhdr['CALL_SIGN']; ?>" id="CALL_SIGN" class="form-control" placeholder="CALL SIGN">
                 </div>
                 <div class="col-sm-5"> 
                   <div class="input-prepend input-group"><span class="add-on input-group-addon"><i class="icon-calendar"></i></span>
@@ -89,4 +101,81 @@ autocomplete('NAMA_KAPAL','/autocomplete/status/reff_kapal/ship_name',function(e
     $('#CALL_SIGN').val(ui.item.CALLSIGN);
   });
 });
+
+  $(function(){
+ var sampleTags = "";
+ $('#myTags').tagit();
+ $('#singleFieldTags').tagit({
+availableTags: sampleTags,
+singleField: true,
+singleFieldNode: $('#mySingleField')
+            }); $('#singleFieldTags2').tagit({
+                availableTags: sampleTags
+            }); $('#myULTags').tagit({
+                availableTags: sampleTags, itemName: 'item',
+                fieldName: 'tags'
+            });var eventTags = $('#eventTags');
+
+            var addEvent = function(text) {
+                $('#events_container').append(text + '<br>');
+            };
+
+            eventTags.tagit({
+                availableTags: sampleTags,
+                beforeTagAdded: function(evt, ui) {
+                    if (!ui.duringInitialization) {
+                        addEvent('beforeTagAdded: ' + eventTags.tagit('tagLabel', ui.tag));
+                    }
+                },
+                afterTagAdded: function(evt, ui) {
+                    if (!ui.duringInitialization) {
+                        addEvent('afterTagAdded: ' + eventTags.tagit('tagLabel', ui.tag));
+                    }
+                },
+                beforeTagRemoved: function(evt, ui) {
+                    addEvent('beforeTagRemoved: ' + eventTags.tagit('tagLabel', ui.tag));
+                },
+                afterTagRemoved: function(evt, ui) {
+                    addEvent('afterTagRemoved: ' + eventTags.tagit('tagLabel', ui.tag));
+                },
+                onTagClicked: function(evt, ui) {
+                    addEvent('onTagClicked: ' + eventTags.tagit('tagLabel', ui.tag));
+                },
+                onTagExists: function(evt, ui) {
+                    addEvent('onTagExists: ' + eventTags.tagit('tagLabel', ui.existingTag));
+                }
+            });
+
+            //-------------------------------
+            // Read-only
+            //-------------------------------
+            $('#readOnlyTags').tagit({
+                readOnly: true
+            });
+
+            //-------------------------------
+            // Tag-it methods
+            //-------------------------------
+            $('#methodTags').tagit({
+                availableTags: sampleTags
+            });
+
+            //-------------------------------
+            // Allow spaces without quotes.
+            //-------------------------------
+            $('#allowSpacesTags').tagit({
+                availableTags: sampleTags,
+                allowSpaces: true
+            });
+
+            //-------------------------------
+            // Remove confirmation
+            //-------------------------------
+            $('#removeConfirmationTags').tagit({
+                availableTags: sampleTags,
+                removeConfirmation: true
+            });
+            
+        });
 </script> 
+
