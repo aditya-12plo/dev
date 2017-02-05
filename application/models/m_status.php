@@ -130,6 +130,7 @@ function execute($type, $act, $id) {
     
 // for save new record data \\
     if ($type == "save") {
+   
       if($this->input->post('GUDANG_ASAL2') == $this->input->post('GUDANG_TUJUAN2'))
       {
         $error += 1;
@@ -145,8 +146,11 @@ function execute($type, $act, $id) {
         {
           $insert = $this->db->query("INSERT INTO reff_kapal (NAMA,CALL_SIGN,CREATE_USER,CREATE_DATE) VALUES ('".$NMKAPAL."','".$CALL_SIGN."','".$this->newsession->userdata('ID')."',date('Y-m-d H:i:s'))");
         }
+        $NO_UBAH_STATUS = 'ST'.date('YmdHis');
+        $NO_CONT = explode(',', $this->input->post('NO_CONT'));
+        $total = count($NO_CONT);
         $ubah= array(
-          'NO_UBAH_STATUS'  =>  'ST'.date('YmdHis'),
+          'NO_UBAH_STATUS'  =>  $NO_UBAH_STATUS,
           'TGL_UBAH_STATUS' =>  date('Y-m-d'),
           'KD_GUDANG_ASAL'  =>  validate($this->input->post('GUDANG_ASAL2')),
           'KD_GUDANG_TUJUAN'=>  validate($this->input->post('GUDANG_TUJUAN2')),
@@ -161,21 +165,27 @@ function execute($type, $act, $id) {
           'WK_REKAM'        =>  date('Y-m-d H:i:s')
           );
         $run = $this->db->insert('t_ubah_status',$ubah);
-
-        if (!$run) {
+        for($x=0;$x<$total;$x++)
+{
+$this->db->set('NO_UBAH_STATUS', $NO_UBAH_STATUS); 
+$this->db->set('NO_CONT', trim($NO_CONT[$x])); 
+$run2 = $this->db->insert('t_no_kontainer'); 
+}
+        if (!$run OR !$run2) {
         $error += 1;
         $message .= "Could not be processed data";
         }
                           
       }
-
-      if($error == 0){
+            if($error == 0){
         $func->main->get_log("add","t_ubah_status");
+        $func->main->get_log("add","t_no_kontainer");
         echo "MSG#OK#Successfully to be processed#". site_url() . "/status/listdata";
       }
       else{
         echo "MSG#ERR#".$message."#";
       }
+      
     } 
     else if ($type == "update") { 
       $id = $this->input->post('ID_DATA');      
