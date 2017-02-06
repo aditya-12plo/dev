@@ -124,7 +124,7 @@
                 this.tagList = this.element.find('ul, ol').andSelf().last();
             }
 
-            this.tagInput = $('<input type="text" />').addClass('ui-widget-content');
+            this.tagInput = $('<input type="text" maxlength="11" />').addClass('ui-widget-content');
 
             if (this.options.readOnly) this.tagInput.attr('disabled', 'disabled');
 
@@ -157,7 +157,7 @@
                 });
 
                 if (typeof this.options.autocomplete.minLength === 'undefined') {
-                    this.options.autocomplete.minLength = 0;
+                    this.options.autocomplete.minLength = 0; 
                 }
             }
 
@@ -205,7 +205,7 @@
                     });
                 } else {
                     // Create our single field input after our list.
-                    this.options.singleFieldNode = $('<input type="hidden" style="display:none;" value="" name="' + this.options.fieldName + '" />');
+                    this.options.singleFieldNode = $('<input type="hidden" style="display:none;" value="" name="' + this.options.fieldName + '" maxlength="11" />');
                     this.tagList.after(this.options.singleFieldNode);
                 }
             }
@@ -495,7 +495,7 @@
             // Unless options.singleField is set, each tag has a hidden input field inline.
             if (!this.options.singleField) {
                 var escapedValue = label.html();
-                tag.append('<input type="hidden" value="' + escapedValue + '" name="' + this.options.fieldName + '" class="tagit-hidden-field" />');
+                tag.append('<input type="hidden" value="' + escapedValue + '" name="' + this.options.fieldName + '" class="tagit-hidden-field" maxlength="11" />');
             }
 
             if (this._trigger('beforeTagAdded', null, {

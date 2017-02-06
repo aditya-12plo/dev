@@ -31,7 +31,7 @@
                         <div class="form-group">
               <label class="col-sm-3 control-label-left">No Kontainer *</label>              
               <div class="col-sm-9"> 
-  <input type="hidden" class="form-control" name="NO_CONT" id="NO_CONT" value=""  wajib="yes">
+  <input type="hidden" maxlength="11" class="form-control" name="NO_CONT" id="NO_CONT" value=""  wajib="yes">
 <ul id="singleFieldTags"></ul>     
 
 

@@ -46,8 +46,9 @@ class M_plp extends Model{
 						'DETAIL'  => array('MODAL',"plp/pengajuan_plp/detail", '1','','glyphicon glyphicon-zoom-in'));
 	*/
 		$this->newtable->multiple_search(true);
-		$this->newtable->show_chk($check);
-		$this->newtable->show_menu($check);
+		#$this->newtable->show_chk($check);
+		$this->newtable->show_chk(false);
+		#$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_SURAT','NO. SURAT'),array('A.REF_NUMBER','REF NUMBER'),array('A.NM_ANGKUT','NAMA ANGKUT'),array('A.TGL_TIBA','TGL. TIBA','DATERANGE')));
 		$this->newtable->action(site_url() . "/plp/pengajuan_plp");
@@ -93,8 +94,9 @@ class M_plp extends Model{
 				LEFT JOIN reff_kapal C ON A.KD_KAPAL = C.ID
 				WHERE A.KD_ASAL_BRG = '1'".$addsql;
 	#	$proses = array('SELECT'  => array('GET',site_url()."/plp/pengajuan_plp/add", '1','','md-check-circle','1'));
-		$this->newtable->show_chk($check);
-		$this->newtable->show_menu($check);
+		#$this->newtable->show_chk($check);
+		$this->newtable->show_chk(false);
+		#$this->newtable->show_menu($check);
 		$this->newtable->multiple_search(true);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_BC11','NO. BC11'),array('C.NAMA','NAMA ANGKUT'),array('A.TGL_TIBA','TGL. TIBA','DATERANGE')));
@@ -192,8 +194,9 @@ class M_plp extends Model{
 		#echo $SQL; 
 	#	$proses = array('PRINT' => array('PRINT',"plp/pengajuan_plp/print", '1','','md-print'));
 		$this->newtable->multiple_search(false);
-		$this->newtable->show_chk($check);
-		$this->newtable->show_menu($check);
+		$this->newtable->show_chk(false);
+		#$this->newtable->show_chk($check);
+		#$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_CONT','KONTAINER')));
 		$this->newtable->action(site_url() . "/plp/pengajuan_plp_kontainer/".$act."/".$id);
@@ -239,8 +242,9 @@ class M_plp extends Model{
 						'PRINT'   => array('PRINT',"plp/pengajuan_plp/print", '1','','md-print'));
 	*/
 		$this->newtable->multiple_search(true);
-		$this->newtable->show_chk($check);
-		$this->newtable->show_menu($check);
+		$this->newtable->show_chk(false);
+		#$this->newtable->show_chk($check);
+		#$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_PLP','NO. PLP'),array('A.TGL_PLP','TGL. PLP','DATERANGE'),array('A.REF_NUMBER','REF NUMBER')));
 		$this->newtable->action(site_url() . "/plp/pengajuan_respon");
@@ -279,8 +283,9 @@ class M_plp extends Model{
 				WHERE A.ID = ".$this->db->escape($id);
 		$proses = array('' => array("","", '','','glyphicon glyphicon-zoom-in'));
 		$this->newtable->multiple_search(false);
-		$this->newtable->show_chk($check);
-		$this->newtable->show_menu($check);
+		$this->newtable->show_chk(false);
+		#$this->newtable->show_chk($check);
+		#$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_CONT','KONTAINER')));
 		$this->newtable->action(site_url() . "/plp/pengajuan_respon_plp_kontainer/".$act."/".$id);
@@ -332,8 +337,9 @@ class M_plp extends Model{
 						'DETAIL'  => array('MODAL',"plp/pembatalan_plp/detail", '1','','glyphicon glyphicon-zoom-in'));
 		*/
 		$this->newtable->multiple_search(true);
-		$this->newtable->show_chk($check);
-		$this->newtable->show_menu($check);
+		$this->newtable->show_chk(false);
+		#$this->newtable->show_chk($check);
+		#$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_SURAT','NO. SURAT'),array('A.TGL_SURAT','TGL. SURAT','DATERANGE')));
 		$this->newtable->action(site_url() . "/plp/pembatalan_plp");
@@ -376,9 +382,10 @@ class M_plp extends Model{
 				FROM t_respon_plp_asal_hdr A
 				LEFT JOIN reff_status B ON B.ID=A.KD_STATUS AND B.KD_TIPE_STATUS='PLPRES'
 				WHERE 1=1".$addsql;
-		$proses = array('SELECT'  => array('GET',site_url()."/plp/pembatalan_plp/add", '1','','md-check-circle','1'));
-		$this->newtable->show_chk($check);
-		$this->newtable->show_menu($check);
+		#$proses = array('SELECT'  => array('GET',site_url()."/plp/pembatalan_plp/add", '1','','md-check-circle','1'));
+		$this->newtable->show_chk(false);
+		#$this->newtable->show_chk($check);
+		#$this->newtable->show_menu($check);
 		$this->newtable->multiple_search(true);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_PLP','NO. PLP'),array('A.TGL_PLP','TGL. PLP','DATERANGE')));
@@ -421,7 +428,7 @@ class M_plp extends Model{
 				WHERE A.ID = ".$this->db->escape($arrid[0]);
 		$proses = array('' => array('','', '1','',''));
 		$this->newtable->multiple_search(false);
-		$this->newtable->show_chk($check);
+		$this->newtable->show_chk(false);
 		$this->newtable->checked(array("NO_CONT_BATAL"));
 		$this->newtable->show_menu(false);
 		$this->newtable->show_search(true);
@@ -472,8 +479,9 @@ class M_plp extends Model{
 				WHERE A.ID = ".$this->db->escape($arrid[1]);
 		$proses = array('' => array("","", '','','glyphicon glyphicon-zoom-in'));
 		$this->newtable->multiple_search(false);
-		$this->newtable->show_chk($check);
-		$this->newtable->show_menu($check);
+		$this->newtable->show_chk(false);
+		#$this->newtable->show_chk($check);
+		#$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_CONT','KONTAINER')));
 		$this->newtable->action(site_url() . "/plp/pembatalan_plp_kontainer/".$act."/".$id);
@@ -515,8 +523,9 @@ class M_plp extends Model{
 				WHERE 1=1".$addsql;
 		#$proses = array('DETAIL'  => array('MODAL',"plp/pembatalan_respon/detail", '1','','glyphicon glyphicon-zoom-in'));
 		$this->newtable->multiple_search(true);
-		$this->newtable->show_chk($check);
-		$this->newtable->show_menu($check);
+		$this->newtable->show_chk(false);
+		#$this->newtable->show_chk($check);
+		#$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_BATAL_PLP','NO. PEMBATALAN PLP'),array('A.TGL_BATAL_PLP','TGL. PEMBATALAN PLP','DATERANGE')));
 		$this->newtable->action(site_url() . "/plp/pembatalan_respon");
@@ -554,8 +563,9 @@ class M_plp extends Model{
 				WHERE A.ID = ".$this->db->escape($id);
 		$proses = array('' => array("","", '','','glyphicon glyphicon-zoom-in'));
 		$this->newtable->multiple_search(false);
-		$this->newtable->show_chk($check);
-		$this->newtable->show_menu($check);
+		$this->newtable->show_chk(false);
+		#$this->newtable->show_chk($check);
+		#$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_CONT','KONTAINER')));
 		$this->newtable->action(site_url() . "/plp/pembatalan_respon_kontainer/".$act."/".$id);
@@ -608,8 +618,9 @@ class M_plp extends Model{
 						'DETAIL'  => array('MODAL',"plp/pengajuan_plp/detail", '1','','glyphicon glyphicon-zoom-in'));
 	*/
 		$this->newtable->multiple_search(true);
-		$this->newtable->show_chk($check);
-		$this->newtable->show_menu($check);
+		$this->newtable->show_chk(false);
+		#$this->newtable->show_chk($check);
+		#$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_SURAT','NO. SURAT'),array('A.TGL_SURAT','TGL. SURAT','DATERANGE'),array('A.NM_ANGKUT','NAMA ANGKUT'),array('A.TGL_TIBA','TGL. TIBA','DATERANGE')));
 		$this->newtable->action(site_url() . "/plp/pengajuan_plp");
@@ -665,8 +676,9 @@ class M_plp extends Model{
 				WHERE 1=1".$addsql;
 		$proses = array('' => array("","", '','','glyphicon glyphicon-zoom-in'));
 		$this->newtable->multiple_search(true);
-		$this->newtable->show_chk($check);
-		$this->newtable->show_menu($check);
+		$this->newtable->show_chk(false);
+		#$this->newtable->show_chk($check);
+		#$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_CONT','KONTAINER'),array('B.NO_SURAT','NO. SURAT')));
 		$this->newtable->action(site_url() . "/plp/monitoring_pengajuan/".$act."/".$id);
@@ -883,7 +895,7 @@ function res_plp_tujuan($act,$id){
 				FROM t_respon_plp_tujuan_v2_hdr A 
 				LEFT JOIN reff_status B ON B.ID=A.KD_STATUS AND B.KD_TIPE_STATUS='PLPTUJ'
 				WHERE 1=1".$addsql;
-		$proses = array('SELECT'  => array('GET',site_url()."/plp/pengajuan/add", '1','','icon-check','','1'));
+		#$proses = array('SELECT'  => array('GET',site_url()."/plp/pengajuan/add", '1','','icon-check','','1'));
 		$this->newtable->show_chk(false);
 		$this->newtable->multiple_search(true);
 		$this->newtable->show_search(true);
@@ -928,7 +940,7 @@ function res_batal_plp_tujuan($act,$id){
 				FROM t_respon_batal_plp_tujuan_hdr A 
 				LEFT JOIN reff_status B ON B.ID=A.KD_STATUS AND B.KD_TIPE_STATUS='BTLTUJ'
 				WHERE 1=1".$addsql;
-		$proses = array('SELECT'  => array('GET',site_url()."/plp/pengajuan/add", '1','','icon-check','','1'));
+		#$proses = array('SELECT'  => array('GET',site_url()."/plp/pengajuan/add", '1','','icon-check','','1'));
 		$this->newtable->show_chk(false);
 		$this->newtable->multiple_search(true);
 		$this->newtable->show_search(true);

@@ -2652,6 +2652,92 @@ class M_execute extends Model {
                     //echo "MSG#ERR#Data gagal diproses#";
                 }
             }
+			else if ($act == "xml_impor_ubahstatus") {
+                $dirXML = "";
+                foreach ($this->input->post('tb_chktblimpor') as $chkitem) {
+                    $arrchk = explode("~", $chkitem);
+                    $ID = $arrchk[0];
+                    $SQL = "SELECT A.ID, A.NO_DOK_INOUT AS NO_DOKUMEN,
+							CASE WHEN A.KD_DOK_INOUT = '1'  THEN 'SPB'
+								 WHEN A.KD_DOK_INOUT = '19' THEN 'SPJ'
+								 WHEN A.KD_DOK_INOUT = '6'  THEN 'NPE'
+							END AS JENIS_DOKUMEN, DATE_FORMAT(A.TGL_DOK_INOUT,'%Y%m%d') AS TGL_DOKUMEN, A.KD_KANTOR, 
+							A.NO_BL_AWB, DATE_FORMAT(A.TGL_BL_AWB,'%Y%m%d') AS TGL_BL_AWB, A.CONSIGNEE, 
+							A.NO_DAFTAR_PABEAN, DATE_FORMAT(A.TGL_DAFTAR_PABEAN,'%Y%m%d') AS TGL_DAFTAR_PABEAN,
+							CASE A.KD_DOK_INOUT WHEN '1' THEN 'PIB'
+												WHEN '19' THEN 'PIB'
+												WHEN '6' THEN 'PEB'
+							END AS DAFTAR_PABEAN
+							FROM t_permit_hdr A
+							WHERE A.ID = '6'";
+                    $result = $func->main->get_result($SQL);
+                    if ($result) {
+                        foreach ($SQL->result_array() as $row => $value) {
+                            $QUERY = "SELECT B.NO_CONT, KD_CONT_UKURAN 
+									  FROM t_permit_cont B 
+									  WHERE ID = " . $this->db->escape($value['ID']);
+                            $exec = $func->main->get_result($QUERY);
+                            if ($exec) {
+                                $str_xml = '<?xml version="1.0" encoding="utf-8"?>';
+                                $str_xml .= '<nctsmsg>';
+                                $str_xml .= '<sender>';
+                                $str_xml .= '<main>TPSONLINE NPCT1</main>';
+                                $str_xml .= '<sub><type>NPCT1Customs</type></sub>';
+                                $str_xml .= '</sender>';
+                                $str_xml .= '<receipient>NPCT1</receipient>';
+                                $str_xml .= '<msgref>' . $value['ID'] . '</msgref>';
+                                $str_xml .= '<msgtype>1</msgtype>';
+                                foreach ($QUERY->result_array() as $rows => $values) {
+                                    $str_xml .= '<nctsdoc>';
+                                    $str_xml .= '<mrnnumber>' . str_xml($value['NO_DOKUMEN']) . '</mrnnumber>';
+                                    $str_xml .= '<container>' . str_xml($values['NO_CONT']) . '</container>';
+                                    $str_xml .= '<doctype>' . str_xml($value['JENIS_DOKUMEN']) . '</doctype>';
+                                    $str_xml .= '<validationdate>' . str_xml($value['TGL_DOKUMEN']) . '</validationdate>';
+                                    $str_xml .= '<validateoffice>040300</validateoffice>';
+                                    $str_xml .= '</nctsdoc>';
+                                    $str_xml .= '<nctsdoc>';
+                                    $str_xml .= '<mrnnumber>' . str_xml($value['NO_DAFTAR_PABEAN']) . '</mrnnumber>';
+                                    $str_xml .= '<container>' . str_xml($values['NO_CONT']) . '</container>';
+                                    $str_xml .= '<doctype>' . str_xml($value['DAFTAR_PABEAN']) . '</doctype>';
+                                    $str_xml .= '<validationdate>' . str_xml($value['TGL_DAFTAR_PABEAN']) . '</validationdate>';
+                                    $str_xml .= '<validateoffice>040300</validateoffice>';
+                                    $str_xml .= '</nctsdoc>';
+                                }
+                                $str_xml .= '</nctsmsg>';
+                            }
+                        }
+                        /* $file_name = $value['ID'].".xml";
+                          $folder_path = date("Ymd");
+                          $mvdir = $dirXML.$folder_path;
+                          if (!is_dir($mvdir)){
+                          $old = umask(0);
+                          mkdir($mvdir, 0777);
+                          umask($old);
+                          }
+                          $mvdir .= "/";
+                          $handle = fopen($mvdir.$file_name, 'w');
+                          if(fwrite($handle, $edi) === FALSE){
+                          echo "Failed create file";
+                          $this->db->where(array('ID' => $row['ID'], 'NO_CONT' => $row['NO_CONT']));
+                          $this->db->update('t_cocostscont',array('FL_CREATE' => '300'));
+                          }else{
+                          fclose($handle);
+                          chmod($file,0777);
+                          echo "Success create file";
+                          $this->db->where(array('ID' => $row['ID'], 'NO_CONT' => $row['NO_CONT']));
+                          $this->db->update('t_cocostscont',array('FL_CREATE' => '200'));
+                          $a++;
+                          } */
+                    }
+                }
+                die();
+                if ($result) {
+                    //$func->main->get_log("add","t_cocostscont");
+                    //echo "MSG#OK#Data berhasil diproses#".site_url()."/".$ACTION."/post/".$ID;
+                } else {
+                    //echo "MSG#ERR#Data gagal diproses#";
+                }
+            }
         }
     }
 

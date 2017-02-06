@@ -61,9 +61,9 @@ class Gate extends Controller {
 			$data['id'] = $id;
 			$this->load->model("m_execute");
 			$data['arrdata'] = $this->m_execute->get_data('kapal', $id);
-			$data['table_kontainer'] = $this->gateout_kontainer($act,$id);
-			//$data['table_kemasan'] = $this->out_kemasan($act,$id);
-			$this->content = $this->load->view('content/gate/getout/gateout-detail',$data,true);
+			$data['table_kontainer'] = $this->kontainer_detail($act,$id);
+			#$data['table_kemasan'] = $this->out_kemasan($act,$id);
+			$this->content = $this->load->view('content/gate/getout/kontainer-gateout-detail',$data,true);
 			$this->index();
 		}else if($act=="upload"){
 			$this->newtable->breadcrumb('Home', site_url());
@@ -88,6 +88,31 @@ class Gate extends Controller {
 			}
 		}
 	}
+	
+	public function kontainer_detail($act,$id){
+		if (!$this->newsession->userdata('LOGGED')){
+			$this->index();
+			return;
+		}
+		$id = ($id!="")?$id:$this->input->post('id');
+	if($act=="detail-kontainer"){	
+			$arrid = explode('~',$id);
+			$this->load->model('m_execute');
+			$data['title'] = 'DETAIL GATE OUT - KONTAINER';
+			$data['arrdata'] = $this->m_execute->get_data('kontainer', $id);
+			echo $this->load->view('content/gate/getout/gateout-kontainer-detail',$data,true);
+		}else{
+			$this->load->model("m_gate");
+			$arrdata = $this->m_gate->kontainer_detail($act, $id);
+			$data = $this->load->view('content/newtable', $arrdata, true);
+			if($this->input->post("ajax")||$act=="post"){
+				return $arrdata;
+			}else{
+				return $data;
+			}	
+		}
+	}
+	
 	
 	public function gateout_kontainer($act,$id){
 		if (!$this->newsession->userdata('LOGGED')){
@@ -197,9 +222,8 @@ class Gate extends Controller {
 			$data['id'] = $id;
 			$this->load->model("m_execute");
 			$data['arrdata'] = $this->m_execute->get_data('kapal', $id);
-			$data['table_kontainer'] = $this->gatein_kontainer($act,$id);
-			$data['table_kemasan'] = $this->gatein_kontainer($act,$id);
-			$this->content = $this->load->view('content/gate/getin/gatein-detail',$data,true);
+			$data['table_kontainer'] = $this->kontainer_masuk($act,$id);
+			$this->content = $this->load->view('content/gate/getin/kontainer-getein-detail',$data,true);
 			$this->index();
 			//print_r($id.'<br><br><br><br>'.$data);
 			
@@ -282,6 +306,33 @@ class Gate extends Controller {
 		}
 	}
 	
+	public function kontainer_masuk($act,$id){
+		if (!$this->newsession->userdata('LOGGED')){
+			$this->index();
+			return;
+		}
+		$id = ($id!="")?$id:$this->input->post('id');
+		if($act=="detail-kontainer"){	
+			$arrid = explode('~',$id); 
+			$this->load->model('m_execute');
+			$data['title'] = 'DETAIL GATE IN - KONTAINER';
+			$data['arrdata'] = $this->m_execute->get_data('kontainer', $id);
+			echo $this->load->view('content/gate/getin/gatein-kontainer-detail',$data,true);
+		}
+		else{
+			$this->load->model("m_gate");
+			$arrdata = $this->m_gate->kontainer_masuk($act, $id);
+			$data = $this->load->view('content/newtable', $arrdata, true);
+			//print_r($data);
+			if($this->input->post("ajax")||$act=="post"){
+				return $arrdata;
+			}else{
+				return $data;
+			}
+			
+		}
+	}
+	
 	public function in_kemasan($act,$id){
 		if (!$this->newsession->userdata('LOGGED')){
 			$this->index();
@@ -331,6 +382,9 @@ class Gate extends Controller {
 			}
 		}
 	}
+	
+	
+	
 
 
 
