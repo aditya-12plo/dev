@@ -5,6 +5,7 @@ class Dokumen extends Controller {
 	
 	public function __construct() {
         parent::__construct();
+		$this->load->library('newtable_edit');
     }
 	
 		function index(){
@@ -52,14 +53,22 @@ class Dokumen extends Controller {
 			return;
 		}
 		$id = ($id!="")?$id:$this->input->post('id');
-		$this->newtable->breadcrumb('Home', site_url());
-		$this->newtable->breadcrumb('Respon Bea Cukai', 'javascript:void(0)');
-		$this->newtable->breadcrumb('Dokumen Impor', 'javascript:void(0)');
-		$data['page_title'] = 'DOKUMEN IMPOR';
-		$data['table_request'] = $this->impor_request_kontainer($act,$id);
-		$data['table_kontainer'] = $this->impor_kontainer($act,$id);
-		$this->content = $this->load->view('content/dokumen/index',$data,true);
-		$this->index();
+		if($act=="detail"){
+			$arrid = explode('~',$id); 
+			$this->load->model('m_execute');
+			$data['title'] = 'DETAIL RESPON BEA CUKAI - EKSPOR KONTAINER';
+			$data['arrdata'] = $this->m_execute->get_data('permit_cont', $id);
+			echo $this->load->view('content/dokumen/kontainer-detail',$data,true);
+		}else{
+			$this->newtable->breadcrumb('Home', site_url());
+			$this->newtable->breadcrumb('Respon Bea Cukai', 'javascript:void(0)');
+			$this->newtable->breadcrumb('Dokumen Impor', 'javascript:void(0)');
+			$data['page_title'] = 'DOKUMEN IMPOR';
+			#$data['table_request'] = $this->impor_request_kontainer($act,$id);
+			$data['table_kontainer'] = $this->impor_kontainer($act,$id);
+			$this->content = $this->load->view('content/dokumen/index',$data,true);
+			$this->index();
+		}
 	}
 	
 	public function impor_request_kontainer($act,$id){
@@ -118,9 +127,9 @@ class Dokumen extends Controller {
 			$this->load->model('m_execute');
 			$data['title'] = 'DETAIL RESPON DOKUMEN IMPOR - KONTAINER';
 			$data['arrdata'] = $this->m_execute->get_data('permit_hdr', $arrid[0]);
-			//$data['table_detail'] = $this->kontainer_detail($act,$arrid[0]);
-			//echo $this->load->view('content/dokumen/kontainer-detail',$data,true);
-			print_r($data['arrdata']);
+			$data['table_detail'] = $this->kontainer_detail($act,$arrid[0]);
+			echo $this->load->view('content/dokumen/kontainer-detail',$data,true);
+			//print_r($data['table_detail']);
 		}else{
 			$this->load->model("m_dokumen");
 			$arrdata = $this->m_dokumen->impor_kontainer($act, $id);

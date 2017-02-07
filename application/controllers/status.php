@@ -186,6 +186,12 @@ function listdata($act="",$id=""){
 			return $data;
 		}
 	}
+
+
+		function kirimxml($type="",$act="", $id=""){
+				$this->load->model("m_execute");
+				$this->m_execute->process($type,'xml_impor_ubahstatus',$id);
+	}
 	
 	
 	

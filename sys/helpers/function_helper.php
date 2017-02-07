@@ -285,6 +285,22 @@ if (!function_exists('format_npwp')){
 	}
 }
 
+if(!function_exists('str_xml')){
+	function str_xml($data){
+		if(strtoupper(trim($data))==""){
+        	$return = "";
+		}else{
+			$return = str_replace("&","&amp;",$data);
+			$return = str_replace("'","&apos;",$return);
+			$return = str_replace("\"","&quot;",$return);
+			$return = str_replace("<","&lt;",$return);
+			$return = str_replace(">","&gt;",$return);	
+			$return = trim($return);
+		}
+		return $return;
+	}
+}
+
 
 
 ?>
