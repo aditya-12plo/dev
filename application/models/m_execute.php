@@ -2652,6 +2652,7 @@ class M_execute extends Model {
                 }
             }
 			else if ($act == "xml_impor_ubahstatus") {
+
                 $dirXML = "";
                     $SQL = "SELECT ID,NO_UBAH_STATUS,TGL_UBAH_STATUS 
 					FROM t_ubah_status WHERE KD_STATUS='0'";
@@ -2676,8 +2677,9 @@ class M_execute extends Model {
                                 }
                                 $str_xml .= '</nctsmsg>';
                     }
-                echo $str_xml;
-                
+              //  echo $str_xml;
+               $this->load->helper('download');
+force_download('ubahstatus.xml', $str_xml);
             }
 			
 			

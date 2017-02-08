@@ -8,6 +8,7 @@ class Dashboard extends Controller {
 	function index(){
 		
 		$add_header  = '<link rel="stylesheet" href="'.base_url().'assets/css/app.min.css">';
+		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/bootstrap-extend.min.css">';
 		$add_header .= '<script src="'.base_url().'assets/js/jquery.min.js"></script>';
 		$add_header .= '<script src="'.base_url().'assets/js/main.js"></script>';
 		$add_script  = '<script src="'.base_url().'assets/js/app.min.js"></script>';

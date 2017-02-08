@@ -9,6 +9,7 @@ class Reset_password extends Controller {
 	function index(){
 		$add_header  = '<link rel="stylesheet" href="'.base_url().'assets/vendor/sweetalert/dist/sweetalert.css">';
 		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/app.min.css">';
+		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/bootstrap-extend.min.css">';
 		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/jquery-ui.css">';
 		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/vendor/themes/twitter/twitter.css">';
 		$add_header .= '<script src="'.base_url().'assets/js/jquery.min.js"></script>';
