@@ -1,25 +1,92 @@
-<div class="card">
-  <div class="card-block p-a-0">
-    <div class="box-tab m-b-0" id="rootwizard">
-      <ul class="wizard-tabs">
-        <li class="active"><a href="#tab1" data-toggle="tab">UBAH STATUS</a></li>
-       <li class="active"><a href="#tab1" data-toggle="tab">DETAIL</a></li>
-      </ul>
-      <div class="tab-content" style="overflow: auto">
-        <div class="tab-pane p-x-lg active" id="tab1" style="overflow: auto">
-         <!-- FORM HERE -->
-            <table >
-              <tr><td width="20%">No Ubah Status *</td><td width="30%"><?php echo $arrhdr['NO_UBAH_STATUS']; ?></td><td width="20%">Tgl. Ubah Status</td><td><?php echo date_input($arrhdr['TGL_UBAH_STATUS']); ?></td></tr>
-              <tr><td>Gudang Asal *</td><td colspan="2"><?php echo $arrhdr['GUDANGASAL']; ?></td></tr>
-              <tr><td>Gudang Tujuan *</td><td colspan="2"><?php echo $arrhdr['GUDANGTUJUAN']; ?></td></tr>
-              <tr><td>Nama Pemohon *</td><td><?php echo $arrhdr['NM_LENGKAP'] ?></td><td>Status</td><td><?php echo $arrhdr['STATUS']; ?></td></tr>
-              <tr><td>Nama Kapal *</td><td><?php echo $arrhdr['NAMA_KAPAL']; ?></td><td>No. VOY FLIGHT *</td><td><?php echo $arrhdr['NO_VOY_FLIGHT']; ?></td></tr>
-              <tr><td>Call Sign *</td><td><?php echo $arrhdr['CALL_SIGN']; ?></td><td>Tgl. Tiba *</td><td><?php echo $arrhdr['TGL_TIBA']; ?></td></tr>
-              <tr><td>No. BC 1.1 *</td><td><?php echo $arrhdr['NO_BC11']; ?></td><td>Tgl. BC 1.1 *</td><td><?php echo $arrhdr['TGL_BC11']; ?></td></tr>
-            </table>
+<div class="panel">
+  <div class="ribbon ribbon-clip ribbon-primary"> <span class="ribbon-inner"> <i class="icon md-boat margin-0" aria-hidden="true"></i> DETAIL UBAH STATUS</span> </div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div class="panel-body container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+         <div class="panel-body container-fluid">
+            <div class="row">
+              <div class="form-group form-material col-sm-12">
+                <label class="col-sm-2 control-label"><strong>NO UBAH STATUS</strong></label>
+                <div class="col-sm-4">
+                 <?php echo $arrhdr['NO_UBAH_STATUS'];?>
+                 </div>
+                  <label class="col-sm-2 control-label"><strong>TGL UBAH STATUS</strong></label>
+                    <div class="col-sm-4">
+                 <?php echo $arrhdr['TGL_UBAH_STATUS'];?>
+                 </div>
+              </div>
+             <div class="form-group form-material col-sm-12">
+                <label class="col-sm-2 control-label"><strong>TERMINAL</strong></label>
+                <div class="col-sm-10">
+                 <?php echo $arrhdr['GUDANGASAL'];?>
+                </div> 
+                </div> 
+                 <div class="form-group form-material col-sm-12">
+                <label class="col-sm-2 control-label"><strong>WAREHOUSE</strong></label>
+                <div class="col-sm-10">
+                 <?php echo $arrhdr['GUDANGTUJUAN'];?>
+                </div></div>
+<div class="form-group form-material col-sm-12">
+                <label class="col-sm-2 control-label"><strong>PEMOHON</strong></label>
+                <div class="col-sm-4">
+                 <?php echo $arrhdr['NM_LENGKAP'];?>
+                </div><label class="col-sm-2 control-label"><strong>STATUS</strong></label>
+                <div class="col-sm-4">
+                 <?php echo $arrhdr['STATUS'];?>
+                </div></div><div class="form-group form-material col-sm-12">
+                <label class="col-sm-2 control-label"><strong>NAMA KAPAL</strong></label>
+                <div class="col-sm-4">
+                 <?php echo $arrhdr['NAMA_KAPAL'];?>
+                </div><label class="col-sm-2 control-label"><strong>NO. VOY FILGHT</strong></label>
+                <div class="col-sm-4">
+                 <?php echo $arrhdr['NO_VOY_FLIGHT'];?>
+                </div></div><div class="form-group form-material col-sm-12">
+                <label class="col-sm-2 control-label"><strong>CALL SIGN</strong></label>
+                <div class="col-sm-4">
+                 <?php echo $arrhdr['CALL_SIGN'];?>
+                </div><label class="col-sm-2 control-label"><strong>TGL TIBA</strong></label>
+                <div class="col-sm-4">
+                 <?php echo $arrhdr['TGL_TIBA'];?>
+                </div></div><div class="form-group form-material col-sm-12">
+                <label class="col-sm-2 control-label"><strong>NO. BC11</strong></label>
+                <div class="col-sm-4">
+                 <?php echo $arrhdr['NO_BC11'];?>
+                </div><label class="col-sm-2 control-label"><strong>TGL BC 11</strong></label>
+                <div class="col-sm-4">
+                 <?php echo $arrhdr['TGL_BC11'];?>
+                </div></div>
+
+                
+              </div>
+            </div>
           </div>
-        </div>
       </div>
+    </div>
+  </div>
+</div>
+<div class="panel">
+  <div class="ribbon ribbon-clip ribbon-primary">
+  <span class="ribbon-inner"> <i class="icon md-collection-item margin-0" aria-hidden="true"></i> DATA DETAIL KONTAINER </span>
+  </div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div class="nav nav-tabs-horizontal nav-tabs-inverse nav-tabs-animate">
+    <ul class="nav nav-tabs nav-tabs" data-plugin="nav-tabs" role="tablist">
+      <li class="active" role="presentation">
+        <a data-toggle="tab" href="#kontainer" aria-controls="kontainer" role="tab">
+            <i class="icon md-view-list margin-0" aria-hidden="true"></i> KONTAINER
+        </a>
+      </li>
+    
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane active animation-slide-top" id="kontainer" role="tabpanel">
+        <?php echo $table_kontainer; ?>
+      </div>
+    
     </div>
   </div>
 </div>

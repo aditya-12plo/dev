@@ -69,6 +69,7 @@ function listdata($act="",$id=""){
 			$arrid = explode("~",$id);//print_r($arrid);die();
 			$data['title'] = 'DATA DETAIL';
 			$data['arrhdr'] = $this->m_status->execute('get','t_ubah_status',$id);
+			$data['table_kontainer'] = $this->kontainer_ubahstatus($act,$id);
 			echo $this->load->view('content/ubahstatus/detail',$data,true);
 
 		}else if($act=="update"){ 
@@ -95,6 +96,23 @@ function listdata($act="",$id=""){
 			}	
 		}
 	}
+
+function kontainer_ubahstatus($act,$id)
+{
+if (!$this->newsession->userdata('LOGGED')){
+			$this->index();
+			return;
+		}
+		$id = ($id!="")?$id:$this->input->post('id');
+		$this->load->model("m_status");
+			$arrdata = $this->m_status->kontainer_ubahstatus($act, $id);
+			$data = $this->load->view('content/newtable', $arrdata, true);
+			if($this->input->post("ajax")||$act=="post"){
+				echo $arrdata;
+			}else{
+				return $data;
+			}	
+}
 
 	function execute($type="",$act="", $id="")
 	{		

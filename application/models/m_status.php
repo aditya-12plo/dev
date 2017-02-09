@@ -69,6 +69,61 @@ function listdata($act, $id) {
         return $arrdata;
 }
 
+
+function kontainer_ubahstatus($act, $id) {
+   
+
+ $this->newtable->breadcrumb('Home', site_url());
+    $this->newtable->breadcrumb('UBAH STATUS', 'javascript:void(0)');
+    $data['title'] = 'DATA UBAH STATUS';
+    $judul = "UBAH STATUS";
+    //$KD_TPS = $this->newsession->userdata('KD_TPS');
+    $KD_GUDANG = $this->newsession->userdata('KD_GUDANG');
+    $KD_GROUP = $this->newsession->userdata('KD_GROUP');
+    $addsql = '';
+    if ($KD_GROUP == "USER") {
+      $addsql .= " AND   A.KD_GUDANG_ASAL = " . $this->db->escape($KD_GUDANG);
+    }else if($KD_GROUP == "CONS"){
+      $addsql .= " AND A.ID_USER = '".$this->newsession->userdata('ID')."' ";
+    }
+ $SQL = "SELECT A.ID, A.NO_CONT AS 'NO KONTAINER', A.NO_CONT FROM t_no_kontainer A
+          LEFT JOIN t_ubah_status B ON A.NO_UBAH_STATUS=B.NO_UBAH_STATUS
+          WHERE B.ID=". $this->db->escape($id) . $addsql; //print_r($SQL);die();     
+
+
+      $check = (grant() == "W") ? true : false;
+      $this->newtable->show_chk(false);
+      if(!$check) $proses = '';
+      $this->newtable->multiple_search(false);
+      $this->newtable->show_search(false);
+      $this->newtable->search(array(array('A.NO_CONT','NO. KONTAINER')));
+      $this->newtable->action(site_url() . "/status/kontainer_ubahstatus");
+      #$this->newtable->detail(array('POPUP', "status/kontainer_ubahstatus/detail"));
+      $this->newtable->tipe_proses('button');
+      $this->newtable->hiddens(array("ID","NO_CONT"));
+      $this->newtable->keys(array("ID","NO_CONT"));
+      $this->newtable->validasi(array("ID","NO_CONT"));
+      $this->newtable->cidb($this->db);
+      $this->newtable->orderby(1);
+      $this->newtable->sortby("DESC");
+      $this->newtable->set_formid("tblubahstatuskontainer");
+      $this->newtable->set_divid("divtblubahstatuskontainer");
+      $this->newtable->rowcount(10);
+      $this->newtable->clear();
+      $this->newtable->menu($proses);
+      $tabel .= $this->newtable->generate($SQL);
+      $arrdata = array("title" => $judul, "content" => $tabel);
+      if ($this->input->post("ajax") || $act == "post")
+        echo $tabel;
+      else
+        return $arrdata;
+
+
+
+
+
+}
+
 function autocomplete($type,$act,$get){
     $post = $this->input->post('term');
     if($type=="reff_gudang"){
