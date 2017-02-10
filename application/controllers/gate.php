@@ -6,6 +6,10 @@ class Gate extends Controller {
        parent::Controller();
     }
 	
+	
+	
+	
+	
 	function index(){
 		$add_header  = '<link rel="stylesheet" href="'.base_url().'assets/vendor/sweetalert/dist/sweetalert.css">';
 		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/app.min.css">';
