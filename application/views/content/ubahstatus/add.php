@@ -14,29 +14,20 @@
         <div class="tab-pane p-x-lg active" id="tab1">
           <form name="form_data" id="form_data" class="form-horizontal" role="form" action="<?php echo site_url('status/execute/'.$act.'/'.$ID); ?>" method="post" autocomplete="off" onsubmit="save_post('form_data'); return false;">
             <div class="form-group">
-              <label class="col-sm-3 control-label-left">Gudang Asal *</label>
+              <label class="col-sm-3 control-label-left">Terminal *</label>
               <div class="col-sm-9"> 
-                <input type="text" value="<?=$arrhdr['GUDANGASAL'];?>"  wajib="yes" id="GUDANG_ASAL" class="form-control" placeholder="GUDANG ASAL"> 
+                <input type="text" value="<?=$arrhdr['GUDANGASAL'];?>"  wajib="yes" id="GUDANG_ASAL" class="form-control" placeholder="TERMINAL"> 
                 <input type="hidden" name="GUDANG_ASAL2" value="<?=$arrhdr['KD_GUDANG_ASAL'];?>" wajib="yes" id="GUDANG_ASAL2" class="form-control" placeholder="GUDANG ASAL2">
               </div>
             </div>
             <div class="form-group">
-              <label class="col-sm-3 control-label-left">Gudang Tujuan *</label>
+              <label class="col-sm-3 control-label-left">Warehouse *</label>
               <div class="col-sm-9"> 
-                <input type="text" value="<?=$arrhdr['GUDANGTUJUAN'];?>" value="" wajib="yes" id="GUDANG_TUJUAN" class="form-control" placeholder="GUDANG TUJUAN">
+                <input type="text" value="<?=$arrhdr['GUDANGTUJUAN'];?>" value="" wajib="yes" id="GUDANG_TUJUAN" class="form-control" placeholder="WAREHOUSE">
                 <input type="hidden" name="GUDANG_TUJUAN2" value="<?=$arrhdr['KD_GUDANG_TUJUAN'];?>" wajib="yes" id="GUDANG_TUJUAN2" class="form-control" placeholder="GUDANG TUJUAN">
               </div>
             </div>
-            <br><br><br>
-                        <div class="form-group">
-              <label class="col-sm-3 control-label-left">No Kontainer *</label>              
-              <div class="col-sm-9"> 
-  <input type="hidden" maxlength="11" class="form-control" name="NO_CONT" id="NO_CONT" value=""  wajib="yes">
-<ul id="singleFieldTags"></ul>     
-
-
-              </div>
-            </div>
+            <br><br>
             <div class="form-group">
               <label class="col-sm-3 control-label-left">Nama Pemohon *</label>              
               <div class="col-sm-9"> 
@@ -74,6 +65,53 @@
                   </div> 
                 </div>
             </div>
+<br><br>
+                        <div class="form-group">
+              <label class="col-sm-3 control-label-left">No Kontainer *</label>              
+              <div class="col-sm-9"> 
+              
+            
+  <button type="button" class="btn btn-primary btn-icon" id="addButton"><i class="glyphicon glyphicon-plus"></i> Tambah Data</button>
+<br><br>
+<?php
+if($act == "update")
+{
+if($num_rows > 0)
+{
+foreach ($arrcont as $key) {
+ echo '<div class="form-inline"> <input type="text" name="NO_CONT[]" id="NO_CONT1" value="'.$key->NO_CONT.'" wajib="yes" class="rank form-control" placeholder="NO KONTAINER" >&nbsp; 
+     <input type="text" name="UKURAN_CONT[]" id="UKURAN_CONT1" value="'.$key->UKURAN.'" wajib="yes" class="rank form-control" placeholder="UKURAN KONTAINER" >&nbsp;<button type="button" class="remove btn btn-danger" id="removeButton">Hapus</button></div><br>
+';
+}
+}
+else
+{
+    echo '<div class="form-inline">
+  <input type="text" name="NO_CONT[]" id="NO_CONT1" wajib="yes" class="rank form-control" placeholder="NO KONTAINER" >
+   <input type="text" name="UKURAN_CONT[]" id="UKURAN_CONT1" wajib="yes" class="rank form-control" placeholder="UKURAN KONTAINER" >
+</div>';
+}
+}
+else
+{
+  echo '<div class="form-inline">
+  <input type="text" name="NO_CONT[]" id="NO_CONT1" wajib="yes" class="rank form-control" placeholder="NO KONTAINER" >
+   <input type="text" name="UKURAN_CONT[]" id="UKURAN_CONT1" wajib="yes" class="rank form-control" placeholder="UKURAN KONTAINER" >
+</div>';
+}
+
+?>
+
+<br>
+<div id="TextBoxContainer">
+    <!--Textboxes will be added here -->
+</div>
+
+
+
+              </div>
+            </div>
+
             <input type="hidden" name="ID_DATA" value="<?php echo $ID_DATA; ?>" readonly="readonly"/>
           </form>
         </div>
@@ -101,6 +139,48 @@ autocomplete('NAMA_KAPAL','/autocomplete/status/reff_kapal/ship_name',function(e
     $('#CALL_SIGN').val(ui.item.CALLSIGN);
   });
 });
+
+
+$(function () {
+    $("#addButton").bind("click", function () {
+        var div = $("<div />");
+        div.html(GetDynamicTextBox(""));
+        $("#TextBoxContainer").append(div);
+    });
+    $("body").on("click", ".remove", function () {
+        $(this).closest("div").remove();
+    });
+});
+function GetDynamicTextBox() {
+    return '<div class="form-inline"> <input type="text" name="NO_CONT[]" id="NO_CONT1" wajib="yes" class="rank form-control" placeholder="NO KONTAINER" >&nbsp;' 
+    + ' <input type="text" name="UKURAN_CONT[]" id="UKURAN_CONT1" wajib="yes" class="rank form-control" placeholder="UKURAN KONTAINER" >&nbsp;' +'<button type="button" class="remove btn btn-danger" id="removeButton">Hapus</button></div><br>'
+}
+
+
+
+/*
+ $(function () {
+    $("#addButton").bind("click", function () {
+        var div = $("<div />");
+        div.html(GetDynamicTextBox(""));
+        $("#TextBoxContainer").append(div);
+    });
+    $("body").on("click", ".remove", function () {
+        $(this).closest("div").remove();
+    });
+});
+function GetDynamicTextBox() {
+    return '<div class="form-inline">' +
+ '<input type="text" name="NO_CONT[]" id="NO_CONT1" wajib="yes" class="form-control" placeholder="NO KONTAINER" >
+  &nbsp;'+ '<input type="text" name="UKURAN_CONT[]" id="UKURAN_CONT1" wajib="yes" class="form-control" placeholder="UKURAN KONTAINER" >
+&nbsp;' +
+'<button type="button" class="remove btn btn-primary btn-icon" id="removeButton"><i class="glyphicon glyphicon-plus"></i> Tambah Data</button>
+</div>'
+}
+
+
+<input type="hidden" maxlength="11" class="form-control" name="NO_CONT" id="NO_CONT" value=""  wajib="yes">
+<ul id="singleFieldTags"></ul>     
 
   $(function(){
  var sampleTags = "";
@@ -177,5 +257,6 @@ singleFieldNode: $('#NO_CONT')
             });
             
         });
+    */
 </script> 
 

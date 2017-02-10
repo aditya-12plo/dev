@@ -21,10 +21,10 @@ function listdata($act, $id) {
     }else if($KD_GROUP == "CONS"){
       $addsql .= " AND A.ID_USER = '".$this->newsession->userdata('ID')."' ";
     }
-  $SQL = "SELECT A.ID,A.NO_UBAH_STATUS AS 'NO. UBAH STATUS' , 
+  $SQL = "SELECT A.ID,A.NO_UBAH_STATUS,A.NO_UBAH_STATUS AS 'NO. UBAH STATUS' , 
           DATE_FORMAT(A.TGL_UBAH_STATUS,'%d-%m-%Y') AS 'TGL. UBAH STATUS',
-          CONCAT('TPS ASAL : ',B.NAMA_TPS,'<BR>NAMA GUDANG : ',C.NAMA_GUDANG) AS 'GUDANG ASAL',
-          CONCAT('TPS TUJUAN : ',D.NAMA_TPS,'<BR>NAMA GUDANG : ',E.NAMA_GUDANG) AS 'GUDANG TUJUAN',F.NM_LENGKAP AS 'NAMA PEMOHON',
+          CONCAT('TPS ASAL : ',B.NAMA_TPS,'<BR>NAMA GUDANG : ',C.NAMA_GUDANG) AS 'TERMINAL',
+          CONCAT('TPS TUJUAN : ',D.NAMA_TPS,'<BR>NAMA GUDANG : ',E.NAMA_GUDANG) AS 'WAREHOUSE',F.NM_LENGKAP AS 'NAMA PEMOHON',
           CONCAT('NAMA KAPAL : ',A.NAMA_KAPAL,'<BR>CALL SIGN : ',A.CALL_SIGN) AS 'NAMA KAPAL',
           A.TGL_TIBA AS 'TGL. TIBA', CONCAT(G.NAMA,'<BR>',DATE_FORMAT(A.TGL_UBAH_STATUS,'%d-%m-%Y %H:%i:%s')) AS STATUS,A.NO_VOY_FLIGHT
           FROM t_ubah_status A INNER JOIN reff_gudang C ON A.KD_GUDANG_ASAL=C.KD_GUDANG INNER JOIN reff_tps B ON C.KD_TPS=B.KD_TPS 
@@ -50,9 +50,9 @@ function listdata($act, $id) {
       $this->newtable->action(site_url() . "/status/listdata");
       $this->newtable->detail(array('POPUP', "status/listdata/detail"));
       $this->newtable->tipe_proses('button');
-      $this->newtable->hiddens(array("ID"));
-      $this->newtable->keys(array("ID"));
-      $this->newtable->validasi(array("ID"));
+      $this->newtable->hiddens(array("ID","NO_UBAH_STATUS"));
+      $this->newtable->keys(array("ID","NO_UBAH_STATUS"));
+      $this->newtable->validasi(array("ID","NO_UBAH_STATUS"));
       $this->newtable->cidb($this->db);
       $this->newtable->orderby(1);
       $this->newtable->sortby("DESC");
@@ -86,7 +86,7 @@ function kontainer_ubahstatus($act, $id) {
     }else if($KD_GROUP == "CONS"){
       $addsql .= " AND A.ID_USER = '".$this->newsession->userdata('ID')."' ";
     }
- $SQL = "SELECT A.ID, A.NO_CONT AS 'NO KONTAINER', A.NO_CONT FROM t_no_kontainer A
+ $SQL = "SELECT A.ID, A.NO_CONT AS 'NO KONTAINER',A.UKURAN AS 'UKURAN KONTAINER',A.WK_REKAM AS 'WAKTU REKAM', A.NO_CONT FROM t_no_kontainer A
           LEFT JOIN t_ubah_status B ON A.NO_UBAH_STATUS=B.NO_UBAH_STATUS
           WHERE B.ID=". $this->db->escape($id) . $addsql; //print_r($SQL);die();     
 
@@ -202,7 +202,9 @@ function execute($type, $act, $id) {
           $insert = $this->db->query("INSERT INTO reff_kapal (NAMA,CALL_SIGN,CREATE_USER,CREATE_DATE) VALUES ('".$NMKAPAL."','".$CALL_SIGN."','".$this->newsession->userdata('ID')."',date('Y-m-d H:i:s'))");
         }
         $NO_UBAH_STATUS = 'ST'.date('YmdHis');
-        $NO_CONT = explode(',', $this->input->post('NO_CONT'));
+        $NO_CONT = $this->input->post('NO_CONT');
+        $UKURAN_CONT = $this->input->post('UKURAN_CONT');
+        $WK_REKAM = date('Y-m-d H:i:s');
         $total = count($NO_CONT);
         $ubah= array(
           'NO_UBAH_STATUS'  =>  $NO_UBAH_STATUS,
@@ -217,20 +219,22 @@ function execute($type, $act, $id) {
           'TGL_TIBA'        =>  validate(date_input($this->input->post('TGL_TIBA'))),
           'NO_BC11'         =>  trim(validate($this->input->post('NO_BC11'))),
           'TGL_BC11'        =>  validate(date_input($this->input->post('TGL_BC11'))),
-          'WK_REKAM'        =>  date('Y-m-d H:i:s')
+          'WK_REKAM'        =>  $WK_REKAM
           );
         $run = $this->db->insert('t_ubah_status',$ubah);
+       
         for($x=0;$x<$total;$x++)
 {
 $this->db->set('NO_UBAH_STATUS', $NO_UBAH_STATUS); 
-$this->db->set('NO_CONT', trim($NO_CONT[$x])); 
+$this->db->set('NO_CONT', $NO_CONT[$x]); 
+$this->db->set('UKURAN', $UKURAN_CONT[$x]); 
+$this->db->set('WK_REKAM', $WK_REKAM); 
 $run2 = $this->db->insert('t_no_kontainer'); 
 }
         if (!$run OR !$run2) {
         $error += 1;
         $message .= "Could not be processed data";
-        }
-                          
+        }                     
       }
             if($error == 0){
         $func->main->get_log("add","t_ubah_status");
@@ -251,6 +255,31 @@ $run2 = $this->db->insert('t_no_kontainer');
       }      
       else
       {
+   $arrchk = explode("~", $id);
+        $KODE = $arrchk[0];
+        $NO_UBAH_STATUS = $arrchk[1];
+
+        $NO_CONT = $this->input->post('NO_CONT');
+        $UKURAN_CONT = $this->input->post('UKURAN_CONT');
+        $WK_REKAM = date('Y-m-d H:i:s');
+        $total = count($NO_CONT);
+
+if($total < 0 OR  $UKURAN_CONT == null OR $NO_CONT == null)
+{
+    $error += 1;
+$message .= "Data Kontainer Tidak Boleh Kosong";
+}
+else
+{
+$HAPUS = $this->db->delete('t_no_kontainer', array('NO_UBAH_STATUS' => $NO_UBAH_STATUS));
+if($HAPUS == false)
+{
+ $error += 1;
+            $message .= "Could not be processed data";
+}
+else
+{
+
         $NMKAPAL = trim($this->input->post('NAMA_KAPAL'));
         $CALL_SIGN = trim($this->input->post('CALL_SIGN'));
         $check = $this->db->query("SELECT * FROM reff_kapal WHERE NAMA='$NMKAPAL'");
@@ -274,13 +303,26 @@ $run2 = $this->db->insert('t_no_kontainer');
             'WK_REKAM'        =>  date('Y-m-d H:i:s')
             );
          
-        $this->db->where(array('ID' => $id));
+        $this->db->where(array('ID' => $KODE));
         $run = $this->db->update('t_ubah_status', $ubah);
+
+
+        for($x=0;$x<$total;$x++)
+{
+$this->db->set('NO_UBAH_STATUS', $NO_UBAH_STATUS); 
+$this->db->set('NO_CONT', $NO_CONT[$x]); 
+$this->db->set('UKURAN', $UKURAN_CONT[$x]); 
+$this->db->set('WK_REKAM', $WK_REKAM); 
+$run2 = $this->db->insert('t_no_kontainer'); 
+}
+
         if (!$run) {
              $error += 1;
             $message .= "Could not be processed data";
         }
       }
+    }
+  }
       if($error == 0){
         $func->main->get_log("add","t_ubah_status");
         echo "MSG#OK#Successfully to be processed#". site_url() . "/status/listdata";
@@ -293,14 +335,17 @@ $run2 = $this->db->insert('t_no_kontainer');
         foreach ($this->input->post('tb_chktblubahstatus') as $chkitem) {
         $arrchk = explode("~", $chkitem);
         $ID = $arrchk[0];
+        $NO_UBAH_STATUS = $arrchk[1];
         $result = $this->db->delete('t_ubah_status', array('ID' => $ID));
-          if ($result == false) {
+        $result2 = $this->db->delete('t_no_kontainer', array('NO_UBAH_STATUS' => $NO_UBAH_STATUS));
+          if ($result == false OR $result2 == false) {
             $error += 1;
             $message .= "Could not be processed data";
           }
         }
         if ($error == 0) {
           $func->main->get_log("delete", "t_ubah_status");
+          $func->main->get_log("delete", "t_no_kontainer");
           echo "MSG#OK#Successfully to be processed#". site_url() . "/status/listdata/post";
         } else {
           echo "MSG#ERR#" . $message . "#";
@@ -326,6 +371,17 @@ $run2 = $this->db->insert('t_no_kontainer');
             redirect(site_url(), 'refresh');
           }
       }
+      if ($act == "t_no_kontainer") {
+
+        $SQL = "SELECT NO_CONT, UKURAN, WK_REKAM
+            FROM t_no_kontainer
+            WHERE NO_UBAH_STATUS = " . $this->db->escape($id);
+        $query = $this->db->query($SQL);
+         if ($query->num_rows() > 0){
+       return $query->result();
+        }
+    }
+     
     }else if($type == "send_ubah_stat"){
       $sendData = true;        
         if($sendData){

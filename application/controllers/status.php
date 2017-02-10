@@ -80,6 +80,8 @@ function listdata($act="",$id=""){
 			$data['ID_DATA'] = $id;
 			$data['act'] = 'update';//print_r($act);die();
 			$data['arrhdr'] = $this->m_status->execute('get','t_ubah_status',$id); //print_r($data['arrhdr']);die();
+			$data['arrcont'] = $this->m_status->execute('get','t_no_kontainer',$data['arrhdr']['NO_UBAH_STATUS']); //print_r($data['arrhdr']);die();
+			 $data['num_rows'] = count($data['arrcont']);
 			$data['TGL_SEKARANG'] =  date('d-m-Y');
 			$this->content = $this->load->view('content/ubahstatus/add',$data,true);
 			$this->index();
