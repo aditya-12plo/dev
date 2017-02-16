@@ -12,7 +12,7 @@ class M_home extends Model{
 				  INNER JOIN app_group C ON A.KD_GROUP = C.ID
 				  LEFT JOIN reff_gudang D ON A.KD_GUDANG = D.KD_GUDANG
 				  LEFT JOIN reff_tps E ON E.KD_TPS=A.KD_TPS
-				  WHERE (A.USERLOGIN = ".$this->db->escape($uid_)." OR A.EMAIL = ".$this->db->escape($uid_).") AND A.PASSWORD = ".$this->db->escape($pwd_);
+				  WHERE (A.USERLOGIN = ".$this->db->escape($uid_)." OR A.EMAIL = ".$this->db->escape($uid_).") AND A.PASSWORD = ".$this->db->escape($pwd_)." ORDER BY A.ID DESC LIMIT 1";
 		$data = $this->db->query($query);
 		if($data->num_rows() > 0){
 			$rs = $data->row();
@@ -254,7 +254,7 @@ class M_home extends Model{
 			$this->load->library('email', $config);
 			$this->email->from($fromemail, $fromname);
 			$this->email->to($toemail);
-			$this->email->bcc('bobi@edi-indonesia.co.id');
+			//$this->email->bcc('bobi@edi-indonesia.co.id');
 			$this->email->subject($subject);
 			$this->email->message($message);
 			if(!$this->email->send()){

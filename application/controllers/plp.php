@@ -73,10 +73,10 @@ class Plp extends Controller {
 		$id = ($id!="")?$id:$this->input->post('id');
 		if($act=="add"){
 			$this->load->model('m_execute');
-			$this->newtable->breadcrumb('Dashboard', site_url());
+			$this->newtable->breadcrumb('HOME', site_url());
 			$this->newtable->breadcrumb('PLP', 'javascript:void(0)');
-			$this->newtable->breadcrumb('Pengajuan', site_url('plp/pengajuan'));
-			$this->newtable->breadcrumb('Entry Pengajuan PLP', 'javascript:void(0)');
+			$this->newtable->breadcrumb('Pengajuan PLP', site_url('plp/pengajuan'));
+			$this->newtable->breadcrumb('Entry', 'javascript:void(0)');
 			$data['page_title'] = 'ENTRY PENGAJUAN PLP';
 			$data['action'] = 'save';
 			$data['arrdata'] = $this->m_execute->get_data('kapal',$id);
@@ -85,10 +85,10 @@ class Plp extends Controller {
 			$this->index();
 		}if($act=="update"){
 			$this->load->model('m_execute');
-			$this->newtable->breadcrumb('Dashboard', site_url());
+			$this->newtable->breadcrumb('HOME', site_url());
 			$this->newtable->breadcrumb('PLP', 'javascript:void(0)');
-			$this->newtable->breadcrumb('Pengajuan', site_url('plp/pengajuan'));
-			$this->newtable->breadcrumb('Update Pengajuan PLP', 'javascript:void(0)');
+			$this->newtable->breadcrumb('Pengajuan PLP', site_url('plp/pengajuan'));
+			$this->newtable->breadcrumb('Update', 'javascript:void(0)');
 			$arrid = explode("~",$id);
 			$data['id'] = $arrid[1];
 			$data['page_title'] = 'UPDATE PENGAJUAN PLP';
@@ -111,9 +111,10 @@ class Plp extends Controller {
 			$data['data'] = $this->m_execute->get_data('respon_plp_cont_print',$id);
 			$this->load->view('content/plp/pengajuan_print',$data);
 		}else{
-				$this->newtable->breadcrumb('Home', site_url());
-				$this->newtable->breadcrumb('Pengajuan PLP', 'javascript:void(0)');
-				$this->load->model("m_plp");
+			$this->newtable->breadcrumb('Home', site_url());
+			$this->newtable->breadcrumb('PLP', 'javascript:void(0)');
+			$this->newtable->breadcrumb('Pengajuan PLP', site_url('plp/pengajuan'));
+			$this->load->model("m_plp");
 			$arrdata = $this->m_plp->pengajuan_plp($act, $id);
 			$data = $this->load->view('content/newtable', $arrdata, true);
 			if($this->input->post("ajax")||$act=="post"){
@@ -241,11 +242,11 @@ class Plp extends Controller {
 		$id = ($id!="")?$id:$this->input->post('id');
 		if($act=="add"){
 			$this->load->model('m_execute');
-			$this->newtable->breadcrumb('Dashboard', site_url());
+			$this->newtable->breadcrumb('Home', site_url());
 			$this->newtable->breadcrumb('PLP', 'javascript:void(0)');
-			$this->newtable->breadcrumb('Pembatalan', site_url('plp/pembatalan'));
-			$this->newtable->breadcrumb('Entry Pengajuan Pembatalan PLP', 'javascript:void(0)');
-			$data['page_title'] = 'ENTRY PENGAJUAN PEMBATALAN PLP';
+			$this->newtable->breadcrumb('PENGAJUAN BATAL PLP', site_url('plp/pembatalan'));
+			$this->newtable->breadcrumb('Entry', 'javascript:void(0)');
+			$data['page_title'] = 'ENTRY PENGAJUAN BATAL PLP';
 			$data['action'] = 'save';
 			$data['arrdata'] = $this->m_execute->get_data('respon_plp',$id);
 			$data['table_pembatalan_kontainer'] = $this->pembatalan_respon_plp_kontainer($act,$id);
@@ -253,13 +254,13 @@ class Plp extends Controller {
 			$this->index();
 		}if($act=="update"){
 			$this->load->model('m_execute');
-			$this->newtable->breadcrumb('Dashboard', site_url());
+			$this->newtable->breadcrumb('Home', site_url());
 			$this->newtable->breadcrumb('PLP', 'javascript:void(0)');
-			$this->newtable->breadcrumb('Pembatalan', site_url('plp/pembatalan'));
-			$this->newtable->breadcrumb('Update Pengajuan Pembatalan PLP', 'javascript:void(0)');
+			$this->newtable->breadcrumb('PENGAJUAN BATAL PLP', site_url('plp/pembatalan'));
+			$this->newtable->breadcrumb('Update', 'javascript:void(0)');
 			$arrid = explode("~",$id);
 			$data['id'] = $arrid[1];
-			$data['page_title'] = 'UPDATE PENGAJUAN PEMBATALAN PLP';
+			$data['page_title'] = 'UPDATE PENGAJUAN BATAL PLP';
 			$data['action'] = 'update';
 			$data['arrdata'] = $this->m_execute->get_data('request_batal_plp',$arrid[1]);
 			$data['table_pembatalan_kontainer'] = $this->pembatalan_respon_plp_kontainer($act,$id);
@@ -268,12 +269,15 @@ class Plp extends Controller {
 		}else if($act=="detail"){
 			$arrid = explode('~',$id);
 			$this->load->model('m_execute');
-			$data['title'] = 'DETAIL PENGAJUAN PEMBATALAN PLP';
+			$data['title'] = 'DETAIL PENGAJUAN BATAL PLP';
 			$data['arrdata'] = $this->m_execute->get_data('request_batal_plp',$arrid[1]);
 			$data['table_pembatalan_kontainer'] = $this->pembatalan_plp_kontainer($act,$id);
 			echo $this->load->view('content/plp/pembatalan_detail',$data,true);
 		}else{
 			$this->load->model("m_plp");
+			$this->newtable->breadcrumb('Home', site_url());
+			$this->newtable->breadcrumb('PLP', 'javascript:void(0)');
+			$this->newtable->breadcrumb('PENGAJUAN BATAL PLP', site_url('plp/pembatalan'));
 			$arrdata = $this->m_plp->pembatalan_plp($act, $id);
 			$data = $this->load->view('content/newtable', $arrdata, true);
 			if($this->input->post("ajax")||$act=="post"){
@@ -341,7 +345,7 @@ class Plp extends Controller {
 		$id = ($id!="")?$id:$this->input->post('id');
 		if($act=="detail"){
 			$this->load->model('m_execute');
-			$data['title'] = 'DETAIL RESPONS PEMBATALAN PLP';
+			$data['title'] = 'DETAIL RESPONS BATAL PLP';
 			$data['arrdata'] = $this->m_execute->get_data('respon_plp',$id);
 			$data['table_kontainer'] = $this->pembatalan_respon_kontainer($act,$id);
 			echo $this->load->view('content/plp/respon_detail',$data,true);

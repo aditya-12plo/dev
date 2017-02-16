@@ -47,7 +47,7 @@ class Status extends Controller {
 		}
 	}
 	
-function listdata($act="",$id=""){	
+	function listdata($act="",$id=""){	
 		if (!$this->newsession->userdata('LOGGED')){
 			$this->index();
 			return;

@@ -45,7 +45,7 @@ class Ppbarang extends Controller {
 		}
 	}
 
-public function listdata($act,$id){
+	public function listdata($act,$id){
 		if (!$this->newsession->userdata('LOGGED')){
 			$this->index();
 			return;

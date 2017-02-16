@@ -5,12 +5,11 @@ class M_ppbarang extends Model{
        parent::Model();
     }
 
- function listdata($act, $id){
-		
+	function listdata($act, $id){
 		$this->newtable->breadcrumb('Home', site_url());
-    $this->newtable->breadcrumb('Permohonan Pengeluaran Barang', 'javascript:void(0)');
-    $data['title'] = 'PERMOHONAN PENGELUARAN BARANG';
-    $judul = "PERMOHONAN PENGELUARAN BARANG";
+		$this->newtable->breadcrumb('Permohonan Pengeluaran Barang', 'javascript:void(0)');
+		$data['title'] = 'PERMOHONAN PENGELUARAN BARANG';
+		$judul = "PERMOHONAN PENGELUARAN BARANG";
 		$KD_TPS = $this->newsession->userdata('KD_TPS');
 		$KD_GUDANG = $this->newsession->userdata('KD_GUDANG');
 		$KD_GROUP = $this->newsession->userdata('KD_GROUP');
@@ -20,7 +19,7 @@ class M_ppbarang extends Model{
 		}
 		$SQL = "SELECT IFNULL(A.REF_NUMBER,'-') AS 'REF NUMBER',
 				CONCAT('NO. : ',IFNULL(A.NO_SURAT,'-'),'<BR>TGL. : ',IFNULL(DATE_FORMAT(A.TGL_SURAT,'%d-%m-%Y'),'-')) AS 'SURAT PLP',
-				A.NM_ANGKUT AS 'NAMA ANGKUT', A.NO_VOY_FLIGHT AS 'VOYAGE/FLIGHT', DATE_FORMAT(A.TGL_TIBA,'%d-%m-%Y') AS 'TGL. TIBA',
+				A.NM_ANGKUT AS 'NAMA ANGKUT', A.NO_VOY_FLIGHT AS 'NO VOYAGE', DATE_FORMAT(A.TGL_TIBA,'%d-%m-%Y') AS 'TGL. TIBA',
 				CONCAT('NO. : ',A.NO_BC11,'<BR>TGL. : ',DATE_FORMAT(A.TGL_BC11,'%d-%m-%Y')) AS BC11,
 				CONCAT('YOR ASAL : ',IFNULL(A.YOR_ASAL,'-'),'<BR> YOR TUJUAN : ',IFNULL(A.YOR_TUJUAN,'-')) AS 'YOR', 
 				CONCAT('TPS : ',A.KD_TPS_TUJUAN,'<BR>GUDANG : ',A.KD_GUDANG_TUJUAN) AS 'GUDANG TUJUAN', 
@@ -31,12 +30,12 @@ class M_ppbarang extends Model{
 				LEFT JOIN reff_status C ON C.ID=A.KD_STATUS AND C.KD_TIPE_STATUS='PLPAJU'
 				WHERE 1=1".$addsql;
 		/*
-		$proses = array('ENTRY'	  => array('MODAL',"plp/pengajuan_discharge", '','','glyphicon glyphicon-plus-sign'),
-						'UPDATE'  => array('GET',site_url()."/plp/pengajuan_plp/update", '1','100:500','glyphicon glyphicon-edit'),
-						'DELETE'  => array('DELETE',"execute/process/delete/pengajuan_plp", '1','100','glyphicon glyphicon-remove-circle'),
-						'PROCESS' => array('POST',"execute/process/update/send_pengajuan_plp", '1','100','glyphicon glyphicon-send'),
-						'DETAIL'  => array('MODAL',"plp/pengajuan_plp/detail", '1','','glyphicon glyphicon-zoom-in'));
-	*/
+		$proses = array('ENTRY'	  => array('MODAL',"plp/pengajuan_discharge", '','','md-plus-circle'),
+						'UPDATE'  => array('GET',site_url()."/plp/pengajuan_plp/update", '1','100:500','md-edit'),
+						'DELETE'  => array('DELETE',"execute/process/delete/pengajuan_plp", '1','100','md-close-circle'),
+						'PROCESS' => array('POST',"execute/process/update/send_pengajuan_plp", '1','100','md-mail-send'),
+						'DETAIL'  => array('MODAL',"plp/pengajuan_plp/detail", '1','','md-zoom-in'));
+		*/
 		$this->newtable->multiple_search(true);
 		$this->newtable->show_chk($check);
 		$this->newtable->show_menu($check);
@@ -64,39 +63,32 @@ class M_ppbarang extends Model{
 			return $arrdata;
 	}
 	
-	  function execute($type, $act, $id) {
-    $func = get_instance();
-    $func->load->model("m_main", "main", true);
-    $success = 0;
-    $error = 0;
-    $KD_TPS = $this->newsession->userdata('KD_TPS');
-    $KD_GUDANG = $this->newsession->userdata('KD_GUDANG');
-    $KD_KPBC = $this->newsession->userdata('KD_KPBC');
-// for detail
-if ($type == "detail") {
-if($act == 't_request_plp_hdr')
-{
-        $SQL = "SELECT * FROM t_request_plp_hdr A LEFT JOIN reff_kapal B ON B.ID=A.KD_KAPAL
-				LEFT JOIN reff_status C ON C.ID=A.KD_STATUS WHERE A.ID = " . $this->db->escape($id);
-       // print_r($SQL);die();
-        $result = $func->main->get_result($SQL);
-        if ($result) { 
-          foreach ($SQL->result_array() as $row => $value) {
-            $arrdata = $value;
-          }
-          return $arrdata;
-        } 
-        else {
-          redirect(site_url(), 'refresh');
-        }
-}
-
-
-
-}
-// for detail
-
-}
-
-
+	function execute($type, $act, $id) {
+		$func = get_instance();
+		$func->load->model("m_main", "main", true);
+		$success = 0;
+		$error = 0;
+		$KD_TPS = $this->newsession->userdata('KD_TPS');
+		$KD_GUDANG = $this->newsession->userdata('KD_GUDANG');
+		$KD_KPBC = $this->newsession->userdata('KD_KPBC');
+		// for detail
+		if ($type == "detail") {
+			if($act == 't_request_plp_hdr'){
+				$SQL = "SELECT * FROM t_request_plp_hdr A LEFT JOIN reff_kapal B ON B.ID=A.KD_KAPAL
+						LEFT JOIN reff_status C ON C.ID=A.KD_STATUS WHERE A.ID = " . $this->db->escape($id);
+				// print_r($SQL);die();
+				$result = $func->main->get_result($SQL);
+				if ($result) { 
+				  foreach ($SQL->result_array() as $row => $value) {
+					$arrdata = $value;
+				  }
+				  return $arrdata;
+				} 
+				else {
+				  redirect(site_url(), 'refresh');
+				}
+			}
+		}
+		// for detail
+	}
 }

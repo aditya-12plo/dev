@@ -43,7 +43,7 @@
                           <th>DATA PENGANGKUT</th>
                           <td>
 						  	<?php echo "NAMA ANGKUT : ".$arrhdr['NM_ANGKUT']."<BR>"; ?>
-                            <?php echo "NO. VOYAGE/FLIGHT : ".$arrhdr['NO_VOY_FLIGHT']."<BR>"; ?>
+                            <?php echo "NO. VOYAGE : ".$arrhdr['NO_VOY_FLIGHT']."<BR>"; ?>
                             <?php echo "CALL SIGN : ".$arrhdr['CALL_SIGN']."<BR>"; ?>
                             <?php echo "TGL. TIBA : ".date_input($arrhdr['TGL_TIBA'])."<BR>"; ?>
                             <?php echo "NO. BC11 : ".$arrhdr['NO_BC11']."<BR>"; ?>

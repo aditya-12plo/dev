@@ -1,29 +1,75 @@
-<table class="table"> 
-<thead> <tr> 
-	<th>NO CONT</th>
- <th>KONDISI SEGEL</th>
-  <th>PELABUHAN BONGKAR</th>
-  <th>WAKTU IN</th> 
-  <th>WAKTU OUT</th> 
-  <th>WAKTU REKAM</th> 
-</tr> </thead>
- <tbody> 
-
- 	<?php
-// $jml = count($arrhdr);
- 	//print_r($arrhdr);
-    foreach ($arrhdr as $v2) {
-echo' 	<tr> 	
- 		<th scope="row">'.$v2->NO_CONT.'</th> 
- 		<td>'.$v2->KONDISI_SEGEL.'</td>
- 		 <td>'.$v2->KD_PEL_BONGKAR.'</td> 
- 		<td>'.$v2->WK_IN.'</td> 
-<td>'.$v2->WK_OUT.'</td>
-<td>'.$v2->WK_REKAM.'</td>
- 		</tr>';
-    }
-
- 	?>
- 
- 	</tbody> 
-</table>
+<div class="card">
+  <div class="card-block p-a-0">
+    <div class="box-tab m-b-0" id="rootwizard">
+      <ul class="wizard-tabs">
+        <li class="active"><a href="#tab1" data-toggle="tab">TRACKING</a></li>
+        <li class="active"><a href="#tab1" data-toggle="tab">DETAIL</a></li>
+      </ul>
+      <div class="tab-content" style="overflow: auto">
+        <div class="tab-pane p-x-lg active" id="tab1" style="overflow: auto">
+          <form class="form-horizontal" role="form" autocomplete="off">
+            <div class="row">
+              <div class="form-group form-material">
+                <label class="col-sm-offset-1 col-sm-2 control-label-left">NO. BL/AWB</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control focus" value="<?php echo $arrdata['NO BL/AWB']; ?>" readonly="readonly">
+                </div>
+              </div>
+              <div class="form-group form-material">
+                <label class="col-sm-offset-1 col-sm-2 control-label-left">JENIS KEMASAN</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control focus" value="<?php echo $arrdata['JENIS KEMASAN']; ?>" readonly="readonly">
+                </div>
+              </div>
+              <div class="form-group form-material">
+                <label class="col-sm-offset-1 col-sm-2 control-label-left">JUMLAH KEMASAN</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control focus" value="<?php echo $arrdata['JUMLAH KEMASAN']; ?>" readonly="readonly">
+                </div>
+              </div>
+              <div class="form-group form-material">
+                <label class="col-sm-offset-1 col-sm-2 control-label-left">CONTAINER ASAL</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control focus" value="<?php echo $arrdata['CONTAINER ASAL']; ?>" readonly="readonly">
+                </div>
+              </div>
+              <div class="form-group form-material">
+                <label class="col-sm-offset-1 col-sm-2 control-label-left">NAMA KAPAL</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control focus" value="<?php echo $arrdata['NAMA KAPAL']; ?>" readonly="readonly">
+                </div>
+                <div class="col-sm-3">
+                  <input type="text" class="form-control focus" value="<?php echo $arrdata['CALL SIGN']; ?>" readonly="readonly">
+                </div>
+              </div>
+              <div class="form-group form-material">
+                <label class="col-sm-offset-1 col-sm-2 control-label-left">NO VOYAGE</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control focus" value="<?php echo $arrdata['NO VOYAGE']; ?>" readonly="readonly">
+                </div>
+              </div>
+              <div class="form-group form-material">
+                <label class="col-sm-offset-1 col-sm-2 control-label-left">TGL. TIBA</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control focus" value="<?php echo $arrdata['TGL. TIBA']; ?>" readonly="readonly">
+                </div>
+              </div>
+              <div class="form-group form-material">
+                <label class="col-sm-offset-1 col-sm-2 control-label-left">GATE IN</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control focus" value="<?php echo $arrdata['GATE IN']; ?>" readonly="readonly">
+                </div>
+              </div>
+              <div class="form-group form-material">
+                <label class="col-sm-offset-1 col-sm-2 control-label-left">GATE OUT</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control focus" value="<?php echo $arrdata['GATE OUT']; ?>" readonly="readonly">
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

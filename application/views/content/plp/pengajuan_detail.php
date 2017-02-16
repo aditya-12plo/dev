@@ -14,10 +14,10 @@
                       <div class="panel-body container-fluid">
                         <div class="row">
                           <div class="form-group form-material">
-                            <label class="col-sm-3 control-label">PESAWAT/KAPAL</label>
+                            <label class="col-sm-3 control-label">KAPAL</label>
                             <div class="col-sm-9">
                               <input type="text" class="form-control <?php echo ($arrdata['NM_ANGKUT']!="")?"focus":""; ?>" value="<?php echo $arrdata['NM_ANGKUT']; ?>" readonly="readonly">
-                              <div class="hint">NAMA PESAWAT/KAPAL</div>
+                              <div class="hint">NAMA KAPAL</div>
                             </div>
                           </div>
                           <div class="form-group form-material">
@@ -54,10 +54,10 @@
                             </div>
                           </div>
                           <div class="form-group form-material">
-                            <label class="col-sm-3 control-label">VOYAGE/FLIGHT</label>
+                            <label class="col-sm-3 control-label">VOYAGE</label>
                             <div class="col-sm-9">
                               <input type="text" mandatory="yes" class="form-control <?php echo ($arrdata['NO_VOY_FLIGHT']!="")?"focus":""; ?>" value="<?php echo $arrdata['NO_VOY_FLIGHT']; ?>" readonly="readonly">
-                              <div class="hint">NOMOR VOYAGE/FLIGHT</div>
+                              <div class="hint">NOMOR VOYAGE</div>
                             </div>
                           </div>
                           <div class="form-group form-material">

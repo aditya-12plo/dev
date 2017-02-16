@@ -6,10 +6,6 @@ class Gate extends Controller {
        parent::Controller();
     }
 	
-	
-	
-	
-	
 	function index(){
 		$add_header  = '<link rel="stylesheet" href="'.base_url().'assets/vendor/sweetalert/dist/sweetalert.css">';
 		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/app.min.css">';
@@ -50,6 +46,66 @@ class Gate extends Controller {
 		}
 	}
 
+	public function in_container($act,$id){
+		if (!$this->newsession->userdata('LOGGED')){
+			$this->index();
+			return;
+		}
+		$id = ($id!="")?$id:$this->input->post('id');
+		if($act=="add"){
+			$data['title'] = 'ENTRY GATE IN';
+			$data['id'] = '';
+			$data['action'] = 'save';
+			echo $this->load->view('content/gate/getin/gatein',$data,true);
+		}else if($act=="update"){
+			$this->newtable->breadcrumb('Home', site_url());
+			$this->newtable->breadcrumb('Kontainer', 'javascript:void(0)');
+			$this->newtable->breadcrumb('Gate In', site_url('gate/in_container'));
+			$this->newtable->breadcrumb('Update Get In Kontainer', 'javascript:void(0)');
+			$data['title'] = 'UPDATE GATE IN';
+			$data['id'] = $id;
+			$data['action'] = 'update';
+			$this->load->model("m_execute");
+			$data['arrdata'] = $this->m_execute->get_data('kapal', $id);
+			$this->content = $this->load->view('content/gate/getin/gatein',$data,true);
+			$this->index();
+			//print_r($data);
+		}else if($act=="detail"){
+			$this->newtable->breadcrumb('Home', site_url());
+			$this->newtable->breadcrumb('Kontainer', 'javascript:void(0)');
+			$this->newtable->breadcrumb('Gate In', site_url('gate/in_container'));
+			$this->newtable->breadcrumb('Detail', 'javascript:void(0)');
+			$data['title'] = 'DETAIL GATE IN';
+			$data['id'] = $id;
+			$this->load->model("m_execute");
+			$data['arrdata'] = $this->m_execute->get_data('kapal', $id);
+			$data['table_kontainer'] = $this->kontainer_masuk($act,$id);
+			$this->content = $this->load->view('content/gate/getin/kontainer-getein-detail',$data,true);
+			$this->index();
+			//print_r($id.'<br><br><br><br>'.$data);
+			
+		}else if($act=="upload"){
+			$this->newtable->breadcrumb('Home', site_url());
+			$this->newtable->breadcrumb('Kontainer', 'javascript:void(0)');
+			$this->newtable->breadcrumb('Gate In', site_url('gate/in_container'));
+			$this->newtable->breadcrumb('Upload', 'javascript:void(0)');
+			$data['title'] = 'UPLOAD GATE IN';
+			$data['id'] = '';
+			$data['action'] = 'save';
+			$this->content = $this->load->view('content/gate/getin/gatein-upload',$data,true);
+			$this->index();
+		}else{
+			$this->load->model("m_gate");
+			$arrdata = $this->m_gate->in_container($act, $id);
+			$data = $this->load->view('content/newtable', $arrdata, true);
+			if($this->input->post("ajax")||$act=="post"){
+				echo $arrdata;
+			}else{
+				$this->content = $data;
+				$this->index();
+			}
+		}
+	}
 
 	public function out_container($act,$id){
 		if (!$this->newsession->userdata('LOGGED')){
@@ -100,7 +156,7 @@ class Gate extends Controller {
 			return;
 		}
 		$id = ($id!="")?$id:$this->input->post('id');
-	if($act=="detail-kontainer"){	
+		if($act=="detail-kontainer"){	
 			$arrid = explode('~',$id);
 			$this->load->model('m_execute');
 			$data['title'] = 'DETAIL GATE OUT - KONTAINER';
@@ -117,8 +173,7 @@ class Gate extends Controller {
 			}	
 		}
 	}
-	
-	
+		
 	public function gateout_kontainer($act,$id){
 		if (!$this->newsession->userdata('LOGGED')){
 			$this->index();
@@ -194,66 +249,6 @@ class Gate extends Controller {
 		}
 	}
 	
-	public function in_container($act,$id){
-		if (!$this->newsession->userdata('LOGGED')){
-			$this->index();
-			return;
-		}
-		$id = ($id!="")?$id:$this->input->post('id');
-		if($act=="add"){
-			$data['title'] = 'ENTRY GATE IN';
-			$data['id'] = '';
-			$data['action'] = 'save';
-			echo $this->load->view('content/gate/getin/gatein',$data,true);
-		}else if($act=="update"){
-			$this->newtable->breadcrumb('Home', site_url());
-			$this->newtable->breadcrumb('Kontainer', 'javascript:void(0)');
-			$this->newtable->breadcrumb('Gate In', site_url('gate/in_container'));
-			$this->newtable->breadcrumb('Update Get In Kontainer', 'javascript:void(0)');
-			$data['title'] = 'UPDATE GATE IN';
-			$data['id'] = $id;
-			$data['action'] = 'update';
-			$this->load->model("m_execute");
-			$data['arrdata'] = $this->m_execute->get_data('kapal', $id);
-			$this->content = $this->load->view('content/gate/getin/gatein',$data,true);
-			$this->index();
-//print_r($data);
-		}else if($act=="detail"){
-			$this->newtable->breadcrumb('Home', site_url());
-			$this->newtable->breadcrumb('Kontainer', 'javascript:void(0)');
-			$this->newtable->breadcrumb('Gate In', site_url('gate/in_container'));
-			$this->newtable->breadcrumb('Detail', 'javascript:void(0)');
-			$data['title'] = 'DETAIL GATE IN';
-			$data['id'] = $id;
-			$this->load->model("m_execute");
-			$data['arrdata'] = $this->m_execute->get_data('kapal', $id);
-			$data['table_kontainer'] = $this->kontainer_masuk($act,$id);
-			$this->content = $this->load->view('content/gate/getin/kontainer-getein-detail',$data,true);
-			$this->index();
-			//print_r($id.'<br><br><br><br>'.$data);
-			
-		}else if($act=="upload"){
-			$this->newtable->breadcrumb('Home', site_url());
-			$this->newtable->breadcrumb('Kontainer', 'javascript:void(0)');
-			$this->newtable->breadcrumb('Gate In', site_url('gate/in_container'));
-			$this->newtable->breadcrumb('Upload', 'javascript:void(0)');
-			$data['title'] = 'UPLOAD GATE IN';
-			$data['id'] = '';
-			$data['action'] = 'save';
-			$this->content = $this->load->view('content/gate/getin/gatein-upload',$data,true);
-			$this->index();
-		}else{
-			$this->load->model("m_gate");
-			$arrdata = $this->m_gate->in_container($act, $id);
-			$data = $this->load->view('content/newtable', $arrdata, true);
-			if($this->input->post("ajax")||$act=="post"){
-				echo $arrdata;
-			}else{
-				$this->content = $data;
-				$this->index();
-			}
-		}
-	}
 	
 	public function gatein_kontainer($act,$id){
 		if (!$this->newsession->userdata('LOGGED')){
@@ -387,10 +382,4 @@ class Gate extends Controller {
 			}
 		}
 	}
-	
-	
-	
-
-
-
 }

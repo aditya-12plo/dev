@@ -18,7 +18,7 @@ function listdata($act, $id) {
     $addsql = '';
     if ($KD_GROUP == "USER") {
       $addsql .= " AND   A.KD_GUDANG_ASAL = " . $this->db->escape($KD_GUDANG);
-    }else if($KD_GROUP == "CONS"){
+    }else if($KD_GROUP == "FWD"){
       $addsql .= " AND A.ID_USER = '".$this->newsession->userdata('ID')."' ";
     }
   $SQL = "SELECT A.ID,A.NO_UBAH_STATUS,A.NO_UBAH_STATUS AS 'NO. UBAH STATUS' , 
@@ -26,7 +26,7 @@ function listdata($act, $id) {
           CONCAT('TPS ASAL : ',B.NAMA_TPS,'<BR>NAMA GUDANG : ',C.NAMA_GUDANG) AS 'TERMINAL',
           CONCAT('TPS TUJUAN : ',D.NAMA_TPS,'<BR>NAMA GUDANG : ',E.NAMA_GUDANG) AS 'WAREHOUSE',F.NM_LENGKAP AS 'NAMA PEMOHON',
           CONCAT('NAMA KAPAL : ',A.NAMA_KAPAL,'<BR>CALL SIGN : ',A.CALL_SIGN) AS 'NAMA KAPAL',
-          A.TGL_TIBA AS 'TGL. TIBA', CONCAT(G.NAMA,'<BR>',DATE_FORMAT(A.TGL_UBAH_STATUS,'%d-%m-%Y %H:%i:%s')) AS STATUS,A.NO_VOY_FLIGHT
+          A.TGL_TIBA AS 'TGL. TIBA', CONCAT(G.NAMA,'<BR>',DATE_FORMAT(A.TGL_UBAH_STATUS,'%d-%m-%Y %H:%i:%s')) AS STATUS,A.NO_VOY_FLIGHT AS 'NO. VOYAGE'
           FROM t_ubah_status A INNER JOIN reff_gudang C ON A.KD_GUDANG_ASAL=C.KD_GUDANG INNER JOIN reff_tps B ON C.KD_TPS=B.KD_TPS 
           INNER JOIN reff_gudang E ON A.KD_GUDANG_TUJUAN=E.KD_GUDANG INNER JOIN reff_tps D ON E.KD_TPS=D.KD_TPS INNER JOIN app_user F 
           ON A.ID_USER=F.ID
@@ -46,7 +46,7 @@ function listdata($act, $id) {
       if(!$check) $proses = '';
       $this->newtable->multiple_search(true);
       $this->newtable->show_search(true);
-      $this->newtable->search(array(array('NO_VOY_FLIGHT','NO. VOYAGE/FLIGHT'),array('TGL_TIBA','TGL. TIBA','DATERANGE')));
+      $this->newtable->search(array(array('NO_VOY_FLIGHT','NO. VOYAGE'),array('TGL_TIBA','TGL. TIBA','DATERANGE')));
       $this->newtable->action(site_url() . "/status/listdata");
       $this->newtable->detail(array('POPUP', "status/listdata/detail"));
       $this->newtable->tipe_proses('button');

@@ -1,4 +1,5 @@
 <?php
+
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
@@ -2651,11 +2652,12 @@ class M_execute extends Model {
                     //echo "MSG#ERR#Data gagal diproses#";
                 }
             }
-			else if ($act == "xml_impor_ubahstatus") {
+			
+			if ($act == "xml_impor_ubahstatus") {
 
                 $dirXML = "";
                     $SQL = "SELECT ID,NO_UBAH_STATUS,TGL_UBAH_STATUS 
-					FROM t_ubah_status WHERE KD_STATUS='0'";
+					FROM t_ubah_status WHERE KD_STATUS='1'";
                     $result = $func->main->get_result($SQL);
                     if ($result) {
                                 $str_xml = '<?xml version="1.0" encoding="utf-8"?>';
@@ -2677,11 +2679,10 @@ class M_execute extends Model {
                                 }
                                 $str_xml .= '</nctsmsg>';
                     }
-              //  echo $str_xml;
-               $this->load->helper('download');
+              # echo $str_xml;
+              $this->load->helper('download');
 force_download('ubahstatus.xml', $str_xml);
             }
-			
 			
         }
     }
@@ -2879,6 +2880,7 @@ force_download('ubahstatus.xml', $str_xml);
 					LEFT JOIN reff_kpbc C ON A.KD_KANTOR = C.ID
 					LEFT JOIN reff_kode_dok_bc D ON A.KD_DOK_INOUT = D.ID
 					WHERE A.ID = " . $this->db->escape($id);
+                    
             $result = $func->main->get_result($SQL);
             if ($result) {
                 foreach ($SQL->result_array() as $row => $value) {

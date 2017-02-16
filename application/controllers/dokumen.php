@@ -8,7 +8,7 @@ class Dokumen extends Controller {
 		$this->load->library('newtable_edit');
     }
 	
-		function index(){
+	function index(){
 		$add_header  = '<link rel="stylesheet" href="'.base_url().'assets/vendor/sweetalert/dist/sweetalert.css">';
 		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/app.min.css">';
 		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/bootstrap-extend.min.css">';
@@ -132,8 +132,8 @@ class Dokumen extends Controller {
 			echo $this->load->view('content/dokumen/kontainer-detail',$data,true);
 			//print_r($data['table_detail']);
 		}else{
-			$this->load->model("m_dokumen");
-			$arrdata = $this->m_dokumen->impor_kontainer($act, $id);
+			$this->load->model("m_dokumen");			
+			$arrdata = $this->m_dokumen->impor_kontainer($act, $id);			
 			$data = $this->load->view('content/newtable', $arrdata, true);
 			if($this->input->post("ajax")||$act=="post"){
 				echo $arrdata;

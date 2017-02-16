@@ -99,10 +99,10 @@
                     </div>
                   </div>
                   <div class="form-group form-material">
-                    <label class="col-sm-3 control-label">VOYAGE/FLIGHT</label>
+                    <label class="col-sm-3 control-label">VOYAGE</label>
                     <div class="col-sm-9">
                       <input type="text" class="form-control focus" value="<?php echo $arrdata['NO_VOY_FLIGHT']; ?>" readonly="readonly">
-                      <div class="hint">VOYAGE/FLIGHT</div>
+                      <div class="hint">NOMOR VOYAGE</div>
                     </div>
                   </div>
                   <div class="form-group form-material">

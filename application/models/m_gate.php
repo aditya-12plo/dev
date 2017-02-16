@@ -2,8 +2,8 @@
 
 class M_gate extends Model{
 
-/*
-public function gateout($act, $id){
+	/*
+	public function gateout($act, $id){
 		$page_title = "GATE OUT";
 		$title = "GATE OUT";
 		$KD_TPS = $this->newsession->userdata('KD_TPS');
@@ -84,7 +84,7 @@ public function gateout($act, $id){
 			$addsql .= " AND A.TGL_TIBA >= DATE_ADD(CURDATE(), INTERVAL -7 DAY)";
 		}
 		$SQL = "SELECT A.NO_CONT AS 'NO KONTAINER', DATE_FORMAT(IFNULL(A.WK_OUT,'-'),'%d-%m-%Y %H:%i:%s') AS 'GATE OUT',B.NO_BC11 AS 'NO BC11',B.TGL_BC11 AS 'TGL BC 11',B.NM_ANGKUT AS 'NAMA KAPAL',
-				B.NO_VOY_FLIGHT AS 'NO VOYAGE/FLIGHT', DATE_FORMAT(B.TGL_TIBA,'%d-%m-%Y') AS 'TGL TIBA',
+				B.NO_VOY_FLIGHT AS 'NO VOYAGE', DATE_FORMAT(B.TGL_TIBA,'%d-%m-%Y') AS 'TGL TIBA',
 				A.NO_CONT
 				FROM t_cocostscont A LEFT JOIN t_cocostshdr B ON A.ID=B.ID 
 				WHERE A.WK_IN IS NOT NULL AND A.WK_OUT IS NOT NULL";
@@ -266,7 +266,10 @@ public function gateout($act, $id){
 	*/
 	public function gateout_kemasan($act,$id){
 		$page_title = "GATE OUT - KEMASAN";
-		$title = "";
+		$title = "GATE OUT";
+		$this->newtable->breadcrumb('Home', site_url(),'');
+		$this->newtable->breadcrumb('Kemasan', site_url('gate/out_kemasan'),'');
+		$this->newtable->breadcrumb('Gate Out', 'javascript:void(0)','');
 		$KD_TPS = $this->newsession->userdata('KD_TPS');
 		$KD_GUDANG = $this->newsession->userdata('KD_GUDANG');
 		$check = (grant()=="W")?true:false;
@@ -277,11 +280,10 @@ public function gateout($act, $id){
 			$addsql .= " AND A.WK_OUT >= DATE_ADD(CURDATE(), INTERVAL -7 DAY)";
 		}
 		$SQL = "SELECT A.NO_BL_AWB AS 'NO BL',A.JUMLAH AS 'JUMLAH KEMASAN',B.NAMA AS 'JENIS KEMASAN',
-				A.NO_CONT_ASAL AS 'KONTAINER ASAL',C.NM_ANGKUT AS 'NAMA KAPAL',C.NO_VOY_FLIGHT AS 'NO VOYAGE/FLIGHT',
-				CONCAT('GATE IN : ',DATE_FORMAT(IFNULL(A.WK_IN,'-'),'%d-%m-%Y %H:%i:%s'),'<BR>TGL TIBA : ',DATE_FORMAT(IFNULL(C.TGL_TIBA,'-'),'%d-%m-%Y')) AS 'GATE IN',
-				A.NO_BL_AWB,A.NO_MASTER_BL_AWB
-		FROM t_cocostskms A LEFT JOIN reff_kemasan B ON A.KD_KEMASAN=B.ID LEFT JOIN t_cocostshdr C ON A.ID=C.ID
-		WHERE A.WK_IN IS NOT NULL AND A.WK_OUT IS NULL";
+				A.NO_CONT_ASAL AS 'KONTAINER ASAL',C.NM_ANGKUT AS 'NAMA KAPAL',C.NO_VOY_FLIGHT AS 'NO VOYAGE',
+				CONCAT('GATE OUT : ',DATE_FORMAT(IFNULL(A.WK_OUT,'-'),'%d-%m-%Y %H:%i:%s'),'<BR>TGL TIBA : ',DATE_FORMAT(IFNULL(C.TGL_TIBA,'-'),'%d-%m-%Y')) AS 'GATE OUT',CONCAT('NAMA TPS : ',D.NAMA_TPS,'<BR>NAMA GUDANG : ',E.NAMA_GUDANG) AS 'LOKASI TIMBUN',A.NO_BL_AWB,A.NO_MASTER_BL_AWB
+		FROM t_cocostskms A LEFT JOIN reff_kemasan B ON A.KD_KEMASAN=B.ID LEFT JOIN t_cocostshdr C ON A.ID=C.ID INNER JOIN reff_gudang E ON A.KD_GUDANG_TUJUAN=E.KD_GUDANG INNER JOIN reff_tps D ON E.KD_TPS=D.KD_TPS
+		WHERE A.WK_IN IS NOT NULL AND A.WK_OUT IS NOT NULL";
 		$this->newtable->show_chk(FALSE);
 		#$this->newtable->show_menu($check);
 		$this->newtable->multiple_search(true);
@@ -301,7 +303,7 @@ public function gateout($act, $id){
 		$this->newtable->clear();
 		$this->newtable->menu($proses);
 		$tabel .= $this->newtable->generate($SQL);
-		$arrdata = array("title" => $judul, "content" => $tabel);
+		$arrdata = array("title" => $title, "content" => $tabel);
 		if($this->input->post("ajax")||$act=="post")
 			echo $tabel;
 		else
@@ -398,7 +400,7 @@ public function gateout($act, $id){
 
 		$SQL = "SELECT A.NO_CONT AS 'NO KONTAINER', DATE_FORMAT(IFNULL(A.WK_IN,'-'),'%d-%m-%Y %H:%i:%s') AS 'GATE IN',
 				B.NO_BC11 AS 'NO BC11',B.TGL_BC11 AS 'TGL BC 11',B.NM_ANGKUT AS 'NAMA KAPAL',
-				B.NO_VOY_FLIGHT AS 'NO VOYAGE/FLIGHT', DATE_FORMAT(B.TGL_TIBA,'%d-%m-%Y') AS 'TGL TIBA',
+				B.NO_VOY_FLIGHT AS 'NO VOYAGE', DATE_FORMAT(B.TGL_TIBA,'%d-%m-%Y') AS 'TGL TIBA',
 				A.NO_CONT
 				FROM t_cocostscont A LEFT JOIN t_cocostshdr B ON A.ID=B.ID WHERE A.WK_IN IS NOT NULL AND A.WK_OUT IS NULL";
 				//WHERE A.KD_ASAL_BRG = '3'".$addsql;
@@ -587,7 +589,10 @@ public function gateout($act, $id){
 	}*/
 	public function gatein_kemasan($act,$id){
 		$page_title = "GATE IN - KEMASAN";
-		$title = "";
+		$title = "GATE IN";
+		$this->newtable->breadcrumb('Home', site_url(),'');
+		$this->newtable->breadcrumb('Kemasan', site_url('gate/in_kemasan'),'');
+		$this->newtable->breadcrumb('Gate In', 'javascript:void(0)','');
 		$KD_TPS = $this->newsession->userdata('KD_TPS');
 		$KD_GUDANG = $this->newsession->userdata('KD_GUDANG');
 		$check = (grant()=="W")?true:false;
@@ -598,10 +603,9 @@ public function gateout($act, $id){
 			$addsql .= " AND A.WK_IN >= DATE_ADD(CURDATE(), INTERVAL -7 DAY)";
 		}
 		$SQL = "SELECT A.NO_BL_AWB AS 'NO BL',A.JUMLAH AS 'JUMLAH KEMASAN',B.NAMA AS 'JENIS KEMASAN',
-				A.NO_CONT_ASAL AS 'KONTAINER ASAL',C.NM_ANGKUT AS 'NAMA KAPAL',C.NO_VOY_FLIGHT AS 'NO VOYAGE/FLIGHT',
-				CONCAT('GATE IN : ',DATE_FORMAT(IFNULL(A.WK_IN,'-'),'%d-%m-%Y %H:%i:%s'),'<BR>TGL TIBA : ',DATE_FORMAT(IFNULL(C.TGL_TIBA,'-'),'%d-%m-%Y')) AS 'GATE IN',
-				A.NO_BL_AWB,A.NO_MASTER_BL_AWB
-		FROM t_cocostskms A LEFT JOIN reff_kemasan B ON A.KD_KEMASAN=B.ID LEFT JOIN t_cocostshdr C ON A.ID=C.ID
+				A.NO_CONT_ASAL AS 'KONTAINER ASAL',C.NM_ANGKUT AS 'NAMA KAPAL',C.NO_VOY_FLIGHT AS 'NO VOYAGE',
+				CONCAT('GATE IN : ',DATE_FORMAT(IFNULL(A.WK_IN,'-'),'%d-%m-%Y %H:%i:%s'),'<BR>TGL TIBA : ',DATE_FORMAT(IFNULL(C.TGL_TIBA,'-'),'%d-%m-%Y')) AS 'GATE IN',CONCAT('NAMA TPS : ',D.NAMA_TPS,'<BR>NAMA GUDANG : ',E.NAMA_GUDANG) AS 'LOKASI TIMBUN',A.NO_BL_AWB,A.NO_MASTER_BL_AWB
+		FROM t_cocostskms A LEFT JOIN reff_kemasan B ON A.KD_KEMASAN=B.ID LEFT JOIN t_cocostshdr C ON A.ID=C.ID INNER JOIN reff_gudang E ON A.KD_GUDANG_TUJUAN=E.KD_GUDANG INNER JOIN reff_tps D ON E.KD_TPS=D.KD_TPS
 		WHERE A.WK_IN IS NOT NULL AND A.WK_OUT IS NULL";
 				#WHERE A.ID = ".$this->db->escape($id).$addsql;
 		
@@ -624,13 +628,10 @@ public function gateout($act, $id){
 		$this->newtable->clear();
 		$this->newtable->menu($proses);
 		$tabel .= $this->newtable->generate($SQL);
-		$arrdata = array("title" => $judul, "content" => $tabel);
+		$arrdata = array("title" => $title, "content" => $tabel);
 		if($this->input->post("ajax")||$act=="post")
 			echo $tabel;
 		else
 			return $arrdata;
 	}
-
-
-
 }

@@ -28,7 +28,7 @@ class M_plp extends Model{
 		}
 		$SQL = "SELECT IFNULL(A.REF_NUMBER,'-') AS 'REF NUMBER',
 				CONCAT('NO. : ',IFNULL(A.NO_SURAT,'-'),'<BR>TGL. : ',IFNULL(DATE_FORMAT(A.TGL_SURAT,'%d-%m-%Y'),'-')) AS 'SURAT PLP',
-				A.NM_ANGKUT AS 'NAMA ANGKUT', A.NO_VOY_FLIGHT AS 'VOYAGE/FLIGHT', DATE_FORMAT(A.TGL_TIBA,'%d-%m-%Y') AS 'TGL. TIBA',
+				A.NM_ANGKUT AS 'NAMA ANGKUT', A.NO_VOY_FLIGHT AS 'NO VOYAGE', DATE_FORMAT(A.TGL_TIBA,'%d-%m-%Y') AS 'TGL. TIBA',
 				CONCAT('NO. : ',A.NO_BC11,'<BR>TGL. : ',DATE_FORMAT(A.TGL_BC11,'%d-%m-%Y')) AS BC11,
 				CONCAT('YOR ASAL : ',IFNULL(A.YOR_ASAL,'-'),'<BR> YOR TUJUAN : ',IFNULL(A.YOR_TUJUAN,'-')) AS 'YOR', 
 				CONCAT('TPS : ',A.KD_TPS_TUJUAN,'<BR>GUDANG : ',A.KD_GUDANG_TUJUAN) AS 'GUDANG TUJUAN', 
@@ -38,17 +38,14 @@ class M_plp extends Model{
 				LEFT JOIN reff_kapal B ON B.ID=A.KD_KAPAL
 				LEFT JOIN reff_status C ON C.ID=A.KD_STATUS AND C.KD_TIPE_STATUS='PLPAJU'
 				WHERE 1=1".$addsql;
-		/*
-		$proses = array('ENTRY'	  => array('MODAL',"plp/pengajuan_discharge", '','','glyphicon glyphicon-plus-sign'),
-						'UPDATE'  => array('GET',site_url()."/plp/pengajuan_plp/update", '1','100:500','glyphicon glyphicon-edit'),
-						'DELETE'  => array('DELETE',"execute/process/delete/pengajuan_plp", '1','100','glyphicon glyphicon-remove-circle'),
-						'PROCESS' => array('POST',"execute/process/update/send_pengajuan_plp", '1','100','glyphicon glyphicon-send'),
-						'DETAIL'  => array('MODAL',"plp/pengajuan_plp/detail", '1','','glyphicon glyphicon-zoom-in'));
-	*/
+		
+		$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
+						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
+	
 		$this->newtable->multiple_search(true);
-		#$this->newtable->show_chk($check);
-		$this->newtable->show_chk(false);
-		#$this->newtable->show_menu($check);
+		$this->newtable->show_chk($check);
+		$this->newtable->show_chk(true);
+		$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_SURAT','NO. SURAT'),array('A.REF_NUMBER','REF NUMBER'),array('A.NM_ANGKUT','NAMA ANGKUT'),array('A.TGL_TIBA','TGL. TIBA','DATERANGE')));
 		$this->newtable->action(site_url() . "/plp/pengajuan_plp");
@@ -93,10 +90,12 @@ class M_plp extends Model{
 				LEFT JOIN reff_gudang B ON A.KD_TPS = B.KD_TPS AND A.KD_GUDANG = B.KD_GUDANG 
 				LEFT JOIN reff_kapal C ON A.KD_KAPAL = C.ID
 				WHERE A.KD_ASAL_BRG = '1'".$addsql;
-	#	$proses = array('SELECT'  => array('GET',site_url()."/plp/pengajuan_plp/add", '1','','md-check-circle','1'));
-		#$this->newtable->show_chk($check);
-		$this->newtable->show_chk(false);
-		#$this->newtable->show_menu($check);
+$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
+						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
+	
+		$this->newtable->show_chk($check);
+		$this->newtable->show_chk(true);
+		$this->newtable->show_menu($check);
 		$this->newtable->multiple_search(true);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_BC11','NO. BC11'),array('C.NAMA','NAMA ANGKUT'),array('A.TGL_TIBA','TGL. TIBA','DATERANGE')));
@@ -192,11 +191,13 @@ class M_plp extends Model{
 				LEFT JOIN reff_status D ON D.ID=C.KD_STATUS AND D.KD_TIPE_STATUS='PLPRESDTL'
 				WHERE A.ID = ".$this->db->escape($arrid[1]);
 		#echo $SQL; 
-	#	$proses = array('PRINT' => array('PRINT',"plp/pengajuan_plp/print", '1','','md-print'));
-		$this->newtable->multiple_search(false);
-		$this->newtable->show_chk(false);
-		#$this->newtable->show_chk($check);
-		#$this->newtable->show_menu($check);
+	$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
+						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
+	
+		$this->newtable->multiple_search(true);
+		$this->newtable->show_chk(true);
+		$this->newtable->show_chk($check);
+		$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_CONT','KONTAINER')));
 		$this->newtable->action(site_url() . "/plp/pengajuan_plp_kontainer/".$act."/".$id);
@@ -237,14 +238,14 @@ class M_plp extends Model{
 				FROM t_respon_plp_asal_hdr A
 				LEFT JOIN reff_status B ON B.ID=A.KD_STATUS AND B.KD_TIPE_STATUS='PLPRES'
 				WHERE 1=1".$addsql;
-	/*
-		$proses = array('DETAIL'  => array('MODAL',"plp/pengajuan_respon/detail", '1','','glyphicon glyphicon-zoom-in'),
-						'PRINT'   => array('PRINT',"plp/pengajuan_plp/print", '1','','md-print'));
-	*/
+					
+	$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
+						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
+	
 		$this->newtable->multiple_search(true);
-		$this->newtable->show_chk(false);
-		#$this->newtable->show_chk($check);
-		#$this->newtable->show_menu($check);
+		$this->newtable->show_chk(true);
+		$this->newtable->show_chk($check);
+		$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_PLP','NO. PLP'),array('A.TGL_PLP','TGL. PLP','DATERANGE'),array('A.REF_NUMBER','REF NUMBER')));
 		$this->newtable->action(site_url() . "/plp/pengajuan_respon");
@@ -275,17 +276,19 @@ class M_plp extends Model{
 		$KD_TPS = $this->newsession->userdata('KD_TPS');
 		$KD_GUDANG = $this->newsession->userdata('KD_GUDANG');
 		$KD_GROUP = $this->newsession->userdata('KD_GROUP');
-		$check = false;
+		$check = (grant()=="W")?true:false;
 		$SQL = "SELECT A.NO_CONT AS 'NO. KONTAINER', func_name(IFNULL(A.KD_CONT_UKURAN,'-'),'CONT_UKURAN') AS UKURAN, 
 				func_name(IFNULL(A.KD_CONT_JENIS,'-'),'CONT_JENIS') AS JENIS, B.NAMA AS STATUS
 				FROM t_respon_plp_asal_cont A
 				LEFT JOIN reff_status B ON B.ID=A.KD_STATUS AND B.KD_TIPE_STATUS='PLPRESDTL'
 				WHERE A.ID = ".$this->db->escape($id);
-		$proses = array('' => array("","", '','','glyphicon glyphicon-zoom-in'));
+		$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
+						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
+	
 		$this->newtable->multiple_search(false);
-		$this->newtable->show_chk(false);
-		#$this->newtable->show_chk($check);
-		#$this->newtable->show_menu($check);
+		$this->newtable->show_chk(true);
+		$this->newtable->show_chk($check);
+		$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_CONT','KONTAINER')));
 		$this->newtable->action(site_url() . "/plp/pengajuan_respon_plp_kontainer/".$act."/".$id);
@@ -329,17 +332,13 @@ class M_plp extends Model{
 				INNER JOIN t_respon_plp_asal_hdr B ON B.ID=A.KD_RESPON_PLP_ASAL
 				LEFT JOIN reff_status C ON C.ID=A.KD_STATUS AND C.KD_TIPE_STATUS='BTLPLP'
 				WHERE 1=1".$addsql;
-		/*
-		$proses = array('ENTRY'	  => array('MODAL',"plp/pembatalan_respon_plp", '','','glyphicon glyphicon-plus-sign'),
-						'UPDATE'  => array('GET',site_url()."/plp/pembatalan_plp/update", '1','100','glyphicon glyphicon-edit'),
-						'DELETE'  => array('DELETE',"execute/process/delete/pembatalan_plp", '1','100','glyphicon glyphicon-remove-circle'),
-						'PROCESS' => array('POST',"execute/process/update/send_pembatalan_plp", '1','100','glyphicon glyphicon-send'),
-						'DETAIL'  => array('MODAL',"plp/pembatalan_plp/detail", '1','','glyphicon glyphicon-zoom-in'));
-		*/
+		$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
+						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
+	
 		$this->newtable->multiple_search(true);
-		$this->newtable->show_chk(false);
-		#$this->newtable->show_chk($check);
-		#$this->newtable->show_menu($check);
+		$this->newtable->show_chk(true);
+		$this->newtable->show_chk($check);
+		$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_SURAT','NO. SURAT'),array('A.TGL_SURAT','TGL. SURAT','DATERANGE')));
 		$this->newtable->action(site_url() . "/plp/pembatalan_plp");
@@ -382,10 +381,11 @@ class M_plp extends Model{
 				FROM t_respon_plp_asal_hdr A
 				LEFT JOIN reff_status B ON B.ID=A.KD_STATUS AND B.KD_TIPE_STATUS='PLPRES'
 				WHERE 1=1".$addsql;
-		#$proses = array('SELECT'  => array('GET',site_url()."/plp/pembatalan_plp/add", '1','','md-check-circle','1'));
-		$this->newtable->show_chk(false);
-		#$this->newtable->show_chk($check);
-		#$this->newtable->show_menu($check);
+		$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
+						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
+		$this->newtable->show_chk(true);
+		$this->newtable->show_chk($check);
+		$this->newtable->show_menu($check);
 		$this->newtable->multiple_search(true);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_PLP','NO. PLP'),array('A.TGL_PLP','TGL. PLP','DATERANGE')));
@@ -426,9 +426,10 @@ class M_plp extends Model{
 						   INNER JOIN t_request_batal_plp_hdr Y ON Y.ID=X.ID
 						   WHERE X.ID = ".$this->db->escape($arrid[1]).") B ON B.KD_RESPON_PLP_ASAL=A.ID AND B.NO_CONT=A.NO_CONT
 				WHERE A.ID = ".$this->db->escape($arrid[0]);
-		$proses = array('' => array('','', '1','',''));
+		$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
+						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
 		$this->newtable->multiple_search(false);
-		$this->newtable->show_chk(false);
+		$this->newtable->show_chk(true);
 		$this->newtable->checked(array("NO_CONT_BATAL"));
 		$this->newtable->show_menu(false);
 		$this->newtable->show_search(true);
@@ -460,7 +461,7 @@ class M_plp extends Model{
 		$KD_TPS = $this->newsession->userdata('KD_TPS');
 		$KD_GUDANG = $this->newsession->userdata('KD_GUDANG');
 		$KD_GROUP = $this->newsession->userdata('KD_GROUP');
-		$check = false;
+		$check = (grant()=="W")?true:false;
 		$arrid = explode("~",$id);
 		$SQL = "SELECT B.REF_NUMBER AS 'REF NUMBER',
 				CONCAT('NO. KONTAINER : ',IFNULL(A.NO_CONT,'-'),'<BR>UKURAN : ', func_name(IFNULL(A.KD_CONT_UKURAN,'-'),'CONT_UKURAN')) 
@@ -477,11 +478,13 @@ class M_plp extends Model{
 				) C ON C.REF_NUMBER=B.REF_NUMBER AND A.NO_CONT=C.NO_CONT
 				LEFT JOIN reff_status D ON D.ID=C.KD_STATUS AND D.KD_TIPE_STATUS='PLPRESDTL'
 				WHERE A.ID = ".$this->db->escape($arrid[1]);
-		$proses = array('' => array("","", '','','glyphicon glyphicon-zoom-in'));
+		$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
+						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
+	
 		$this->newtable->multiple_search(false);
-		$this->newtable->show_chk(false);
-		#$this->newtable->show_chk($check);
-		#$this->newtable->show_menu($check);
+		$this->newtable->show_chk(true);
+		$this->newtable->show_chk($check);
+		$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_CONT','KONTAINER')));
 		$this->newtable->action(site_url() . "/plp/pembatalan_plp_kontainer/".$act."/".$id);
@@ -521,11 +524,11 @@ class M_plp extends Model{
 				FROM t_respon_batal_plp_asal_hdr A
 				LEFT JOIN reff_status B ON B.ID=A.KD_STATUS AND B.KD_TIPE_STATUS='BTLRES'
 				WHERE 1=1".$addsql;
-		#$proses = array('DETAIL'  => array('MODAL',"plp/pembatalan_respon/detail", '1','','glyphicon glyphicon-zoom-in'));
-		$this->newtable->multiple_search(true);
-		$this->newtable->show_chk(false);
-		#$this->newtable->show_chk($check);
-		#$this->newtable->show_menu($check);
+		$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
+						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));$this->newtable->multiple_search(true);
+		$this->newtable->show_chk(true);
+		$this->newtable->show_chk($check);
+		$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_BATAL_PLP','NO. PEMBATALAN PLP'),array('A.TGL_BATAL_PLP','TGL. PEMBATALAN PLP','DATERANGE')));
 		$this->newtable->action(site_url() . "/plp/pembatalan_respon");
@@ -556,16 +559,17 @@ class M_plp extends Model{
 		$KD_TPS = $this->newsession->userdata('KD_TPS');
 		$KD_GUDANG = $this->newsession->userdata('KD_GUDANG');
 		$KD_GROUP = $this->newsession->userdata('KD_GROUP');
-		$check = false;
+		$check = (grant()=="W")?true:false;
 		$SQL = "SELECT A.NO_CONT AS 'NO. KONTAINER', func_name(IFNULL(A.KD_CONT_UKURAN,'-'),'CONT_UKURAN') AS UKURAN, 
 				func_name(IFNULL(A.KD_CONT_JENIS,'-'),'CONT_JENIS') AS JENIS 
 				FROM t_respon_batal_plp_asal_cont A
 				WHERE A.ID = ".$this->db->escape($id);
-		$proses = array('' => array("","", '','','glyphicon glyphicon-zoom-in'));
+		$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
+						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
 		$this->newtable->multiple_search(false);
-		$this->newtable->show_chk(false);
-		#$this->newtable->show_chk($check);
-		#$this->newtable->show_menu($check);
+		$this->newtable->show_chk(true);
+		$this->newtable->show_chk($check);
+		$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_CONT','KONTAINER')));
 		$this->newtable->action(site_url() . "/plp/pembatalan_respon_kontainer/".$act."/".$id);
@@ -805,8 +809,9 @@ function res_plp_asal($act,$id){
 				FROM t_respon_plp_asal_hdr A
 				LEFT JOIN reff_status B ON B.ID=A.KD_STATUS AND B.KD_TIPE_STATUS='PLPRES'
 				WHERE 1=1".$addsql;
-		#$proses = array('SELECT'  => array('GET',site_url()."/plp/pengajuan/add", '1','','icon-check','','1'));
-		$this->newtable->show_chk(false);
+$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
+						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
+		$this->newtable->show_chk(true);
 		$this->newtable->multiple_search(true);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_PLP','NO. PLP'),array('A.TGL_PLP','TGL. PLP','DATERANGE')));
@@ -848,8 +853,9 @@ function res_batal_plp_asal($act,$id){
 				FROM t_respon_batal_plp_asal_hdr A 
 				LEFT JOIN reff_status B ON B.ID=A.KD_STATUS AND B.KD_TIPE_STATUS='BTLRES'
 				WHERE 1=1".$addsql;
-		#$proses = array('SELECT'  => array('GET',site_url()."/plp/pengajuan/add", '1','','icon-check','','1'));
-		$this->newtable->show_chk(false);
+		$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
+						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
+		$this->newtable->show_chk(true);
 		$this->newtable->multiple_search(true);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_BATAL_PLP','NO. PLP'),array('A.TGL_BATAL_PLP','TGL. PLP','DATERANGE')));
@@ -895,8 +901,9 @@ function res_plp_tujuan($act,$id){
 				FROM t_respon_plp_tujuan_v2_hdr A 
 				LEFT JOIN reff_status B ON B.ID=A.KD_STATUS AND B.KD_TIPE_STATUS='PLPTUJ'
 				WHERE 1=1".$addsql;
-		#$proses = array('SELECT'  => array('GET',site_url()."/plp/pengajuan/add", '1','','icon-check','','1'));
-		$this->newtable->show_chk(false);
+		$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
+						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
+		$this->newtable->show_chk(true);
 		$this->newtable->multiple_search(true);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_PLP','NO. PLP'),array('A.TGL_PLP','TGL. PLP','DATERANGE')));
@@ -940,8 +947,9 @@ function res_batal_plp_tujuan($act,$id){
 				FROM t_respon_batal_plp_tujuan_hdr A 
 				LEFT JOIN reff_status B ON B.ID=A.KD_STATUS AND B.KD_TIPE_STATUS='BTLTUJ'
 				WHERE 1=1".$addsql;
-		#$proses = array('SELECT'  => array('GET',site_url()."/plp/pengajuan/add", '1','','icon-check','','1'));
-		$this->newtable->show_chk(false);
+		$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
+						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
+		$this->newtable->show_chk(true);
 		$this->newtable->multiple_search(true);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_BATAL_PLP','NO. PLP'),array('A.TGL_BATAL_PLP','TGL. PLP','DATERANGE')));
@@ -975,7 +983,9 @@ function v_res_plp_tujuan_kms($act,$id){
 				A.ID, A.KD_KEMASAN, A.NO_BL_AWB, A.TGL_BL_AWB, A.JML_KMS
 				FROM t_respon_plp_tujuan_v2_kms A
 				WHERE A.ID = ".$this->db->escape($arrid[0]);
-		$this->newtable->show_chk(false);
+				$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
+						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
+		$this->newtable->show_chk(true);
 		$this->newtable->multiple_search(false);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.KD_KEMASAN', 'KODE KEMASAN'),array('A.NO_BL_AWB', 'NO. BL/AWB')));
@@ -1620,7 +1630,9 @@ function execute($type, $act, $id){
 				A.ID, A.KD_KEMASAN, A.NO_BL_AWB, A.TGL_BL_AWB, A.JML_KMS
 				FROM t_respon_batal_plp_tujuan_kms A
 				WHERE A.ID = ".$this->db->escape($arrid[0]);
-		$this->newtable->show_chk(false);
+				$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
+						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
+		$this->newtable->show_chk(true);
 		$this->newtable->multiple_search(false);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.KD_KEMASAN', 'KODE KEMASAN'),array('A.NO_BL_AWB', 'NO. BL/AWB')));
@@ -1652,7 +1664,9 @@ function v_res_batal_plp_asal_kms($act, $id){
 				A.ID, A.KD_KEMASAN, A.NO_BL_AWB, A.TGL_BL_AWB, A.JML_KMS
 				FROM t_respon_batal_plp_asal_kms A
 				WHERE A.ID = ".$this->db->escape($arrid[0]);
-		$this->newtable->show_chk(false);
+				$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
+						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
+		$this->newtable->show_chk(true);
 		$this->newtable->multiple_search(false);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.KD_KEMASAN', 'KODE KEMASAN'),array('A.NO_BL_AWB', 'NO. BL/AWB')));

@@ -4,13 +4,13 @@ class Tracking extends Controller {
     var $content = "";
     function Tracking() {
        parent::Controller();
-       $this->load->library('newtable_edit');
+      
     }
-
+	
 	function index(){
-
 		$add_header  = '<link rel="stylesheet" href="'.base_url().'assets/vendor/sweetalert/dist/sweetalert.css">';
 		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/app.min.css">';
+		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/bootstrap-extend.min.css">';
 		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/newtable.css">';
 		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/vendor/themes/twitter/twitter.css">';
 		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/jquery-ui.css">';
@@ -46,44 +46,70 @@ class Tracking extends Controller {
 			redirect(base_url('index.php'),'refresh');
 		}
 	}
+	
 
-function cek($act="",$id=""){
+/*
+	public function cek($id){
 		if (!$this->newsession->userdata('LOGGED')){
 			$this->index();
 			return;
 		}
-		$id = ($id!="")?$id:$this->input->post('id');
-		$this->load->model("m_tracking");
-		if($act=="detail"){ //print_r($act);die();
-			$arrid = explode("~",$id);//print_r($arrid);die();
-			$data['title'] = 'DATA DETAIL';//$data['arrdata'] = $arrid;$data['idaja'] = $arrid[0];
-			$data['arrdata'] = $this->m_tracking->execute('get','t_cocostskms',$id);
-			echo $this->load->view('content/tracking/detail',$data,true);
-		}else{
-			$arrdata = $this->m_tracking->cek($act, $id);
-			$data = $this->load->view('content/newtable', $arrdata, true);
-			if($this->input->post("ajax")||$act=="post"){
-				echo $arrdata;
-			}else{
-				$this->content = $data;
-				$this->index();
-			}
-		}
+$id = ($id!="")?$id:$this->input->post('NO_BL_AWB');
+$this->newtable->breadcrumb('Dashboard', site_url());
+$this->newtable->breadcrumb('Tracking', 'javascript:void(0)');
+$data['page_title'] = 'Tracking';
+if(!$id)
+{
+$this->load->model("m_tracking");
+$arrhdr = $this->m_tracking->execute('get','t_cocostscont',$id);
+if(!$arrhdr)
+{
+	$this->session->set_flashdata('error', 'NO BL/AWB Yang Anda Masukan Tidak Terdaftar');
+	$this->content = $this->load->view('content/tracking/index',$data,true);
+}
+else
+{
+$this->content = $this->load->view('content/tracking/detail',$data,true);
+}
+}
+else
+{
+$this->content = $this->load->view('content/tracking/index',$data,true);
+}
+					$this->index();
+			
 	}
 
-	function execute($type="",$act="", $id=""){
-		if (!$this->newsession->userdata('LOGGED')) {
+*/	
+
+
+	public function cek($act,$id){
+		if (!$this->newsession->userdata('LOGGED')){
 			$this->index();
 			return;
-		}else{
-			if (strtolower($_SERVER['REQUEST_METHOD']) != "post") {
-				redirect(base_url());
-				exit();
-			}
-			else{
-				$this->load->model("m_status");
-				$this->m_status->execute($type,$act,$id);
-			}
 		}
+		$id = ($id!="")?$id:$this->input->post('NO_BL_AWB');
+		$this->load->model("m_tracking");
+		if($act=='detail')
+		{
+			$this->newtable->breadcrumb('Dashboard', site_url());
+			$this->newtable->breadcrumb('Tracking',  site_url('tracking/cek'));
+			$this->newtable->breadcrumb('Detail', 'javascript:void(0)');
+			$data['page_title'] = 'Tracking';
+			$data['arrhdr'] = $this->m_tracking->execute('get','t_cocostskms',$id);
+			//$data['contennya'] = $this->load->view('content/tracking/detail');
+			echo $this->load->view('content/tracking/detail',$data,true);
+			//$this->index();
+			//print_r($data['arrhdr']);
+		}
+		else
+		{
+			$this->newtable->breadcrumb('Dashboard', site_url());
+			$this->newtable->breadcrumb('Tracking', 'javascript:void(0)');
+			$data['page_title'] = 'Tracking';
+			$this->content = $this->load->view('content/tracking/index',$data,true);
+			$this->index();
+		}		
 	}
+
 }

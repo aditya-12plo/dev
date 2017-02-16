@@ -39,7 +39,7 @@
                 <label class="col-sm-2 control-label"><strong>NAMA KAPAL</strong></label>
                 <div class="col-sm-4">
                  <?php echo $arrhdr['NAMA_KAPAL'];?>
-                </div><label class="col-sm-2 control-label"><strong>NO. VOY FILGHT</strong></label>
+                </div><label class="col-sm-2 control-label"><strong>NO. VOYAGE</strong></label>
                 <div class="col-sm-4">
                  <?php echo $arrhdr['NO_VOY_FLIGHT'];?>
                 </div></div><div class="form-group form-material col-sm-12">

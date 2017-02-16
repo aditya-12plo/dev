@@ -76,15 +76,16 @@ class M_dokumen extends Model {
 		if($KD_GROUP!="SPA"){
 			$addsql .= " AND A.KD_GUDANG = ".$this->db->escape($KD_GUDANG);
 		}
+
 		$SQL = "SELECT B.NAMA AS 'JENIS DOKUMEN', CONCAT('NO. : ',IFNULL(A.NO_DOK_INOUT,'-'),
 				'<BR>TGL. : ',IFNULL(DATE_FORMAT(A.TGL_DOK_INOUT,'%d-%m-%Y'),'-')) AS DOKUMEN,
 				CONCAT('NO. : ',IFNULL(A.NO_DAFTAR_PABEAN,'-'),
 				'<BR>TGL. : ',IFNULL(DATE_FORMAT(A.TGL_DAFTAR_PABEAN,'%d-%m-%Y'),'-')) AS 'DAFTAR PABEAN',
-				A.NO_VOY_FLIGHT AS 'NO. VOYAGE/FLIGHT', A.NM_ANGKUT AS 'NAMA ANGKUT',
+				A.NO_VOY_FLIGHT AS 'NO. VOYAGE', A.NM_ANGKUT AS 'NAMA ANGKUT',
 				CONCAT('<center>',A.JML_CONT,'</center>') AS 'JUMLAH', A.TGL_STATUS, A.ID
-				FROM t_permit_hdr A INNER JOIN reff_kode_dok_bc B ON B.ID=A.KD_DOK_INOUT".$addsql;
-				#INNER JOIN reff_kode_dok_bc B ON B.ID=A.KD_DOK_INOUT AND B.KD_PERMIT='IMP'".$addsql;
-
+				FROM t_permit_hdr A 
+				INNER JOIN reff_kode_dok_bc B ON B.ID=A.KD_DOK_INOUT AND B.KD_PERMIT='IMP'".$addsql;
+		#echo $SQL;die();
 		$proses = array('DETAIL' => array('POPUP',"dokumen/impor_kontainer/detail", '1','','md-zoom-in'));
 						#'GENERATE' => array('POST',"execute/process/update/create_xml_impor", 'ALL','','md-code-setting'));
 		$this->newtable_edit->multiple_search(true);
@@ -108,10 +109,13 @@ class M_dokumen extends Model {
 		$this->newtable_edit->menu($proses);
 		$tabel .= $this->newtable_edit->generate($SQL);
 		$arrdata = array("page_title" => $page_title, "title" => $title, "content" => $tabel);
-		if($this->input->post("ajax")||$act == "post")
+		if($this->input->post("ajax")||$act == "post"){			
 			echo $tabel;
-		else
+		}			
+		else{			
 			return $arrdata;
+
+		}
 	}
 
 	public function ekspor_request_kontainer($act, $id){
@@ -179,7 +183,7 @@ class M_dokumen extends Model {
 				'<BR>TGL. : ',IFNULL(DATE_FORMAT(A.TGL_DOK_INOUT,'%d-%m-%Y'),'-')) AS DOKUMEN,
 				CONCAT('NO. : ',IFNULL(A.NO_DAFTAR_PABEAN,'-'),
 				'<BR>TGL. : ',IFNULL(DATE_FORMAT(A.TGL_DAFTAR_PABEAN,'%d-%m-%Y'),'-')) AS 'DAFTAR PABEAN',
-				A.NO_VOY_FLIGHT AS 'NO. VOYAGE/FLIGHT', A.NM_ANGKUT AS 'NAMA ANGKUT',
+				A.NO_VOY_FLIGHT AS 'NO. VOYAGE', A.NM_ANGKUT AS 'NAMA ANGKUT',
 				CONCAT('<center>',A.JML_CONT,'</center>') AS 'JUMLAH', A.TGL_STATUS, A.ID
 				FROM t_permit_hdr A
 				INNER JOIN reff_kode_dok_bc B ON B.ID=A.KD_DOK_INOUT AND B.KD_PERMIT='EXP'".$addsql;
