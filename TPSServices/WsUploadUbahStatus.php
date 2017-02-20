@@ -43,25 +43,13 @@ if (!$CheckFile) {
                        </ser:UploadMohonPLP>
                     </soapenv:Body>
                  </soapenv:Envelope>';
-			/*$xml = '<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://services.beacukai.go.id/">
-				   <soapenv:Header/>
-				   <soapenv:Body>
-					  <ser:UploadMohonPLP soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
-						 <fStream xsi:type="xsd:string">' . htmlspecialchars($STR_DATA) . '</fStream>
-						 <Username xsi:type="xsd:string">' . $USERNAME_TPSONLINE_BC . '</Username>
-						 <Password xsi:type="xsd:string">' . $PASSWORD_TPSONLINE_BC . '</Password>
-					  </ser:UploadMohonPLP>
-				   </soapenv:Body>
-				</soapenv:Envelope>';*/
             $Send = $main->SendCurl($xml, $CONF['url.wsdl'], $SOAPAction, $CONF['proxyhost'] . ":" . $CONF['proxyport'],'80');
            	print_r($Send);
             if ($Send['response'] != '') {
                 $arr1 = 'UploadMohonPLPResponse';
-				#$arr1 = 'ns1:UploadMohonPLPResponse';
                 $arr2 = 'UploadMohonPLPResult';
                 $response = xml2ary($Send['response']);
                 $response = $response['soap:Envelope']['_c']['soap:Body']['_c'][$arr1]['_c'][$arr2]['_v'];
-				//$response = $response['SOAP-ENV:Envelope']['_c']['SOAP-ENV:Body']['_c'][$arr1]['_c'][$arr2]['_v'];
 				#echo '<br>';
 				#echo '<pre>';
 				print_r($response);
@@ -99,7 +87,8 @@ if (!$CheckFile) {
 
     $main->connect(false);
     $main->removeFile($filename);
-} else {
+}
+ else {
     echo 'Scheduler sedang berjalan, harap menghapus file ' . $method . '.txt yang ada difolder CheckScheduler.';
 }
 ?>

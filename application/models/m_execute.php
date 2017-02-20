@@ -2652,19 +2652,99 @@ class M_execute extends Model {
                     //echo "MSG#ERR#Data gagal diproses#";
                 }
             }
-			
-			if ($act == "xml_impor_ubahstatus") {
+            if ($act == "xml_impor_ubahstatus") {
 
                 $dirXML = "";
-                    $SQL = "SELECT ID,NO_UBAH_STATUS,TGL_UBAH_STATUS 
-					FROM t_ubah_status WHERE KD_STATUS='1'";
+$SQL = "SELECT A.NO_UBAH_STATUS, A.KD_GUDANG_ASAL, A.KD_GUDANG_TUJUAN,
+        B.NM_LENGKAP,B.KD_ORGANISASI,C.NAMA,C.ALAMAT,C.EMAIL,C.NPWP,C.NOTELP,
+        C.NOFAX,A.NAMA_KAPAL,A.CALL_SIGN,A.NO_VOY_FLIGHT,DATE_FORMAT(A.TGL_TIBA,'%Y-%m-%d') AS TGL_TIBA,A.NO_BC11,
+        DATE_FORMAT(A.TGL_BC11,'%Y-%m-%d') AS TGL_BC11, DATE_FORMAT(A.TGL_UBAH_STATUS,'%Y-%m-%d') AS TGL_UBAH_STATUS 
+                    FROM t_ubah_status A INNER JOIN app_user B ON A.ID_USER=B.ID INNER JOIN t_organisasi C ON B.KD_ORGANISASI=C.ID 
+                    WHERE A.KD_STATUS='1'";
+
+                   
                     $result = $func->main->get_result($SQL);
                     if ($result) {
                                 $str_xml = '<?xml version="1.0" encoding="utf-8"?>';
-                                $str_xml .= '<nctsmsg>';
-                                $str_xml .= '<sender>';
-                                $str_xml .= '<main>CFS CENTER</main>';
-                                $str_xml .= '</sender>';
+                                $str_xml .= '<DOCUMENT xmlns="loadubahstatus.xsd">';
+                                $str_xml .= ' <LOADUBAHSTATUS>';
+                                
+                                foreach ($SQL->result_array() as $rows => $values) {
+                                    
+                                    $str_xml .= '<HEADER>';
+                                    $str_xml .= '<NO_UBAH_STATUS>' . str_xml($values['NO_UBAH_STATUS']) . '</NO_UBAH_STATUS>';
+                                    $str_xml .= '<KD_GUDANG_ASAL>' . str_xml($values['KD_GUDANG_ASAL']) . '</KD_GUDANG_ASAL>';
+                                    $str_xml .= '<KD_GUDANG_TUJUAN>' . str_xml($values['KD_GUDANG_TUJUAN']) . '</KD_GUDANG_TUJUAN>';
+                                    $str_xml .= '<NM_LENGKAP>' . str_xml($values['NM_LENGKAP']) . '</NM_LENGKAP>';
+                                    $str_xml .= '<KD_ORGANISASI>' . str_xml($values['KD_ORGANISASI']) . '</KD_ORGANISASI>';
+                                    $str_xml .= '<NAMA_ORGANISASI>' . str_xml($values['NAMA_ORGANISASI']) . '</NAMA_ORGANISASI>';
+                                    $str_xml .= '<ALAMAT>' . str_xml($values['ALAMAT']) . '</ALAMAT>';
+                                    $str_xml .= '<EMAIL>' . str_xml($values['EMAIL']) . '</EMAIL>';
+                                    $str_xml .= '<NPWP>' . str_xml($values['NPWP']) . '</NPWP>';
+                                    $str_xml .= '<NOTELP>' . str_xml($values['NOTELP']) . '</NOTELP>';
+                                    $str_xml .= '<NOFAX>' . str_xml($values['NOFAX']) . '</NOFAX>';
+                                    $str_xml .= '<NAMA_KAPAL>' . str_xml($values['NAMA_KAPAL']) . '</NAMA_KAPAL>';
+                                    $str_xml .= '<NO_VOY_FLIGHT>' . str_xml($values['NO_VOY_FLIGHT']) . '</NO_VOY_FLIGHT>';
+                                    $str_xml .= '<TGL_TIBA>' . str_xml($values['TGL_TIBA']) . '</TGL_TIBA>';
+                                    $str_xml .= '<NO_BC11>' . str_xml($values['NO_BC11']) . '</NO_BC11>';
+                                    $str_xml .= '<TGL_BC11>' . str_xml($values['TGL_BC11']) . '</TGL_BC11>';
+                                    $str_xml .= '<TGL_UBAH_STATUS>' . str_xml($values['TGL_UBAH_STATUS']) . '</TGL_UBAH_STATUS>';
+                                    $str_xml .= '</HEADER>';
+                                     $str_xml .= ' <DETIL>';
+ #$DETAIL = mysq"SELECT NO_CONT,UKURAN,DATE_FORMAT(WK_REKAM,'%Y-%m-%d %H-%i-%s') AS WK_REKAM FROM t_no_kontainer WHERE NO_UBAH_STATUS='".$values['NO_UBAH_STATUS']."'";                                  
+  $this->db->select("NO_CONT,UKURAN, WK_REKAM");
+  $this->db->where('NO_UBAH_STATUS', $values['NO_UBAH_STATUS']);
+$DETAIL = $this->db->get('t_no_kontainer');
+      foreach ($DETAIL->result_array() as $rowsD => $d) {
+                 
+                  $str_xml .= ' <CONTAINER>';
+                  $str_xml .= ' <NO_CONT>' . str_xml($d['NO_CONT']) . '</NO_CONT>';
+                  $str_xml .= '<UKURAN>' . str_xml($d['UKURAN']) . '</UKURAN>';
+                  $str_xml .= '<WK_REKAM>' . str_xml($d['WK_REKAM']) . '</WK_REKAM>';
+                  $str_xml .= '</CONTAINER>';
+                  
+}
+$str_xml .= '</DETIL>';
+                                }
+                                $str_xml .= '</LOADUBAHSTATUS>';
+                                $str_xml .= '</DOCUMENT>';
+if($str_xml == true)
+{
+$this->db->set('KD_STATUS', '2');
+$this->db->where('KD_STATUS', '1');
+$ubah = $this->db->update('t_ubah_status');
+
+ echo $str_xml;
+}
+else
+{
+    echo "periksa koneksi anda";
+}
+
+                                
+                    }
+                    else
+                    {
+                        echo "Data Tidak Ditemukan";
+                    }
+             
+                    /*
+ $this->load->helper('download');
+force_download('ubahstatus.xml', $str_xml);
+*/
+            }
+			
+/*
+			if ($act == "xml_impor_ubahstatus") {
+
+                $dirXML = "";
+                    $SQL = "SELECT A.ID, A.NO_UBAH_STATUS, A.TGL_UBAH_STATUS 
+					FROM t_ubah_status A WHERE A.KD_STATUS='1'";
+                    $result = $func->main->get_result($SQL);
+                    if ($result) {
+                                $str_xml = '<?xml version="1.0" encoding="utf-8"?>';
+                                $str_xml .= '<DOCUMENT xmlns="loadubahstatus.xsd">';
+                                $str_xml .= ' <LOADUBAHSTATUS>';
 								
                                 foreach ($SQL->result_array() as $rows => $values) {
 									
@@ -2677,12 +2757,14 @@ class M_execute extends Model {
                                
 
                                 }
-                                $str_xml .= '</nctsmsg>';
+                                $str_xml .= '</LOADUBAHSTATUS>';
+                                $str_xml .= '</DOCUMENT>';
                     }
               # echo $str_xml;
               $this->load->helper('download');
 force_download('ubahstatus.xml', $str_xml);
             }
+            */
 			
         }
     }

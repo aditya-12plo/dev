@@ -103,7 +103,8 @@ else
 ?>
 
 <br>
-<div id="TextBoxContainer">
+<div id="TextBoxContainer" class="form-inline">
+
     <!--Textboxes will be added here -->
 </div>
 
@@ -152,8 +153,8 @@ $(function () {
     });
 });
 function GetDynamicTextBox() {
-    return '<div class="form-inline"> <input type="text" name="NO_CONT[]" id="NO_CONT1" wajib="yes" class="rank form-control" placeholder="NO KONTAINER" >&nbsp;' 
-    + ' <input type="text" name="UKURAN_CONT[]" id="UKURAN_CONT1" wajib="yes" class="rank form-control" placeholder="UKURAN KONTAINER" >&nbsp;' +'<button type="button" class="remove btn btn-danger" id="removeButton">Hapus</button></div><br>'
+    return '<input type="text" name="NO_CONT[]" id="NO_CONT1" wajib="yes" class="rank form-control" style="margin-bottom: 20px;" placeholder="NO KONTAINER" >&nbsp;' 
+    + ' <input type="text" name="UKURAN_CONT[]" id="UKURAN_CONT1" wajib="yes" class="rank form-control" style="margin-bottom: 20px;" placeholder="UKURAN KONTAINER" >&nbsp;' +'<button type="button" class="remove btn btn-danger" id="removeButton" style="margin-bottom: 20px;">Hapus</button>'
 }
 
 

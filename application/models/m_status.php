@@ -36,7 +36,7 @@ function listdata($act, $id) {
     $proses = array('ENTRY' => array('ADD_MODAL', "status/listdata/add", '0', '', 'icon-plus', '80'),
           'UPDATE' => array('GET',site_url()."/status/listdata/update", '1','','icon-refresh'),
           'DELETE' => array('DELETE', site_url() . "/status/execute/delete/ubahstatus", 'ALL', '', 'icon-trash'),
-          'KIRIM' => array('GET_POST',site_url()."/status/execute/send_ubah_stat", 'ALL','','icon-share-alt')
+          'KIRIM' => array('GET_POST',site_url()."/status/execute/send_ubah_stat", '1','0','icon-share-alt')
           #'PRINT PERNYATAAN' => array('EXCEL', site_url() . "/plp/execute/cetak/word", '1', '100', 'icon-share-alt'),
           #'PRINT SURAT' => array('EXCEL', site_url() . "/plp/execute/cetak/excel", '1', '100', 'icon-share-alt'),
           //'PRINT' => array('PRINT', site_url() . "/status/proses_print/ubahstatus", '1', '', 'icon-printer'),

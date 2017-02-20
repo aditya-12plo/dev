@@ -571,7 +571,7 @@ class Newtable_edit {
 							$top .= $b[1];
 							$top .= '</option>';
 						}
-						$top .= '</select>';
+				$top .= '</select>';
 				$top .=	'	</div>';
 				$top .=	'	<div class="col-sm-5">';
 				$top .= '	<input type="text" class="form-control" name="form[]" '.$disabled.' value="'.$arrvalcari[1].'" placeholder="TEXT INPUT"/>';
