@@ -552,11 +552,13 @@ class Newtable_edit {
 				$top .=	'<div class="form-group">';
 				$top .=	'<label class="col-sm-2 control-label-left">&nbsp;</label>';
 				$top .=	'	<div class="col-sm-10">';
-				$top .=	'<button type="reset" class="btn btn-danger btn-sm btn-icon"><i class="icon-refresh"></i> Cancel</button>&nbsp;';
+				$top .=	'<button type="reset" name="clearform" id="clearform" class="btn btn-danger btn-sm btn-icon"><i class="icon-refresh"></i> Cancel</button>&nbsp;';
 				$top .= "<button type=\"submit\" onclick=\"newtable_search('".$this->formid."','".$this->divid."','".$this->hal."','".$this->sortby."','".$this->orderby."'); return false;\" class=\"btn btn-primary btn-sm btn-icon\"><i class='icon-magnifier'></i> Search</button>";
 				$top .=	'	</div>';
 				$top .=	'</div>';
-				$top .= "<script>$(function(){ date('drp');});</script>";
+				$top .= "<script>$(function(){ date('drp');});$('#clearform').on('click', function () {
+					$('#".$this->formid."').find('input:text').val('');$('input:checkbox').removeAttr('checked');newtable_cancel('".$this->formid."','".$this->divid."','".$this->hal."','".$this->sortby."','".$this->orderby."');
+				});</script>";
 			}else{
 				$top .=	'<div class="form-group">';
 				$top .=	'<label class="col-sm-2 control-label-left">SEARCH BY</label>';
@@ -571,7 +573,7 @@ class Newtable_edit {
 							$top .= $b[1];
 							$top .= '</option>';
 						}
-				$top .= '</select>';
+						$top .= '</select>';
 				$top .=	'	</div>';
 				$top .=	'	<div class="col-sm-5">';
 				$top .= '	<input type="text" class="form-control" name="form[]" '.$disabled.' value="'.$arrvalcari[1].'" placeholder="TEXT INPUT"/>';
@@ -581,7 +583,7 @@ class Newtable_edit {
 				$top .=	'<div class="form-group">';
 				$top .=	'<label class="col-sm-2 control-label-left">&nbsp;</label>';
 				$top .=	'	<div class="col-sm-10">';
-				$top .=	'<button type="reset" class="btn btn-danger btn-sm btn-icon"><i class="icon-refresh"></i> Cancel</button>&nbsp;';
+				$top .=	'<button type="button" onclick="newtable_cancel(\''.$this->formid.'\',\''.$this->divid.'\',\''.$this->hal.'\',\''.$this->sortby.'\',\''.$this->orderby.'\'); return false;" class="btn btn-danger btn-sm btn-icon"><i class="icon-refresh"></i> Cancel</button>&nbsp;';
 				$top .= "<button type=\"submit\" onclick=\"newtable_search('".$this->formid."','".$this->divid."','".$this->hal."','".$this->sortby."','".$this->orderby."'); return false;\" class=\"btn btn-primary btn-sm btn-icon\"><i class='icon-magnifier'></i> Search</button>";
 				$top .=	'	</div>';
 				$top .=	'</div>';

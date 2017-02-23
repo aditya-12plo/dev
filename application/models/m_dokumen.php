@@ -44,7 +44,8 @@ class M_dokumen extends Model {
 		$arr_dok = $this->get_combobox('dok_bc','IMP');
 		$this->newtable_edit->search(array(array('A.KD_DOK_INOUT','JENIS DOKUMEN','OPTION',$arr_dok),array('A.NO_DOK_INOUT','NOMOR DOKUMEN'),array('A.TGL_DOK_INOUT','TANGGAL DOKUMEN','DATERANGE')));
 		$this->newtable_edit->action(site_url() . "/dokumen/impor_request_kontainer");
-		if($check) $this->newtable_edit->detail(array('POPUP',"dokumen/impor_request_kontainer/detail"));
+		#if($check) $this->newtable_edit->detail(array('POPUP',"dokumen/impor_request_kontainer/detail"));
+		$this->newtable_edit->detail(array('POPUP',"dokumen/impor_request_kontainer/detail"));
 		$this->newtable_edit->tipe_proses('button');
 		$this->newtable_edit->hiddens(array("ID","KD_STATUS","POST"));
 		$this->newtable_edit->keys(array("ID","POST"));
@@ -95,7 +96,8 @@ class M_dokumen extends Model {
 		$arr_dok = $this->get_combobox('dok_bc','IMP');
 		$this->newtable_edit->search(array(array('A.KD_DOK_INOUT','JENIS DOKUMEN','OPTION',$arr_dok),array('A.NO_DOK_INOUT','NOMOR DOKUMEN'),array('A.TGL_DOK_INOUT','TANGGAL DOKUMEN','DATERANGE'),array('A.NM_ANGKUT','NAMA ANGKUT')));
 		$this->newtable_edit->action(site_url() . "/dokumen/impor_kontainer");
-		if($check) $this->newtable_edit->detail(array('POPUP',"dokumen/impor_kontainer/detail"));
+		#if($check) $this->newtable_edit->detail(array('POPUP',"dokumen/impor_kontainer/detail"));
+		$this->newtable_edit->detail(array('POPUP',"dokumen/impor_kontainer/detail"));
 		$this->newtable_edit->tipe_proses('button');
 		$this->newtable_edit->hiddens(array("ID","TGL_STATUS"));
 		$this->newtable_edit->keys(array("ID"));
@@ -148,6 +150,7 @@ class M_dokumen extends Model {
 		$this->newtable_edit->search(array(array('A.KD_DOK_INOUT','JENIS DOKUMEN','OPTION',$arr_dok),array('A.NO_DOK_INOUT','NOMOR DOKUMEN'),array('A.TGL_DOK_INOUT','TANGGAL DOKUMEN','DATERANGE')));
 		$this->newtable_edit->action(site_url() . "/dokumen/ekspor_request_kontainer");
 		#if($check) $this->newtable_edit->detail(array('POPUP',"dokumen/impor_kontainer/detail"));
+		$this->newtable_edit->detail(array('POPUP',"dokumen/impor_kontainer/detail"));
 		$this->newtable_edit->tipe_proses('button');
 		$this->newtable_edit->hiddens(array("ID","KD_STATUS","POST"));
 		$this->newtable_edit->keys(array("ID","POST"));
@@ -196,6 +199,7 @@ class M_dokumen extends Model {
 		$this->newtable_edit->search(array(array('A.KD_DOK_INOUT','JENIS DOKUMEN','OPTION',$arr_dok),array('A.NO_DOK_INOUT','NO. DOKUMEN'),array('A.NM_ANGKUT','NAMA ANGKUT'),array('B.NO_CONT','NOMOR KONTAINER')));
 		$this->newtable_edit->action(site_url() . "/dokumen/ekspor_kontainer");
 		if($check) $this->newtable_edit->detail(array('POPUP',"dokumen/ekspor_kontainer/detail"));
+		$this->newtable_edit->detail(array('POPUP',"dokumen/ekspor_kontainer/detail"));
 		$this->newtable_edit->tipe_proses('button');
 		$this->newtable_edit->hiddens(array("ID"));
 		$this->newtable_edit->keys(array("ID"));

@@ -548,11 +548,13 @@ class Newtable {
 				$out .=	'<div class="form-group">';
 				$out .=	'<label class="col-sm-2 control-label-left">&nbsp;</label>';
 				$out .=	'	<div class="col-sm-10">';
-				$out .=	'<button type="reset" class="btn btn-danger btn-sm btn-icon"><i class="icon-refresh"></i> Cancel</button>&nbsp;';
+				$out .=	'<button type="reset" name="clearform" id="clearform" class="btn btn-danger btn-sm btn-icon"><i class="icon-refresh"></i> Cancel</button>&nbsp;';
 				$out .= "<button type=\"submit\" onclick=\"newtable_search('".$this->formid."','".$this->divid."','".$this->hal."','".$this->sortby."','".$this->orderby."'); return false;\" class=\"btn btn-primary btn-sm btn-icon\"><i class='icon-magnifier'></i> Search</button>";
 				$out .=	'	</div>';
 				$out .=	'</div>';
-				$out .= "<script>$(function(){ date('drp');});</script>";
+				$out .= "<script>$(function(){ date('drp');});$('#clearform').on('click', function () {
+					$('#".$this->formid."').find('input:text').val('');$('input:checkbox').removeAttr('checked');newtable_cancel('".$this->formid."','".$this->divid."','".$this->hal."','".$this->sortby."','".$this->orderby."');
+				});</script>";
 			}else{
 				$out .=	'<div class="form-group">';
 				$out .=	'<label class="col-sm-2 control-label-left">SEARCH BY</label>';
@@ -577,7 +579,7 @@ class Newtable {
 				$out .=	'<div class="form-group">';
 				$out .=	'<label class="col-sm-2 control-label-left">&nbsp;</label>';
 				$out .=	'	<div class="col-sm-10">';
-				$out .=	'<button type="reset" class="btn btn-danger btn-sm btn-icon"><i class="icon-refresh"></i> Cancel</button>&nbsp;';
+				$out .=	'<button type="button" onclick="newtable_cancel(\''.$this->formid.'\',\''.$this->divid.'\',\''.$this->hal.'\',\''.$this->sortby.'\',\''.$this->orderby.'\'); return false;" class="btn btn-danger btn-sm btn-icon"><i class="icon-refresh"></i> Cancel</button>&nbsp;';
 				$out .= "<button type=\"submit\" onclick=\"newtable_search('".$this->formid."','".$this->divid."','".$this->hal."','".$this->sortby."','".$this->orderby."'); return false;\" class=\"btn btn-primary btn-sm btn-icon\"><i class='icon-magnifier'></i> Search</button>";
 				$out .=	'	</div>';
 				$out .=	'</div>';

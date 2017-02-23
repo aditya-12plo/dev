@@ -2,7 +2,7 @@
 
 set_time_limit(3600);
 require_once("config.php");
-$CONF['url.wsdl'] = 'http://103.29.187.109/TPSServices/services.php';
+//$CONF['url.wsdl'] = 'http://103.29.187.109/TPSServices/services.php';
 $method = 'GetImpor_Sppb';
 $KdAPRF = 'GETIMPPERMIT';
 $filename = $CONF['root.dir'] . "CheckScheduler/" . $method . ".txt";
@@ -20,7 +20,8 @@ if (!$CheckFile) {
                                INNER JOIN app_user C ON B.ID = C.KD_ORGANISASI
             WHERE A.KD_APRF = '" . $KdAPRF . "'
                   AND A.KD_STATUS = 'Y'
-                  AND B.KD_TIPE_ORGANISASI IN ('TPS','TPS1','TPS2')";
+                  AND B.KD_TIPE_ORGANISASI IN ('TPS','TPS1')";
+                  
     $Query = $conn->query($SQL);
     if ($Query->size() > 0) {
         while ($Query->next()) {
@@ -41,6 +42,7 @@ if (!$CheckFile) {
                           AND A.KD_TPS = '" . $KD_TPS . "'
                           AND A.KD_GUDANG = '" . $KD_GUDANG . "'
                     ORDER BY A.TGL_STATUS ASC";
+                    //echo $SQL;die();
             $QueryRequest = $conn->query($SQL);
             if ($QueryRequest->size() > 0) {
                 while ($QueryRequest->next()) {
@@ -62,29 +64,35 @@ if (!$CheckFile) {
                       </soap:Body>
                       </soap:Envelope>'; */
                     $xml = '<?xml version="1.0" encoding="utf-8"?>
-                            <soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://services.beacukai.go.id/">
+                            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://services.beacukai.go.id/">
                             <soapenv:Header/>
                             <soapenv:Body>
-                               <ser:GetImpor_Sppb soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
-                                  <Username xsi:type="xsd:string">' . $USERNAME_TPSONLINE_BC . '</Username>
-                                  <Password xsi:type="xsd:string">' . $PASSWORD_TPSONLINE_BC . '</Password>
-                                  <No_Sppb xsi:type="xsd:string">' . $NO_DOK_INOUT . '</No_Sppb>
-                                  <Tgl_Sppb xsi:type="xsd:string">' . $TGL_DOK_INOUT . '</Tgl_Sppb>
-                                  <NPWP_Imp xsi:type="xsd:string">' . $NPWP_CONSIGNEE . '</NPWP_Imp>
+                               <ser:GetImpor_Sppb>
+                                  <ser:UserName>' . $USERNAME_TPSONLINE_BC . '</ser:UserName>
+                                  <ser:Password>' . $PASSWORD_TPSONLINE_BC . '</ser:Password>
+                                  <ser:No_Sppb>' . $NO_DOK_INOUT . '</ser:No_Sppb>
+                                  <ser:Tgl_Sppb>' . $TGL_DOK_INOUT . '</ser:Tgl_Sppb>
+                                  <ser:NPWP_Imp>' . $NPWP_CONSIGNEE . '</ser:NPWP_Imp>
                                </ser:GetImpor_Sppb>
                             </soapenv:Body>
                          </soapenv:Envelope>';
+                         //echo $xml;die();
+                         //echo 
                     $Send = $main->SendCurl($xml, $CONF['url.wsdl'], $SOAPAction, $CONF['proxyhost'] . ":" . $CONF['proxyport'],'80');
                     echo '<pre>';
                     print_r($Send);
                     echo '</pre>';
                     if ($Send['response'] != '') {
-                        //$arr1 = 'GetImpor_SppbResponse';
-                        $arr1 = 'ns1:GetImpor_SppbResponse';
+                        $arr1 = 'GetImpor_SppbResponse';
+                        //$arr1 = 'ns1:GetImpor_SppbResponse';
                         $arr2 = 'GetImpor_SppbResult';
                         $response = xml2ary($Send['response']);
-                        //$response = $response['soap:Envelope']['_c']['soap:Body']['_c'][$arr1]['_c'][$arr2]['_v'];
-                        $response = $response['SOAP-ENV:Envelope']['_c']['SOAP-ENV:Body']['_c'][$arr1]['_c'][$arr2]['_v'];
+                        $response = $response['soap:Envelope']['_c']['soap:Body']['_c'][$arr1]['_c'][$arr2]['_v'];
+
+                        //soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><GetImpor_SppbResponse xmlns="http://services.beacukai.go.id/"><GetImpor_SppbResult>
+
+
+                        //$response = $response['SOAP-ENV:Envelope']['_c']['SOAP-ENV:Body']['_c'][$arr1]['_c'][$arr2]['_v'];
                         echo '<br>';
                         echo '<pre>';
                         print_r($response);
@@ -95,7 +103,7 @@ if (!$CheckFile) {
                         $Execute = $conn->execute($SQL);
 
                         $SQL = "UPDATE t_request_custimp_hdr SET KD_STATUS = '400', TGL_STATUS = NOW() WHERE ID = '" . $ID . "'";
-                        $Execute = $conn->execute($SQL);
+                       //$Execute = $conn->execute($SQL);
                     } else {
                         $response = '';
                     }
@@ -103,8 +111,8 @@ if (!$CheckFile) {
             } else {
                 echo $response = 'Data request tidak ada.';
             }
-            $SQL = "CALL create_log_services('" . $CONF['url.wsdl'] . "','" . $method . "','" . $xml . "','" . $response . "')";
-            $Execute = $conn->execute($SQL);
+            //$SQL = "CALL create_log_services('" . $CONF['url.wsdl'] . "','" . $method . "','" . $xml . "','" . $response . "')";
+            //$Execute = $conn->execute($SQL);
         }
     } else {
         echo 'Data user TPS tidak ada.';

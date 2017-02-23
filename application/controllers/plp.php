@@ -46,25 +46,6 @@ class Plp extends Controller {
 		}
 	}
 	
-/*
-
-	public function pengajuan($act,$id){
-		if (!$this->newsession->userdata('LOGGED')){
-			$this->index();
-			return;
-		}
-		$id = ($id!="")?$id:$this->input->post('id');
-		$this->newtable->breadcrumb('Dashboard', site_url());
-		$this->newtable->breadcrumb('PLP', 'javascript:void(0)');
-		$this->newtable->breadcrumb('Pengajuan', 'javascript:void(0)');
-		$data['page_title'] = 'PENGAJUAN';
-		$data['table_request'] = $this->pengajuan_plp($act,$id);
-		$data['table_respon'] = $this->pengajuan_respon($act,$id);
-		$this->content = $this->load->view('content/plp/index',$data,true);
-		$this->index();
-	}
-*/
-	
 	public function pengajuan_plp($act,$id){
 		if (!$this->newsession->userdata('LOGGED')){
 			$this->index();
@@ -126,6 +107,8 @@ class Plp extends Controller {
 			}	
 		}
 	}
+	
+
 	
 	function pengajuan_discharge($act, $id){
 		if (!$this->newsession->userdata('LOGGED')) {

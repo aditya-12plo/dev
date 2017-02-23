@@ -44,12 +44,13 @@ class M_plp extends Model{
 	
 		$this->newtable->multiple_search(true);
 		$this->newtable->show_chk($check);
-		$this->newtable->show_chk(true);
+		#$this->newtable->show_chk(true);
 		$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_SURAT','NO. SURAT'),array('A.REF_NUMBER','REF NUMBER'),array('A.NM_ANGKUT','NAMA ANGKUT'),array('A.TGL_TIBA','TGL. TIBA','DATERANGE')));
 		$this->newtable->action(site_url() . "/plp/pengajuan_plp");
-		if($check) $this->newtable->detail(array('POPUP',"plp/pengajuan_plp/detail"));
+		#if($check) $this->newtable->detail(array('POPUP',"plp/pengajuan_plp/detail"));
+		$this->newtable->detail(array('POPUP',"plp/pengajuan_plp/detail"));
 		$this->newtable->tipe_proses('button');
 		$this->newtable->hiddens(array("KD_COCOSTSHDR","ID","KD_STATUS","TGL_STATUS"));
 		$this->newtable->keys(array("KD_COCOSTSHDR","ID"));
@@ -190,14 +191,11 @@ $proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-
 				) C ON C.REF_NUMBER=B.REF_NUMBER AND A.NO_CONT=C.NO_CONT
 				LEFT JOIN reff_status D ON D.ID=C.KD_STATUS AND D.KD_TIPE_STATUS='PLPRESDTL'
 				WHERE A.ID = ".$this->db->escape($arrid[1]);
-		#echo $SQL; 
-	$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
-						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
-	
+
 		$this->newtable->multiple_search(true);
-		$this->newtable->show_chk(true);
-		$this->newtable->show_chk($check);
-		$this->newtable->show_menu($check);
+		$this->newtable->show_chk(false);
+		#$this->newtable->show_chk($check);
+		#$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_CONT','KONTAINER')));
 		$this->newtable->action(site_url() . "/plp/pengajuan_plp_kontainer/".$act."/".$id);
@@ -243,7 +241,7 @@ $proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-
 						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
 	
 		$this->newtable->multiple_search(true);
-		$this->newtable->show_chk(true);
+		#$this->newtable->show_chk(true);
 		$this->newtable->show_chk($check);
 		$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
@@ -286,7 +284,7 @@ $proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-
 						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
 	
 		$this->newtable->multiple_search(false);
-		$this->newtable->show_chk(true);
+		#$this->newtable->show_chk(true);
 		$this->newtable->show_chk($check);
 		$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
@@ -336,13 +334,14 @@ $proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-
 						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
 	
 		$this->newtable->multiple_search(true);
-		$this->newtable->show_chk(true);
+		#$this->newtable->show_chk(true);
 		$this->newtable->show_chk($check);
 		$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_SURAT','NO. SURAT'),array('A.TGL_SURAT','TGL. SURAT','DATERANGE')));
 		$this->newtable->action(site_url() . "/plp/pembatalan_plp");
-		if($check) $this->newtable->detail(array('POPUP',"plp/pembatalan_plp/detail"));
+		#if($check) $this->newtable->detail(array('POPUP',"plp/pembatalan_plp/detail"));
+		$this->newtable->detail(array('POPUP',"plp/pembatalan_plp/detail"));
 		$this->newtable->tipe_proses('button');
 		$this->newtable->hiddens(array("KD_RESPON_PLP_ASAL","ID","KD_STATUS","TGL_STATUS"));
 		$this->newtable->keys(array("KD_RESPON_PLP_ASAL","ID"));
@@ -383,7 +382,7 @@ $proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-
 				WHERE 1=1".$addsql;
 		$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
 						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
-		$this->newtable->show_chk(true);
+		#$this->newtable->show_chk(true);
 		$this->newtable->show_chk($check);
 		$this->newtable->show_menu($check);
 		$this->newtable->multiple_search(true);
@@ -482,7 +481,7 @@ $proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-
 						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
 	
 		$this->newtable->multiple_search(false);
-		$this->newtable->show_chk(true);
+		#$this->newtable->show_chk(true);
 		$this->newtable->show_chk($check);
 		$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
@@ -526,7 +525,7 @@ $proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-
 				WHERE 1=1".$addsql;
 		$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
 						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));$this->newtable->multiple_search(true);
-		$this->newtable->show_chk(true);
+		#$this->newtable->show_chk(true);
 		$this->newtable->show_chk($check);
 		$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
@@ -567,7 +566,7 @@ $proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-
 		$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
 						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
 		$this->newtable->multiple_search(false);
-		$this->newtable->show_chk(true);
+		#$this->newtable->show_chk(true);
 		$this->newtable->show_chk($check);
 		$this->newtable->show_menu($check);
 		$this->newtable->show_search(true);
@@ -811,7 +810,9 @@ function res_plp_asal($act,$id){
 				WHERE 1=1".$addsql;
 $proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
 						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
-		$this->newtable->show_chk(true);
+		$check = (grant()=="W")?true:false;
+		$this->newtable->show_chk($check);
+		$this->newtable->show_menu($check);
 		$this->newtable->multiple_search(true);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_PLP','NO. PLP'),array('A.TGL_PLP','TGL. PLP','DATERANGE')));
@@ -855,7 +856,9 @@ function res_batal_plp_asal($act,$id){
 				WHERE 1=1".$addsql;
 		$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
 						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
-		$this->newtable->show_chk(true);
+		$check = (grant()=="W")?true:false;
+		$this->newtable->show_chk($check);
+		$this->newtable->show_menu($check);
 		$this->newtable->multiple_search(true);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_BATAL_PLP','NO. PLP'),array('A.TGL_BATAL_PLP','TGL. PLP','DATERANGE')));
@@ -888,9 +891,9 @@ function res_plp_tujuan($act,$id){
 		$KD_TPS = $this->newsession->userdata('KD_TPS');
 		$KD_GUDANG = $this->newsession->userdata('KD_GUDANG');
 		$KD_GROUP = $this->newsession->userdata('KD_GROUP');
-		if($KD_GROUP!="SPA"){
+		/*if($KD_GROUP!="SPA"){
 			$addsql .= " AND A.KD_TPS_TUJUAN = ".$this->db->escape($KD_TPS);
-		}
+		}*/
 		$SQL = "SELECT CONCAT(func_name(A.KD_TPS_ASAL,'TPS'),' [',A.KD_TPS_ASAL,']') AS 'TPS ASAL', 
 				CONCAT('TPS : ',func_name(A.KD_TPS_TUJUAN,'TPS'),' [',A.KD_TPS_TUJUAN,']
 				<BR>GUDANG : ',func_name(A.KD_GUDANG_TUJUAN,'GUDANG'),' [',A.KD_GUDANG_TUJUAN,']') AS 'TPS/GUDANG TUJUAN', 
@@ -903,7 +906,9 @@ function res_plp_tujuan($act,$id){
 				WHERE 1=1".$addsql;
 		$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
 						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
-		$this->newtable->show_chk(true);
+		$check = (grant()=="W")?true:false;
+		$this->newtable->show_chk($check);
+		$this->newtable->show_menu($check);
 		$this->newtable->multiple_search(true);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_PLP','NO. PLP'),array('A.TGL_PLP','TGL. PLP','DATERANGE')));
@@ -949,7 +954,9 @@ function res_batal_plp_tujuan($act,$id){
 				WHERE 1=1".$addsql;
 		$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
 						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
-		$this->newtable->show_chk(true);
+		$check = (grant()=="W")?true:false;
+		$this->newtable->show_chk($check);
+		$this->newtable->show_menu($check);
 		$this->newtable->multiple_search(true);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_BATAL_PLP','NO. PLP'),array('A.TGL_BATAL_PLP','TGL. PLP','DATERANGE')));
@@ -1632,7 +1639,9 @@ function execute($type, $act, $id){
 				WHERE A.ID = ".$this->db->escape($arrid[0]);
 				$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
 						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
-		$this->newtable->show_chk(true);
+		$check = (grant()=="W")?true:false;
+		$this->newtable->show_chk($check);
+		$this->newtable->show_menu($check);
 		$this->newtable->multiple_search(false);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.KD_KEMASAN', 'KODE KEMASAN'),array('A.NO_BL_AWB', 'NO. BL/AWB')));
@@ -1666,7 +1675,9 @@ function v_res_batal_plp_asal_kms($act, $id){
 				WHERE A.ID = ".$this->db->escape($arrid[0]);
 				$proses = array('REQUEST'	  => array('ADD_MODAL','', '','','glyphicon glyphicon-send'),
 						'RESPON'  => array('ADD_MODAL','', '','','glyphicon glyphicon-retweet'));
-		$this->newtable->show_chk(true);
+		$check = (grant()=="W")?true:false;
+		$this->newtable->show_chk($check);
+		$this->newtable->show_menu($check);
 		$this->newtable->multiple_search(false);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.KD_KEMASAN', 'KODE KEMASAN'),array('A.NO_BL_AWB', 'NO. BL/AWB')));

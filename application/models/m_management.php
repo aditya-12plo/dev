@@ -5,30 +5,28 @@ if (!defined('BASEPATH'))
 
 class M_management extends Model {
 
-function autocomplete($type,$act,$get){
-    $post = $this->input->post('term');
-    if($type=="app_group"){
-        if($act=="nama"){        
-          if (!$post) return;
-
-          $SQL = "SELECT ID,NAMA
-          FROM app_group
-          WHERE NAMA LIKE '%".$post."%' LIMIT 5"; 
-          $result = $this->db->query($SQL);
-          $banyakData = $result->num_rows();
-          $arrayDataTemp = array();
-          if($banyakData > 0){
-            foreach($result->result() as $row){
-              $KODE = strtoupper($row->ID);
-              $NAMA = strtoupper($row->NAMA);
-              $arrayDataTemp[] = array("value"=>$NAMA,"NAMANYA"=>$KODE);
-            }
-          } 
-        }
-        echo json_encode($arrayDataTemp);
-    }
-
-}
+	function autocomplete($type,$act,$get){
+		$post = $this->input->post('term');
+		if($type=="app_group"){
+			if($act=="nama"){        
+			  if (!$post) return;
+			  $SQL = "SELECT ID,NAMA
+			  FROM app_group
+			  WHERE NAMA LIKE '%".$post."%' LIMIT 5"; 
+			  $result = $this->db->query($SQL);
+			  $banyakData = $result->num_rows();
+			  $arrayDataTemp = array();
+			  if($banyakData > 0){
+				foreach($result->result() as $row){
+				  $KODE = strtoupper($row->ID);
+				  $NAMA = strtoupper($row->NAMA);
+				  $arrayDataTemp[] = array("value"=>$NAMA,"NAMANYA"=>$KODE);
+				}
+			  } 
+			}
+			echo json_encode($arrayDataTemp);
+		}
+	}
 
     function get_data($act, $id) {
         $func = get_instance();
@@ -461,7 +459,8 @@ function autocomplete($type,$act,$get){
                         $DATA[$a] = $b;
                 }
                 $DATA['PASSWORD'] = md5($DATA['PASSWORD']);
-                $DATA['CHILD_USER'] = $this->newsession->userdata('ID');
+                $DATA['WK_REKAM'] = date("Y-m-d H:i:s");
+                //$DATA['CHILD_USER'] = $this->newsession->userdata('ID');
                 $result = $this->db->insert('app_user', $DATA);
                 if ($result) {
                     $func->main->get_log("add", "app_user");
@@ -1166,9 +1165,9 @@ function autocomplete($type,$act,$get){
         $judul = "DAFTAR USER";
         $KD_GROUP = $this->newsession->userdata('KD_GROUP');
         $KD_ORGANISASI = $this->newsession->userdata('KD_ORGANISASI');
-        if ($KD_GROUP != "SPA") {
+        /*if ($KD_GROUP != "SPA") {
             $addsql = " AND A.KD_ORGANISASI = " . $this->db->escape($KD_ORGANISASI);
-        }
+        }*/
         $SQL = "SELECT B.NAMA AS 'ORGANISASI', A.USERLOGIN ,A.NM_LENGKAP AS 'NAMA LENGKAP' ,A.HANDPHONE ,A.EMAIL ,C.NAMA AS 'NAMA GROUP',
 	  		  CONCAT('KODE TPS : ',A.KD_TPS,'<BR>KODE GUDANG : ',A.KD_GUDANG) AS 'GUDANG TPS', A.KD_STATUS AS STATUS, A.ID
 			  FROM app_user A
@@ -1178,13 +1177,15 @@ function autocomplete($type,$act,$get){
         $proses = array('ADD' => array('ADD_MODAL', "management/user/add", '0', '', 'icon-plus', '', '1'),
             'EDIT' => array('EDIT_MODAL', "management/user/edit", '1', '', 'icon-pencil', '', '1'),
             'DELETE' => array('DELETE', site_url() . "/management/execute/delete/user", 'ALL', '', 'icon-trash', '', '1'));
+		$check = (grant()=="W")?true:false;
+		$this->newtable->show_chk($check);
+		$this->newtable->show_menu($check);
         $this->newtable->search(array(array('A.USERLOGIN', 'USERLOGIN'), array('A.NM_LENGKAP', 'NAMA')));
         $this->newtable->action(site_url() . "/management/user");
         $this->newtable->hiddens(array("ID"));
         $this->newtable->keys(array("ID"));
         $this->newtable->multiple_search(true);
         $this->newtable->tipe_proses('button');
-        $this->newtable->show_chk(true);
         $this->newtable->show_search(true);
         $this->newtable->cidb($this->db);
         $this->newtable->set_formid("tbluser");
@@ -1256,13 +1257,15 @@ function autocomplete($type,$act,$get){
         $proses = array('ADD' => array('ADD_MODAL', "management/organisasi/add", '0', '', 'icon-plus', '', '1'),
             'EDIT' => array('EDIT_MODAL', "management/organisasi/edit", '1', '', 'icon-pencil', '', '1'),
             'DELETE' => array('DELETE', site_url() . "/management/execute/delete/organisasi", 'ALL', '', 'icon-trash', '', '1'));
+		$check = (grant()=="W")?true:false;
+		$this->newtable->show_chk($check);
+		$this->newtable->show_menu($check);
         $this->newtable->search(array(array('A.NAMA', 'ORGANISASI')));
         $this->newtable->action(site_url() . "/management/organisasi");
         $this->newtable->hiddens(array("ID"));
         $this->newtable->keys(array("ID"));
         $this->newtable->multiple_search(true);
         $this->newtable->tipe_proses('button');
-        $this->newtable->show_chk(true);
         $this->newtable->show_search(true);
         $this->newtable->cidb($this->db);
         $this->newtable->set_formid("tblorganisasi");
@@ -1287,9 +1290,9 @@ function autocomplete($type,$act,$get){
         $judul = "DAFTAR ORGANISASI";
         $KD_GROUP = $this->newsession->userdata('KD_GROUP');
         $KD_USER = $this->newsession->userdata('ID');
-        if ($KD_GROUP != "SPA") {
+        /*if ($KD_GROUP != "SPA") {
             $addsql = " AND A.KD_USER = " . $this->db->escape($KD_USER);
-        }
+        }*/
         $SQL = "SELECT B.NM_LENGKAP AS USER, A.DESKRIPSI AS LOG, A.WK_REKAM AS 'WAKTU REKAM', A.ID
                 FROM app_log A
                 LEFT JOIN app_user B ON B.ID=A.KD_USER

@@ -42,7 +42,8 @@ class M_ppbarang extends Model{
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_SURAT','NO. SURAT'),array('A.REF_NUMBER','REF NUMBER'),array('A.NM_ANGKUT','NAMA ANGKUT'),array('A.TGL_TIBA','TGL. TIBA','DATERANGE')));
 		$this->newtable->action(site_url() . "/ppbarang/listdata");
-		if($check) $this->newtable->detail(array('POPUP',"ppbarang/listdata/detail"));
+		#if($check) $this->newtable->detail(array('POPUP',"ppbarang/listdata/detail"));
+		$this->newtable->detail(array('POPUP',"ppbarang/listdata/detail"));
 		$this->newtable->tipe_proses('button');
 		$this->newtable->hiddens(array("KD_COCOSTSHDR","ID","KD_STATUS","TGL_STATUS"));
 		$this->newtable->keys(array("KD_COCOSTSHDR","ID"));

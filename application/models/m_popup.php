@@ -90,13 +90,11 @@ class M_popup extends Model {
 			}
 			$SQL = "SELECT USERLOGIN, NM_LENGKAP AS NAMA, HANDPHONE, EMAIL, KD_GROUP AS 'GROUP', ID
 					FROM app_user WHERE 1=1".$addsql;
-			$proses = array('SELECT' => array('OPTION', site_url()."/popup/pilih".$id, '1','','icon md-check',$popup));
-			$this->newtable->search(array(array('USERLOGIN', 'USERLOGIN'),array('NM_LENGKAP', 'NAMA')));
+			$proses = array('SELECT' => array('OPTION', site_url()."/popup/pilih/".$id, '1','','icon-check','',$popup));
+			$this->newtable->search(array(array('USERLOGIN', 'USERLOGIN'),array('NAMA_LENGKAP', 'NAMA LENGKAP')));
 			$this->newtable->action(site_url()."/popup/popup_search/".$arract[0]."/".$id."/".$popup);
-			$this->newtable->hiddens(array('ID'));
-			$this->newtable->keys(array("ID","USERLOGIN"));
-			$this->newtable->orderby(1);
-			$this->newtable->sortby("ASC");
+			$this->newtable->hiddens(array());			
+			$this->newtable->keys(array("ID","USERLOGIN","NM_LENGKAP"));
 			$showchk = true;
 		}else if($arract[0]=="mst_alasan_plp"){
 			$judul = "ALASAN PLP";
@@ -150,7 +148,7 @@ class M_popup extends Model {
 	
 	function pilih($id,$ajax){
 		$arrayReturn = array();
-		$arrfield = explode('|',$id);		
+		$arrfield = explode('|',$id);
 		if(count($arrfield>0)){
 			foreach($this->input->post('tb_chktblsearch') as $chkitem){
 				$arrdata[]  = $chkitem;
@@ -158,10 +156,7 @@ class M_popup extends Model {
 			$value = implode($arrdata,",");
 			$arrvalue = explode("~",$value);
 		}
-		if($ajax!="") $ajax = str_replace("~","/",$ajax);
-		$arrayReturn['arrajax'] = $ajax;
-		$arrayReturn['arrvalue'] = $arrvalue;
-		$arrayReturn['arrfield'] = $arrfield;
+		$arrayReturn = array('arrvalue' => $arrvalue, 'arrfield' => $arrfield);
 		echo json_encode($arrayReturn);
 	}
 	

@@ -9,9 +9,9 @@ class M_status extends Model {
 
 function listdata($act, $id) {
     $this->newtable->breadcrumb('Home', site_url());
-    $this->newtable->breadcrumb('UBAH STATUS', 'javascript:void(0)');
-    $data['title'] = 'DATA UBAH STATUS';
-    $judul = "UBAH STATUS";
+    $this->newtable->breadcrumb('PEMBERITAHUAN LCL', 'javascript:void(0)');
+    $data['title'] = 'DATA PEMBERITAHUAN LCL';
+    $judul = "PEMBERITAHUAN LCL";
     //$KD_TPS = $this->newsession->userdata('KD_TPS');
     $KD_GUDANG = $this->newsession->userdata('KD_GUDANG');
     $KD_GROUP = $this->newsession->userdata('KD_GROUP');
@@ -21,22 +21,22 @@ function listdata($act, $id) {
     }else if($KD_GROUP == "FWD"){
       $addsql .= " AND A.ID_USER = '".$this->newsession->userdata('ID')."' ";
     }
-  $SQL = "SELECT A.ID,A.NO_UBAH_STATUS,A.NO_UBAH_STATUS AS 'NO. UBAH STATUS' , 
-          DATE_FORMAT(A.TGL_UBAH_STATUS,'%d-%m-%Y') AS 'TGL. UBAH STATUS',
+  $SQL = "SELECT A.ID,A.NO_UBAH_STATUS,A.NO_UBAH_STATUS AS 'NO. PEMBERITAHUAN LCL' , 
+          DATE_FORMAT(A.TGL_UBAH_STATUS,'%d-%m-%Y') AS 'TGL. PEMBERITAHUAN LCL',
           CONCAT('TPS ASAL : ',B.NAMA_TPS,'<BR>NAMA GUDANG : ',C.NAMA_GUDANG) AS 'TERMINAL',
           CONCAT('TPS TUJUAN : ',D.NAMA_TPS,'<BR>NAMA GUDANG : ',E.NAMA_GUDANG) AS 'WAREHOUSE',F.NM_LENGKAP AS 'NAMA PEMOHON',
-          CONCAT('NAMA KAPAL : ',A.NAMA_KAPAL,'<BR>CALL SIGN : ',A.CALL_SIGN) AS 'NAMA KAPAL',
-          A.TGL_TIBA AS 'TGL. TIBA', CONCAT(G.NAMA,'<BR>',DATE_FORMAT(A.TGL_UBAH_STATUS,'%d-%m-%Y %H:%i:%s')) AS STATUS,A.NO_VOY_FLIGHT AS 'NO. VOYAGE'
+          CONCAT('NAMA KAPAL : ',A.NAMA_KAPAL,'<BR>CALL SIGN : ',A.CALL_SIGN,'<BR>TGL. TIBA : ',DATE_FORMAT(A.TGL_TIBA,'%d-%m-%Y'),'<BR>NO. VOYAGE : ',A.NO_VOY_FLIGHT) AS 'NAMA KAPAL',A.KD_STATUS,
+          CONCAT(G.NAMA,'<BR>',DATE_FORMAT(A.TGL_UBAH_STATUS,'%d-%m-%Y %H:%i:%s')) AS STATUS
           FROM t_ubah_status A INNER JOIN reff_gudang C ON A.KD_GUDANG_ASAL=C.KD_GUDANG INNER JOIN reff_tps B ON C.KD_TPS=B.KD_TPS 
           INNER JOIN reff_gudang E ON A.KD_GUDANG_TUJUAN=E.KD_GUDANG INNER JOIN reff_tps D ON E.KD_TPS=D.KD_TPS INNER JOIN app_user F 
           ON A.ID_USER=F.ID
           LEFT JOIN reff_status G ON G.ID = A.KD_STATUS AND G.KD_TIPE_STATUS = 'UBHSTAT' 
           WHERE 1=1" . $addsql; //print_r($SQL);die();   
 
-    $proses = array('ENTRY' => array('ADD_MODAL', "status/listdata/add", '0', '', 'icon-plus', '80'),
-          'UPDATE' => array('GET',site_url()."/status/listdata/update", '1','','icon-refresh'),
-          'DELETE' => array('DELETE', site_url() . "/status/execute/delete/ubahstatus", 'ALL', '', 'icon-trash'),
-          'KIRIM' => array('GET_POST',site_url()."/status/execute/send_ubah_stat", '1','0','icon-share-alt')
+    $proses = array('ENTRY' => array('ADD_MODAL', "status/listdata/add", '', '', 'icon-plus'),
+          'UPDATE' => array('GET',site_url()."/status/listdata/update", '1','100','icon-refresh'),
+          'DELETE' => array('DELETE', site_url() . "/status/execute/delete/ubahstatus", 'ALL', '100', 'icon-trash'),
+          'KIRIM' => array('GET_POST',site_url()."/status/execute/send_ubah_stat", '1','100','icon-share-alt')
           #'PRINT PERNYATAAN' => array('EXCEL', site_url() . "/plp/execute/cetak/word", '1', '100', 'icon-share-alt'),
           #'PRINT SURAT' => array('EXCEL', site_url() . "/plp/execute/cetak/excel", '1', '100', 'icon-share-alt'),
           //'PRINT' => array('PRINT', site_url() . "/status/proses_print/ubahstatus", '1', '', 'icon-printer'),
@@ -50,9 +50,9 @@ function listdata($act, $id) {
       $this->newtable->action(site_url() . "/status/listdata");
       $this->newtable->detail(array('POPUP', "status/listdata/detail"));
       $this->newtable->tipe_proses('button');
-      $this->newtable->hiddens(array("ID","NO_UBAH_STATUS"));
+      $this->newtable->hiddens(array("ID","NO_UBAH_STATUS","KD_STATUS"));
       $this->newtable->keys(array("ID","NO_UBAH_STATUS"));
-      $this->newtable->validasi(array("ID","NO_UBAH_STATUS"));
+      $this->newtable->validasi(array("KD_STATUS"));
       $this->newtable->cidb($this->db);
       $this->newtable->orderby(1);
       $this->newtable->sortby("DESC");
@@ -74,9 +74,9 @@ function kontainer_ubahstatus($act, $id) {
    
 
  $this->newtable->breadcrumb('Home', site_url());
-    $this->newtable->breadcrumb('UBAH STATUS', 'javascript:void(0)');
-    $data['title'] = 'DATA UBAH STATUS';
-    $judul = "UBAH STATUS";
+    $this->newtable->breadcrumb('PEMBERITAHUAN LCL', 'javascript:void(0)');
+    $data['title'] = 'DATA PEMBERITAHUAN LCL';
+    $judul = "PEMBERITAHUAN LCL";
     //$KD_TPS = $this->newsession->userdata('KD_TPS');
     $KD_GUDANG = $this->newsession->userdata('KD_GUDANG');
     $KD_GROUP = $this->newsession->userdata('KD_GROUP');
@@ -86,9 +86,16 @@ function kontainer_ubahstatus($act, $id) {
     }else if($KD_GROUP == "CONS"){
       $addsql .= " AND A.ID_USER = '".$this->newsession->userdata('ID')."' ";
     }
- $SQL = "SELECT A.ID, A.NO_CONT AS 'NO KONTAINER',A.UKURAN AS 'UKURAN KONTAINER',A.WK_REKAM AS 'WAKTU REKAM', A.NO_CONT FROM t_no_kontainer A
-          LEFT JOIN t_ubah_status B ON A.NO_UBAH_STATUS=B.NO_UBAH_STATUS
-          WHERE B.ID=". $this->db->escape($id) . $addsql; //print_r($SQL);die();     
+ $SQL = "SELECT A.ID, A.NO_CONT AS 'NO KONTAINER',C.NAMA AS 'UKURAN KONTAINER',
+		CASE WHEN A.STATUS = '0'  THEN 'Menunggu Approve'
+		WHEN A.STATUS = '1'  THEN 'Approve PLP'
+		WHEN A.STATUS = '2'  THEN 'Cancel PLP' END AS STATUS,
+		A.KETERANGAN,A.WK_REKAM AS 'WAKTU REKAM', A.NO_CONT
+		FROM t_no_kontainer A
+          LEFT JOIN t_ubah_status B ON A.NO_UBAH_STATUS=B.NO_UBAH_STATUS 
+		  LEFT JOIN reff_cont_ukuran C ON C.ID=A.KD_CONT_UKURAN
+          WHERE B.ID=". $this->db->escape($id) . $addsql; 
+		 // print_r($SQL);die();     
 
 
       $check = (grant() == "W") ? true : false;
@@ -132,8 +139,10 @@ function autocomplete($type,$act,$get){
           $addSQL = '';
           if($get == '1'){
             $addSQL .= " AND A.TIPE = '1' ";
+            $addSQL .= " AND A.KD_GUDANG <> 'CART' ";
           }else if($get == '2'){
             $addSQL .= " AND A.TIPE = '2' ";
+            $addSQL .= " AND A.KD_GUDANG IN ('BAND','RAYA') ";
           }
 
           $SQL = "SELECT A.KD_GUDANG AS KODE,CONCAT(A.NAMA_GUDANG,' - ',B.NAMA_TPS) AS NAMANYA 
@@ -193,7 +202,13 @@ function execute($type, $act, $id) {
       }
       else
       {
-        $NMKAPAL = trim($this->input->post('NAMA_KAPAL'));
+		$check = $this->db->query("SELECT * FROM reff_gudang WHERE KD_GUDANG='".$this->input->post('GUDANG_ASAL2')."'");
+		$check2 = $this->db->query("SELECT * FROM reff_gudang WHERE KD_GUDANG='".$this->input->post('GUDANG_TUJUAN2')."'");
+        $result = $check->num_rows();
+        $result2 = $check2->num_rows();
+        if($result > 0 && $result2 > 0)
+        {	  
+		 $NMKAPAL = trim($this->input->post('NAMA_KAPAL'));
         $CALL_SIGN = trim($this->input->post('CALL_SIGN'));
         $check = $this->db->query("SELECT * FROM reff_kapal WHERE NAMA ='".$NMKAPAL."'");
         $result = $check->num_rows();
@@ -212,7 +227,7 @@ function execute($type, $act, $id) {
           'KD_GUDANG_ASAL'  =>  validate($this->input->post('GUDANG_ASAL2')),
           'KD_GUDANG_TUJUAN'=>  validate($this->input->post('GUDANG_TUJUAN2')),
           'ID_USER'         =>  $this->newsession->userdata('ID'),
-          'KD_STATUS'       => '0',
+          'KD_STATUS'       => '100',
           'NAMA_KAPAL'      =>  trim(validate($this->input->post('NAMA_KAPAL'))),
           'CALL_SIGN'       =>  trim(validate($this->input->post('CALL_SIGN'))),
           'NO_VOY_FLIGHT'   =>  trim(validate($this->input->post('NO_VOYAGE'))),
@@ -227,14 +242,23 @@ function execute($type, $act, $id) {
 {
 $this->db->set('NO_UBAH_STATUS', $NO_UBAH_STATUS); 
 $this->db->set('NO_CONT', $NO_CONT[$x]); 
-$this->db->set('UKURAN', $UKURAN_CONT[$x]); 
+$this->db->set('KD_CONT_UKURAN', $UKURAN_CONT[$x]); 
 $this->db->set('WK_REKAM', $WK_REKAM); 
+$this->db->set('STATUS', '0'); 
+$this->db->set('KETERANGAN', ''); 
 $run2 = $this->db->insert('t_no_kontainer'); 
 }
         if (!$run OR !$run2) {
         $error += 1;
         $message .= "Could not be processed data";
-        }                     
+        }
+		}
+			else
+			{
+			$error += 1;
+        $message .= "Could not be processed data";	
+			}
+                             
       }
             if($error == 0){
         $func->main->get_log("add","t_ubah_status");
@@ -293,7 +317,6 @@ else
             'KD_GUDANG_ASAL'  =>  validate($this->input->post('GUDANG_ASAL2')),
             'KD_GUDANG_TUJUAN'=>  validate($this->input->post('GUDANG_TUJUAN2')),
             'ID_USER'         =>  $this->newsession->userdata('ID'),
-            'KD_STATUS'       => '0',
             'NAMA_KAPAL'      =>  trim(strtoupper(validate($this->input->post('NAMA_KAPAL')))),
             'CALL_SIGN'       => trim(strtoupper(validate($this->input->post('CALL_SIGN')))),
             'NO_VOY_FLIGHT'   =>  trim(strtoupper(validate($this->input->post('NO_VOYAGE')))),
@@ -310,9 +333,11 @@ else
         for($x=0;$x<$total;$x++)
 {
 $this->db->set('NO_UBAH_STATUS', $NO_UBAH_STATUS); 
-$this->db->set('NO_CONT', $NO_CONT[$x]); 
-$this->db->set('UKURAN', $UKURAN_CONT[$x]); 
+$this->db->set('NO_CONT', trim(strtoupper(validate($NO_CONT[$x])))); 
+$this->db->set('KD_CONT_UKURAN', $UKURAN_CONT[$x]); 
 $this->db->set('WK_REKAM', $WK_REKAM); 
+$this->db->set('STATUS', '0'); 
+$this->db->set('KETERANGAN', ''); 
 $run2 = $this->db->insert('t_no_kontainer'); 
 }
 
@@ -353,13 +378,16 @@ $run2 = $this->db->insert('t_no_kontainer');
     }
      else if ($type == "get") {
       if ($act == "t_ubah_status") {
-        $SQL = "SELECT A.NO_UBAH_STATUS,A.TGL_UBAH_STATUS,CONCAT(B.NAMA_TPS,' - ',C.NAMA_GUDANG) AS 'GUDANGASAL',CONCAT(D.NAMA_TPS,'  - ',E.NAMA_GUDANG) AS 'GUDANGTUJUAN',F.NM_LENGKAP,A.ID_USER,A.NAMA_KAPAL,A.CALL_SIGN,A.NO_BC11,A.TGL_BC11,A.NO_VOY_FLIGHT,A.TGL_TIBA, CASE WHEN A.KD_STATUS='0' THEN 'MENUNGGU' WHEN A.KD_STATUS='1' THEN 'PROSES'  ELSE 'SELESAI' END AS STATUS,A.ID,A.KD_GUDANG_ASAL,A.KD_GUDANG_TUJUAN
+        $SQL = "SELECT A.NO_UBAH_STATUS,A.TGL_UBAH_STATUS,CONCAT(B.NAMA_TPS,' - ',C.NAMA_GUDANG) AS 'GUDANGASAL',CONCAT(D.NAMA_TPS,'  - ',E.NAMA_GUDANG) AS 'GUDANGTUJUAN',F.NM_LENGKAP,A.ID_USER,A.NAMA_KAPAL,A.CALL_SIGN,A.NO_BC11,A.TGL_BC11,A.NO_VOY_FLIGHT,A.TGL_TIBA, 
+          G.NAMA AS STATUS,
+          A.ID,A.KD_GUDANG_ASAL,A.KD_GUDANG_TUJUAN
             FROM t_ubah_status A 
             INNER JOIN reff_gudang C ON A.KD_GUDANG_ASAL=C.KD_GUDANG 
             INNER JOIN reff_tps B ON C.KD_TPS=B.KD_TPS 
             INNER JOIN reff_gudang E ON A.KD_GUDANG_TUJUAN=E.KD_GUDANG 
             INNER JOIN reff_tps D ON E.KD_TPS=D.KD_TPS 
-            INNER JOIN app_user F ON A.ID_USER=F.ID  
+            INNER JOIN app_user F ON A.ID_USER=F.ID
+            INNER JOIN reff_status G ON G.ID=A.KD_STATUS AND G.KD_TIPE_STATUS = 'UBHSTAT'
             WHERE A.ID = " . $this->db->escape($id);
           $result = $func->main->get_result($SQL);
           if ($result) { 
@@ -371,9 +399,23 @@ $run2 = $this->db->insert('t_no_kontainer');
             redirect(site_url(), 'refresh');
           }
       }
+	  
+	  if($act == "reff_cont_ukuran")
+	  {
+		  $SQL = "SELECT ID,NAMA FROM reff_cont_ukuran";
+		  $query = $this->db->query($SQL);
+		   $result = $func->main->get_result($SQL);
+          if ($result) { 
+           return $query->result();
+          } 
+		  else {
+            redirect(site_url(), 'refresh');
+          }
+	  }
+	  
       if ($act == "t_no_kontainer") {
 
-        $SQL = "SELECT NO_CONT, UKURAN, WK_REKAM
+        $SQL = "SELECT NO_CONT, KD_CONT_UKURAN ,WK_REKAM
             FROM t_no_kontainer
             WHERE NO_UBAH_STATUS = " . $this->db->escape($id);
         $query = $this->db->query($SQL);
@@ -389,7 +431,7 @@ $run2 = $this->db->insert('t_no_kontainer');
             $arrchk = explode("~", $chkitem);
             $id_stat = $arrchk[0];
             $this->db->where(array('ID'=>$id_stat));
-            $this->db->update('t_ubah_status',array('KD_STATUS'=>'1','TGL_UBAH_STATUS'=>date('Y-m-d H:i:s')));
+            $this->db->update('t_ubah_status',array('KD_STATUS'=>'200','TGL_UBAH_STATUS'=>date('Y-m-d H:i:s')));
           } 
         }else{
           $error += 1;

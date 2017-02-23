@@ -5,7 +5,7 @@
   <div class="card-block p-a-0">
     <div class="box-tab m-b-0" id="rootwizard">
       <ul class="wizard-tabs">
-        <li class="active"><a href="#tab1" data-toggle="tab">UBAH STATUS</a></li>
+        <li class="active"><a href="#tab1" data-toggle="tab">PEMBERITAHUAN LCL</a></li>
         <li style="width:100%;"> <a data-toggle="" style="text-align:right">
           <button type="button" class="btn btn-primary btn-icon" onclick="save_post('form_data'); return false;">Save <i class="icon-check"></i></button>
           </a> </li>
@@ -40,13 +40,13 @@
                   <input type="text" wajib="yes" value="<?php echo $arrhdr['NAMA_KAPAL']; ?>" name="NAMA_KAPAL" id="NAMA_KAPAL" class="form-control" placeholder="NAMA KAPAL">                  
                 </div>
                 <div class="col-sm-5"> 
-                  <input type="text" name="NO_VOYAGE" value="<?=$arrhdr['NO_VOY_FLIGHT'];?>" wajib="yes" id="NO_VOYAGE" class="form-control" placeholder="NO VOYAGE">
+                  <input type="text" name="NO_VOYAGE" value="<?=$arrhdr['NO_VOY_FLIGHT'];?>" wajib="yes" id="NO_VOYAGE" class="form-control" maxlength="20" placeholder="NO VOYAGE">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label-left">Call Sign *</label>
+                <label class="col-sm-3 control-label-left">Call Sign</label>
                 <div class="col-sm-4">
-                  <input type="text" name="CALL_SIGN" value="<?php echo $arrhdr['CALL_SIGN']; ?>" id="CALL_SIGN" class="form-control" placeholder="CALL SIGN">
+                  <input type="text" name="CALL_SIGN" value="<?php echo $arrhdr['CALL_SIGN']; ?>" id="CALL_SIGN" maxlength="50" class="form-control" placeholder="CALL SIGN - BOLEH DIKOSONGKAN">
                 </div>
                 <div class="col-sm-5"> 
                   <div class="input-prepend input-group"><span class="add-on input-group-addon"><i class="icon-calendar"></i></span>
@@ -57,7 +57,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label-left">No. BC 11 *</label>
                 <div class="col-sm-4"> 
-                  <input type="text" name="NO_BC11" wajib="yes" value="<?php echo $arrhdr['NO_BC11']; ?>" id="NO_BC11" class="form-control" placeholder="No. BC 1.1">
+                  <input type="text" name="NO_BC11" wajib="yes" maxlength="50" value="<?php echo $arrhdr['NO_BC11']; ?>" id="NO_BC11" class="form-control" placeholder="No. BC 1.1">
                 </div>
                 <div class="col-sm-5"> 
                   <div class="input-prepend input-group"><span class="add-on input-group-addon"><i class="icon-calendar"></i></span>
@@ -79,32 +79,51 @@ if($act == "update")
 if($num_rows > 0)
 {
 foreach ($arrcont as $key) {
- echo '<div class="form-inline"> <input type="text" name="NO_CONT[]" id="NO_CONT1" value="'.$key->NO_CONT.'" wajib="yes" class="rank form-control" placeholder="NO KONTAINER" >&nbsp; 
-     <input type="text" name="UKURAN_CONT[]" id="UKURAN_CONT1" value="'.$key->UKURAN.'" wajib="yes" class="rank form-control" placeholder="UKURAN KONTAINER" >&nbsp;<button type="button" class="remove btn btn-danger" id="removeButton">Hapus</button></div><br>
+ echo '<div class="form-inline"> <input type="text" name="NO_CONT[]" maxlength="11" id="NO_CONT1" value="'.$key->NO_CONT.'" wajib="yes" class="rank form-control" placeholder="NO KONTAINER" >&nbsp; 
+     <select wajib="yes" class="rank form-control" name="UKURAN_CONT[]" id="UKURAN_CONT1">';
+	  foreach ($CONT as $c) {
+	  if($key->KD_CONT_UKURAN == $c->ID)
+	  {
+		   echo '<option value="'.$c->ID.'" selected="selected">'.$c->NAMA.'</option>'; 
+	  }
+	  else
+	  {
+		 echo '<option value="'.$c->ID.'">'.$c->NAMA.'</option>'; 
+	  }
+   
+  
+  } 
+	echo '</select>
+	 &nbsp;<button type="button" class="remove btn btn-danger" id="removeButton">Hapus</button></div><br>
 ';
 }
 }
 else
 {
-    echo '<div class="form-inline">
-  <input type="text" name="NO_CONT[]" id="NO_CONT1" wajib="yes" class="rank form-control" placeholder="NO KONTAINER" >
-   <input type="text" name="UKURAN_CONT[]" id="UKURAN_CONT1" wajib="yes" class="rank form-control" placeholder="UKURAN KONTAINER" >
-</div>';
+  echo '<div class="form-inline">
+  <input type="text" name="NO_CONT[]" maxlength="11" id="NO_CONT1" wajib="yes" class="rank form-control" placeholder="NO KONTAINER" > <select wajib="yes" class="rank form-control" name="UKURAN_CONT[]" id="UKURAN_CONT1">';
+  foreach ($CONT as $c) {
+	  
+   echo '<option value="'.$c->ID.'">'.$c->NAMA.'</option>';
+  }
+echo '</select></div>';
 }
 }
 else
 {
   echo '<div class="form-inline">
-  <input type="text" name="NO_CONT[]" id="NO_CONT1" wajib="yes" class="rank form-control" placeholder="NO KONTAINER" >
-   <input type="text" name="UKURAN_CONT[]" id="UKURAN_CONT1" wajib="yes" class="rank form-control" placeholder="UKURAN KONTAINER" >
-</div>';
+  <input type="text" name="NO_CONT[]" maxlength="11" id="NO_CONT1" wajib="yes" class="rank form-control" placeholder="NO KONTAINER" > <select wajib="yes" class="rank form-control" name="UKURAN_CONT[]" id="UKURAN_CONT1">';
+  foreach ($CONT as $c) {
+	  
+   echo '<option value="'.$c->ID.'">'.$c->NAMA.'</option>';
+  }
+echo '</select></div>';
 }
 
 ?>
 
 <br>
 <div id="TextBoxContainer" class="form-inline">
-
     <!--Textboxes will be added here -->
 </div>
 
@@ -142,6 +161,7 @@ autocomplete('NAMA_KAPAL','/autocomplete/status/reff_kapal/ship_name',function(e
 });
 
 
+
 $(function () {
     $("#addButton").bind("click", function () {
         var div = $("<div />");
@@ -153,8 +173,13 @@ $(function () {
     });
 });
 function GetDynamicTextBox() {
-    return '<input type="text" name="NO_CONT[]" id="NO_CONT1" wajib="yes" class="rank form-control" style="margin-bottom: 20px;" placeholder="NO KONTAINER" >&nbsp;' 
-    + ' <input type="text" name="UKURAN_CONT[]" id="UKURAN_CONT1" wajib="yes" class="rank form-control" style="margin-bottom: 20px;" placeholder="UKURAN KONTAINER" >&nbsp;' +'<button type="button" class="remove btn btn-danger" id="removeButton" style="margin-bottom: 20px;">Hapus</button>'
+    return '<input type="text" name="NO_CONT[]" maxlength="11" id="NO_CONT1" wajib="yes" class="rank form-control" style="margin-bottom: 20px;" placeholder="NO KONTAINER" >&nbsp;' 
+    + ' <select wajib="yes" class="rank form-control" name="UKURAN_CONT[]" id="UKURAN_CONT1" style="margin-bottom: 20px;"><?php
+	  foreach ($CONT as $c) {
+	  
+   echo '<option value="'.$c->ID.'">'.$c->NAMA.'</option>';
+  }
+	?></select>&nbsp;' +'<button type="button" class="remove btn btn-danger" id="removeButton" style="margin-bottom: 20px;">Hapus</button>'
 }
 
 

@@ -107,6 +107,8 @@
                     <select class="form-control input-lg" name="role">
                       <option value="CONS">CONSIGNEE</option>
                       <option value="FWD">FORWARDER</option>
+                      <!--option value="USR">TERMINAL</option>
+                      <option value="GDG">GUDANG</option-->
                     </select>
                   </div>
                 </div>

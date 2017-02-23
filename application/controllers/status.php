@@ -7,6 +7,7 @@ class Status extends Controller {
     }
 	
 	function index(){
+
 		$add_header  = '<link rel="stylesheet" href="'.base_url().'assets/vendor/sweetalert/dist/sweetalert.css">';
 		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/app.min.css">';
 		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/bootstrap-extend.min.css">';
@@ -55,34 +56,39 @@ class Status extends Controller {
 		$this->load->model("m_status");
 		if($act=="add"){
 			$this->newtable->breadcrumb('Home', site_url());
-			$this->newtable->breadcrumb('Ubah Status', site_url('status/listdata'));
+			$this->newtable->breadcrumb('PEMBERITAHUAN LCL', site_url('status/listdata'));
 			$this->newtable->breadcrumb('Entry', 'javascript:void(0)');
 			$data['title'] = 'ENTRY DATA';
 			$data['act'] = 'save';
 			$data['ID_DATA'] = '';
+			$data['CONT'] = $this->m_status->execute('get','reff_cont_ukuran',$id);
 			$data['TGL_SEKARANG'] =  date('d-m-Y');
 			echo $this->load->view('content/ubahstatus/add',$data,true);
 			//$this->index();
-		}else if($act=="detail"){ //print_r($act);die();
+		}
+		else if($act=="detail"){ //print_r($act);die();
 			$arrid = explode("~",$id);//print_r($arrid);die();
 			$data['title'] = 'DATA DETAIL';
 			$data['arrhdr'] = $this->m_status->execute('get','t_ubah_status',$id);
 			$data['table_kontainer'] = $this->kontainer_ubahstatus($act,$id);
 			echo $this->load->view('content/ubahstatus/detail',$data,true);
+
 		}else if($act=="update"){ 
 			$this->newtable->breadcrumb('Home', site_url());
-			$this->newtable->breadcrumb('Ubah Status', 'status/listdata');
+			$this->newtable->breadcrumb('PEMBERITAHUAN LCL', 'status/listdata');
 			$this->newtable->breadcrumb('Update', 'javascript:void(0)');
 			$data['title'] = 'UPDATE DATA';
 			$data['ID_DATA'] = $id;
 			$data['act'] = 'update';//print_r($act);die();
+			$data['CONT'] = $this->m_status->execute('get','reff_cont_ukuran',$id);
 			$data['arrhdr'] = $this->m_status->execute('get','t_ubah_status',$id); //print_r($data['arrhdr']);die();
 			$data['arrcont'] = $this->m_status->execute('get','t_no_kontainer',$data['arrhdr']['NO_UBAH_STATUS']); //print_r($data['arrhdr']);die();
-			$data['num_rows'] = count($data['arrcont']);
+			 $data['num_rows'] = count($data['arrcont']);
 			$data['TGL_SEKARANG'] =  date('d-m-Y');
 			$this->content = $this->load->view('content/ubahstatus/add',$data,true);
 			$this->index();
 			//print_r($data['arrhdr']);
+	
         }else{
 			$arrdata = $this->m_status->listdata($act, $id);
 			$data = $this->load->view('content/newtable', $arrdata, true);
@@ -95,21 +101,22 @@ class Status extends Controller {
 		}
 	}
 
-	function kontainer_ubahstatus($act,$id){
-		if (!$this->newsession->userdata('LOGGED')){
+function kontainer_ubahstatus($act,$id)
+{
+if (!$this->newsession->userdata('LOGGED')){
 			$this->index();
 			return;
 		}
 		$id = ($id!="")?$id:$this->input->post('id');
 		$this->load->model("m_status");
-		$arrdata = $this->m_status->kontainer_ubahstatus($act, $id);
-		$data = $this->load->view('content/newtable', $arrdata, true);
-		if($this->input->post("ajax")||$act=="post"){
-			echo $arrdata;
-		}else{
-			return $data;
-		}	
-	}
+			$arrdata = $this->m_status->kontainer_ubahstatus($act, $id);
+			$data = $this->load->view('content/newtable', $arrdata, true);
+			if($this->input->post("ajax")||$act=="post"){
+				echo $arrdata;
+			}else{
+				return $data;
+			}	
+}
 
 	function execute($type="",$act="", $id="")
 	{		
@@ -141,6 +148,8 @@ class Status extends Controller {
 		}
 	}
 
+
+	
 	function stacking($act, $id){
 		if (!$this->newsession->userdata('LOGGED')) {
 			$this->index();
@@ -201,8 +210,13 @@ class Status extends Controller {
 		}
 	}
 
-	function kirimxml($type="",$act="", $id=""){
-		$this->load->model("m_execute");
-		$this->m_execute->process($type,'xml_impor_ubahstatus',$id);
-	}	
+
+		function kirimxml($type="",$act="", $id=""){
+				$this->load->model("m_execute");
+				$this->m_execute->process($type,'xml_impor_ubahstatus',$id);
+	}
+	
+	
+	
+	
 }

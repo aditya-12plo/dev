@@ -2652,7 +2652,8 @@ class M_execute extends Model {
                     //echo "MSG#ERR#Data gagal diproses#";
                 }
             }
-            if ($act == "xml_impor_ubahstatus") {
+			
+		  if ($act == "xml_impor_ubahstatus") {
 
                 $dirXML = "";
 $SQL = "SELECT A.NO_UBAH_STATUS, A.KD_GUDANG_ASAL, A.KD_GUDANG_TUJUAN,
@@ -2660,7 +2661,7 @@ $SQL = "SELECT A.NO_UBAH_STATUS, A.KD_GUDANG_ASAL, A.KD_GUDANG_TUJUAN,
         C.NOFAX,A.NAMA_KAPAL,A.CALL_SIGN,A.NO_VOY_FLIGHT,DATE_FORMAT(A.TGL_TIBA,'%Y-%m-%d') AS TGL_TIBA,A.NO_BC11,
         DATE_FORMAT(A.TGL_BC11,'%Y-%m-%d') AS TGL_BC11, DATE_FORMAT(A.TGL_UBAH_STATUS,'%Y-%m-%d') AS TGL_UBAH_STATUS 
                     FROM t_ubah_status A INNER JOIN app_user B ON A.ID_USER=B.ID INNER JOIN t_organisasi C ON B.KD_ORGANISASI=C.ID 
-                    WHERE A.KD_STATUS='1'";
+                    WHERE A.KD_STATUS='200'";
 
                    
                     $result = $func->main->get_result($SQL);
@@ -2692,7 +2693,7 @@ $SQL = "SELECT A.NO_UBAH_STATUS, A.KD_GUDANG_ASAL, A.KD_GUDANG_TUJUAN,
                                     $str_xml .= '</HEADER>';
                                      $str_xml .= ' <DETIL>';
  #$DETAIL = mysq"SELECT NO_CONT,UKURAN,DATE_FORMAT(WK_REKAM,'%Y-%m-%d %H-%i-%s') AS WK_REKAM FROM t_no_kontainer WHERE NO_UBAH_STATUS='".$values['NO_UBAH_STATUS']."'";                                  
-  $this->db->select("NO_CONT,UKURAN, WK_REKAM");
+  $this->db->select("NO_CONT,KD_CONT_UKURAN, WK_REKAM");
   $this->db->where('NO_UBAH_STATUS', $values['NO_UBAH_STATUS']);
 $DETAIL = $this->db->get('t_no_kontainer');
       foreach ($DETAIL->result_array() as $rowsD => $d) {
@@ -2708,18 +2709,19 @@ $str_xml .= '</DETIL>';
                                 }
                                 $str_xml .= '</LOADUBAHSTATUS>';
                                 $str_xml .= '</DOCUMENT>';
-if($str_xml == true)
-{
-$this->db->set('KD_STATUS', '2');
-$this->db->where('KD_STATUS', '1');
-$ubah = $this->db->update('t_ubah_status');
-
- echo $str_xml;
-}
-else
-{
-    echo "periksa koneksi anda";
-}
+                        if($str_xml == true)
+                        {
+                        	/*
+                        $this->db->set('KD_STATUS', '2');
+                        $this->db->where('KD_STATUS', '1');
+                        $ubah = $this->db->update('t_ubah_status');
+                        */
+                         echo $str_xml;
+                        }
+                        else
+                        {
+                            echo "periksa koneksi anda";
+                        }
 
                                 
                     }
@@ -2733,39 +2735,6 @@ else
 force_download('ubahstatus.xml', $str_xml);
 */
             }
-			
-/*
-			if ($act == "xml_impor_ubahstatus") {
-
-                $dirXML = "";
-                    $SQL = "SELECT A.ID, A.NO_UBAH_STATUS, A.TGL_UBAH_STATUS 
-					FROM t_ubah_status A WHERE A.KD_STATUS='1'";
-                    $result = $func->main->get_result($SQL);
-                    if ($result) {
-                                $str_xml = '<?xml version="1.0" encoding="utf-8"?>';
-                                $str_xml .= '<DOCUMENT xmlns="loadubahstatus.xsd">';
-                                $str_xml .= ' <LOADUBAHSTATUS>';
-								
-                                foreach ($SQL->result_array() as $rows => $values) {
-									
-                                    $str_xml .= '<nctsdoc>';
-                                    $str_xml .= '<mrnnumber>' . str_xml($values['NO_UBAH_STATUS']) . '</mrnnumber>';
-                                    $str_xml .= '<nobc11>' . str_xml($values['NO_BC11']) . '</nobc11>';
-                                    $str_xml .= '<validationdate>' . str_xml($values['TGL_UBAH_STATUS']) . '</validationdate>';
-                                    $str_xml .= '<validateoffice>040300</validateoffice>';
-                                    $str_xml .= '</nctsdoc>';
-                               
-
-                                }
-                                $str_xml .= '</LOADUBAHSTATUS>';
-                                $str_xml .= '</DOCUMENT>';
-                    }
-              # echo $str_xml;
-              $this->load->helper('download');
-force_download('ubahstatus.xml', $str_xml);
-            }
-            */
-			
         }
     }
 

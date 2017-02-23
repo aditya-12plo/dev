@@ -55,15 +55,15 @@
                 </div>
               </div>
               <div class="form-group form-material">
-                <label class="col-sm-offset-1 col-sm-2 control-label-left">GATE IN</label>
+                <label class="col-sm-offset-1 col-sm-2 control-label-left">RECEIVING</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control focus" value="<?php echo $arrdata['GATE IN']; ?>" readonly="readonly">
+                  <input type="text" class="form-control focus" value="<?php echo $arrdata['RECEIVING']; ?>" readonly="readonly">
                 </div>
               </div>
               <div class="form-group form-material">
-                <label class="col-sm-offset-1 col-sm-2 control-label-left">GATE OUT</label>
+                <label class="col-sm-offset-1 col-sm-2 control-label-left">DELIVERY</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control focus" value="<?php echo $arrdata['GATE OUT']; ?>" readonly="readonly">
+                  <input type="text" class="form-control focus" value="<?php echo $arrdata['DELIVERY']; ?>" readonly="readonly">
                 </div>
               </div>
             </div>

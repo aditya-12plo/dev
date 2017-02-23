@@ -1,5 +1,5 @@
 <div class="panel">
-  <div class="ribbon ribbon-clip ribbon-primary"> <span class="ribbon-inner"> <i class="icon md-boat margin-0" aria-hidden="true"></i> DETAIL UBAH STATUS</span> </div>
+  <div class="ribbon ribbon-clip ribbon-primary"> <span class="ribbon-inner"> <i class="icon md-boat margin-0" aria-hidden="true"></i> DETAIL PEMBERITAHUAN LCL</span> </div>
   <div>&nbsp;</div>
   <div>&nbsp;</div>
   <div class="panel-body container-fluid">
@@ -8,11 +8,11 @@
          <div class="panel-body container-fluid">
             <div class="row">
               <div class="form-group form-material col-sm-12">
-                <label class="col-sm-2 control-label"><strong>NO UBAH STATUS</strong></label>
+                <label class="col-sm-2 control-label"><strong>NO PEMBERITAHUAN LCL</strong></label>
                 <div class="col-sm-4">
                  <?php echo $arrhdr['NO_UBAH_STATUS'];?>
                  </div>
-                  <label class="col-sm-2 control-label"><strong>TGL UBAH STATUS</strong></label>
+                  <label class="col-sm-2 control-label"><strong>TGL PEMBERITAHUAN LCL</strong></label>
                     <div class="col-sm-4">
                  <?php echo $arrhdr['TGL_UBAH_STATUS'];?>
                  </div>

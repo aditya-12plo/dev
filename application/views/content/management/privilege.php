@@ -16,10 +16,10 @@
                                 <input type="text" class="form-control" name="KD_USER" id="KD_USER" wajib="yes" placeholder="KODE" readonly="readonly" value="<?php echo $arrhdr['KD_USER']; ?>">
                             </div>
                             <div class="col-sm-7">
-                                <input type="text" name="NAMA_USERLOGIN" id="NAMA_USERLOGIN" wajib="yes" class="form-control" placeholder="NAMA USER" value="<?php echo strtoupper($arrhdr['USER']); ?>" <?php echo ($act == "update") ? "readonly" : ""; ?>>
+                                <input type="text" name="NAMA_USERLOGIN" id="NAMA_USERLOGIN" wajib="yes" class="form-control" placeholder="NAMA USER" value="<?php echo strtoupper($arrhdr['USER']); ?>" <?php echo ($act == "update") ? "readonly" : "readonly"; ?>>
                             </div>
                             <div class="col-sm-1" style="padding-top:2px">
-                                <button type="button" class="btn btn-primary btn-sm" onclick="popup_searchtwo('popup/popup_search/appuser/KD_USER|NAMA_USERLOGIN|NM_LENGKAP/2','','60','600')" <?php echo ($act == "update") ? "disabled" : ""; ?>> <span class="icon-magnifier"></span></button>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="popup_searchtwo('popup/popup_search/app_user/KD_USER|NAMA_USERLOGIN|NM_LENGKAP/2','','60','600')" <?php echo ($act == "update") ? "disabled" : ""; ?>> <span class="icon-magnifier"></span></button>
                             </div>
                         </div>
                         <div class="form-group">

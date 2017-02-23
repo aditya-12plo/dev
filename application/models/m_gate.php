@@ -266,10 +266,10 @@ class M_gate extends Model{
 	*/
 	public function gateout_kemasan($act,$id){
 		$page_title = "GATE OUT - KEMASAN";
-		$title = "GATE OUT";
+		$title = "DELIVERY";
 		$this->newtable->breadcrumb('Home', site_url(),'');
 		$this->newtable->breadcrumb('Kemasan', site_url('gate/out_kemasan'),'');
-		$this->newtable->breadcrumb('Gate Out', 'javascript:void(0)','');
+		$this->newtable->breadcrumb('DELIVERY', 'javascript:void(0)','');
 		$KD_TPS = $this->newsession->userdata('KD_TPS');
 		$KD_GUDANG = $this->newsession->userdata('KD_GUDANG');
 		$check = (grant()=="W")?true:false;
@@ -281,7 +281,7 @@ class M_gate extends Model{
 		}
 		$SQL = "SELECT A.NO_BL_AWB AS 'NO BL',A.JUMLAH AS 'JUMLAH KEMASAN',B.NAMA AS 'JENIS KEMASAN',
 				A.NO_CONT_ASAL AS 'KONTAINER ASAL',C.NM_ANGKUT AS 'NAMA KAPAL',C.NO_VOY_FLIGHT AS 'NO VOYAGE',
-				CONCAT('GATE OUT : ',DATE_FORMAT(IFNULL(A.WK_OUT,'-'),'%d-%m-%Y %H:%i:%s'),'<BR>TGL TIBA : ',DATE_FORMAT(IFNULL(C.TGL_TIBA,'-'),'%d-%m-%Y')) AS 'GATE OUT',CONCAT('NAMA TPS : ',D.NAMA_TPS,'<BR>NAMA GUDANG : ',E.NAMA_GUDANG) AS 'LOKASI TIMBUN',A.NO_BL_AWB,A.NO_MASTER_BL_AWB
+				CONCAT('DELIVERY : ',DATE_FORMAT(IFNULL(A.WK_OUT,'-'),'%d-%m-%Y %H:%i:%s')) AS 'DELIVERY',CONCAT('NAMA TPS : ',D.NAMA_TPS,'<BR>NAMA GUDANG : ',E.NAMA_GUDANG) AS 'LOKASI TIMBUN',A.NO_BL_AWB,A.NO_MASTER_BL_AWB
 		FROM t_cocostskms A LEFT JOIN reff_kemasan B ON A.KD_KEMASAN=B.ID LEFT JOIN t_cocostshdr C ON A.ID=C.ID INNER JOIN reff_gudang E ON A.KD_GUDANG_TUJUAN=E.KD_GUDANG INNER JOIN reff_tps D ON E.KD_TPS=D.KD_TPS
 		WHERE A.WK_IN IS NOT NULL AND A.WK_OUT IS NOT NULL";
 		$this->newtable->show_chk(FALSE);
@@ -289,7 +289,7 @@ class M_gate extends Model{
 		$this->newtable->multiple_search(true);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_MASTER_BL_AWB', 'MASTER BL/AWB'),array('A.NO_BL_AWB', 'BL/AWB')));
-		$this->newtable->action(site_url() . "/gate/gateout_kemasan/".$act."/".$id);
+		$this->newtable->action(site_url() . "/gate/out_kemasan");
 		#if($check) $this->newtable->detail(array('POPUP',"gate/gateout_kemasan/detail-kemasan"));
 		$this->newtable->tipe_proses('button');
 		$this->newtable->hiddens(array("NO_BL_AWB","NO_MASTER_BL_AWB"));
@@ -589,10 +589,10 @@ class M_gate extends Model{
 	}*/
 	public function gatein_kemasan($act,$id){
 		$page_title = "GATE IN - KEMASAN";
-		$title = "GATE IN";
+		$title = "RECEIVING";
 		$this->newtable->breadcrumb('Home', site_url(),'');
 		$this->newtable->breadcrumb('Kemasan', site_url('gate/in_kemasan'),'');
-		$this->newtable->breadcrumb('Gate In', 'javascript:void(0)','');
+		$this->newtable->breadcrumb('RECEIVING', 'javascript:void(0)','');
 		$KD_TPS = $this->newsession->userdata('KD_TPS');
 		$KD_GUDANG = $this->newsession->userdata('KD_GUDANG');
 		$check = (grant()=="W")?true:false;
@@ -604,17 +604,17 @@ class M_gate extends Model{
 		}
 		$SQL = "SELECT A.NO_BL_AWB AS 'NO BL',A.JUMLAH AS 'JUMLAH KEMASAN',B.NAMA AS 'JENIS KEMASAN',
 				A.NO_CONT_ASAL AS 'KONTAINER ASAL',C.NM_ANGKUT AS 'NAMA KAPAL',C.NO_VOY_FLIGHT AS 'NO VOYAGE',
-				CONCAT('GATE IN : ',DATE_FORMAT(IFNULL(A.WK_IN,'-'),'%d-%m-%Y %H:%i:%s'),'<BR>TGL TIBA : ',DATE_FORMAT(IFNULL(C.TGL_TIBA,'-'),'%d-%m-%Y')) AS 'GATE IN',CONCAT('NAMA TPS : ',D.NAMA_TPS,'<BR>NAMA GUDANG : ',E.NAMA_GUDANG) AS 'LOKASI TIMBUN',A.NO_BL_AWB,A.NO_MASTER_BL_AWB
+				CONCAT('RECEIVING : ',DATE_FORMAT(IFNULL(A.WK_IN,'-'),'%d-%m-%Y %H:%i:%s'),'<BR>TGL TIBA : ',DATE_FORMAT(IFNULL(C.TGL_TIBA,'-'),'%d-%m-%Y')) AS 'RECEIVING',CONCAT('NAMA TPS : ',D.NAMA_TPS,'<BR>NAMA GUDANG : ',E.NAMA_GUDANG) AS 'LOKASI TIMBUN',A.NO_BL_AWB,A.NO_MASTER_BL_AWB
 		FROM t_cocostskms A LEFT JOIN reff_kemasan B ON A.KD_KEMASAN=B.ID LEFT JOIN t_cocostshdr C ON A.ID=C.ID INNER JOIN reff_gudang E ON A.KD_GUDANG_TUJUAN=E.KD_GUDANG INNER JOIN reff_tps D ON E.KD_TPS=D.KD_TPS
 		WHERE A.WK_IN IS NOT NULL AND A.WK_OUT IS NULL";
 				#WHERE A.ID = ".$this->db->escape($id).$addsql;
-		
+
 		$this->newtable->show_chk(false);
 		#$this->newtable->show_menu($check);
 		$this->newtable->multiple_search(true);
 		$this->newtable->show_search(true);
 		$this->newtable->search(array(array('A.NO_MASTER_BL_AWB', 'MASTER BL/AWB'),array('A.NO_BL_AWB', 'BL/AWB')));
-		$this->newtable->action(site_url() . "/gate/gatein_kemasan/".$act."/".$id);
+		$this->newtable->action(site_url() . "/gate/in_kemasan/");
 		#if($check) $this->newtable->detail(array('POPUP',"gate/gatein_kemasan/detail-kemasan"));
 		#$this->newtable->tipe_proses('button');
 		$this->newtable->hiddens(array("NO_BL_AWB","NO_MASTER_BL_AWB"));

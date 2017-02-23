@@ -7,7 +7,7 @@ if ( ! function_exists('menu_content')){
 		$ci->load->database();
 		$segs = substr($ci->uri->slash_segment(1).$ci->uri->slash_segment(2),0,-1);
 
-		if($ci->newsession->userdata('TIPE_ORGANISASI')=="SPA"){
+		if(($ci->newsession->userdata('TIPE_ORGANISASI')=="SPA")&&($ci->newsession->userdata('KD_GROUP')=="SPA")){
 			$SQL = "SELECT B.ID, B.ID_PARENT, B.JUDUL_MENU, B.URL, B.URL_CI, B.URUTAN, B.TIPE, B.TARGET, 
 					B.ACTION, B.CLS_ICON AS ICON
 					FROM app_menu B

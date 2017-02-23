@@ -18,14 +18,14 @@ class M_tracking extends Model {
     $KD_KPBC = $this->newsession->userdata('KD_KPBC');
     $addsql = '';
     if ($KD_GROUP == "USER") {
-      $addsql .= " AND   A.KD_GUDANG_ASAL = " . $this->db->escape($KD_GUDANG);
+      $addsql .= " AND A.KD_GUDANG_ASAL = " . $this->db->escape($KD_GUDANG);
     }else if($KD_GROUP == "CONS"){
-      $addsql .= " AND C.ID = '".$this->newsession->userdata('ID')."' ";
+      $addsql .= " AND A.KD_ORG_CONSIGNEE = '".$this->newsession->userdata('KD_ORGANISASI')."' ";
     }
     $SQL = "SELECT A.NO_BL_AWB AS 'NO BL/AWB', A.JUMLAH AS 'JUMLAH KEMASAN', func_name(IFNULL(A.KD_KEMASAN,'-'),'KEMASAN') AS 'JENIS KEMASAN',
             A.NO_CONT_ASAL AS 'CONTAINER ASAL', CONCAT('NAMA KAPAL : ',B.NM_ANGKUT,'<BR>CALL SIGN : ',B.CALL_SIGN) AS 'NAMA KAPAL', B.NO_VOY_FLIGHT AS 'NO VOYAGE',
-            CASE WHEN A.WK_OUT IS NOT NULL THEN CONCAT('GATE OUT : ',DATE_FORMAT(IFNULL(A.WK_OUT,'-'),'%d-%m-%Y %H:%i:%s'))
-            ELSE CONCAT('GATE IN : ',DATE_FORMAT(IFNULL(A.WK_IN,'-'),'%d-%m-%Y %H:%i:%s'),'<BR>TGL TIBA : ',DATE_FORMAT(IFNULL(B.TGL_TIBA,'-'),'%d-%m-%Y')) END AS 'STATUS',
+            CASE WHEN A.WK_OUT IS NOT NULL THEN CONCAT('DELIVERY : ',DATE_FORMAT(IFNULL(A.WK_OUT,'-'),'%d-%m-%Y %H:%i:%s'))
+            ELSE CONCAT('RECEIVING : ',DATE_FORMAT(IFNULL(A.WK_IN,'-'),'%d-%m-%Y %H:%i:%s'),'<BR>TGL TIBA : ',DATE_FORMAT(IFNULL(B.TGL_TIBA,'-'),'%d-%m-%Y')) END AS 'STATUS',
             A.ID FROM t_cocostskms A	INNER JOIN t_cocostshdr B ON A.ID=B.ID WHERE 1=1" . $addsql;
      /*$proses = array('ENTRY' => array('ADD_MODAL', "status/listdata/add", '0', '', 'icon-plus', '80'),
           'UPDATE' => array('GET',site_url()."/status/listdata/update", '1','','icon-refresh'),
@@ -72,117 +72,7 @@ class M_tracking extends Model {
     $KD_GUDANG = $this->newsession->userdata('KD_GUDANG');
     $KD_KPBC = $this->newsession->userdata('KD_KPBC');
 
-    // for save new record data \\
-    if ($type == "save") {
-      if($this->input->post('GUDANG_ASAL2') == $this->input->post('GUDANG_TUJUAN2'))
-      {
-        $error += 1;
-        $message .= "Could not be processed data";
-      }
-      else
-      {
-        $NMKAPAL = trim($this->input->post('NAMA_KAPAL'));
-        $CALL_SIGN = trim($this->input->post('CALL_SIGN'));
-        $check = $this->db->query("SELECT * FROM reff_kapal WHERE NAMA ='".$NMKAPAL."'");
-        $result = $check->num_rows();
-        if($result < 0)
-        {
-          $insert = $this->db->query("INSERT INTO reff_kapal (NAMA,CALL_SIGN,CREATE_USER,CREATE_DATE) VALUES ('".$NMKAPAL."','".$CALL_SIGN."','".$this->newsession->userdata('ID')."',date('Y-m-d H:i:s'))");
-        }
-        $ubah= array(
-          'NO_UBAH_STATUS'  =>  'ST'.date('YmdHis'),
-          'TGL_UBAH_STATUS' =>  date('Y-m-d'),
-          'KD_GUDANG_ASAL'  =>  validate($this->input->post('GUDANG_ASAL2')),
-          'KD_GUDANG_TUJUAN'=>  validate($this->input->post('GUDANG_TUJUAN2')),
-          'ID_USER'         =>  $this->newsession->userdata('ID'),
-          'KD_STATUS'       => '0',
-          'NAMA_KAPAL'      =>  trim(validate($this->input->post('NAMA_KAPAL'))),
-          'CALL_SIGN'       =>  trim(validate($this->input->post('CALL_SIGN'))),
-          'NO_VOY_FLIGHT'   =>  trim(validate($this->input->post('NO_VOYAGE'))),
-          'TGL_TIBA'        =>  validate(date_input($this->input->post('TGL_TIBA'))),
-          'NO_BC11'         =>  trim(validate($this->input->post('NO_BC11'))),
-          'TGL_BC11'        =>  validate(date_input($this->input->post('TGL_BC11'))),
-          'WK_REKAM'        =>  date('Y-m-d H:i:s')
-        );
-        $run = $this->db->insert('t_ubah_status',$ubah);
-        if (!$run) {
-          $error += 1;
-          $message .= "Could not be processed data";
-        }
-      }
-      if($error == 0){
-        $func->main->get_log("add","t_ubah_status");
-        echo "MSG#OK#Successfully to be processed#". site_url() . "/status/listdata";
-      }
-      else{
-        echo "MSG#ERR#".$message."#";
-      }
-    }
-    else if ($type == "update") {
-      $id = $this->input->post('ID_DATA');
-      if($this->input->post('GUDANG_ASAL2') == $this->input->post('GUDANG_TUJUAN2'))
-      {
-        $error += 1;
-        $message .= "Could not be processed data";
-      }
-      else
-      {
-        $NMKAPAL = trim($this->input->post('NAMA_KAPAL'));
-        $CALL_SIGN = trim($this->input->post('CALL_SIGN'));
-        $check = $this->db->query("SELECT * FROM reff_kapal WHERE NAMA='$NMKAPAL'");
-        $result = $check->num_rows();
-        if($result < 0)
-        {
-          $insert = $this->db->query("INSERT INTO reff_kapal (NAMA,CALL_SIGN,CREATE_USER,CREATE_DATE) VALUES ('".$NMKAPAL."','".$CALL_SIGN."','".$this->newsession->userdata('ID')."',date('Y-m-d H:i:s'))");
-        }
-        $ubah= array(
-          'TGL_UBAH_STATUS' =>  date('Y-m-d'),
-          'KD_GUDANG_ASAL'  =>  validate($this->input->post('GUDANG_ASAL2')),
-          'KD_GUDANG_TUJUAN'=>  validate($this->input->post('GUDANG_TUJUAN2')),
-          'ID_USER'         =>  $this->newsession->userdata('ID'),
-          'KD_STATUS'       => '0',
-          'NAMA_KAPAL'      =>  trim(strtoupper(validate($this->input->post('NAMA_KAPAL')))),
-          'CALL_SIGN'       => trim(strtoupper(validate($this->input->post('CALL_SIGN')))),
-          'NO_VOY_FLIGHT'   =>  trim(strtoupper(validate($this->input->post('NO_VOYAGE')))),
-          'TGL_TIBA'        =>  validate(date_input($this->input->post('TGL_TIBA'))),
-          'NO_BC11'         =>  trim(strtoupper(validate($this->input->post('NO_BC11')))),
-          'TGL_BC11'        =>  validate(date_input($this->input->post('TGL_BC11'))),
-          'WK_REKAM'        =>  date('Y-m-d H:i:s')
-        );
-
-        $this->db->where(array('ID' => $id));
-        $run = $this->db->update('t_ubah_status', $ubah);
-        if (!$run) {
-          $error += 1;
-          $message .= "Could not be processed data";
-        }
-      }
-      if($error == 0){
-        $func->main->get_log("add","t_ubah_status");
-        echo "MSG#OK#Successfully to be processed#". site_url() . "/status/listdata";
-      }
-      else{
-        echo "MSG#ERR#".$message."#";
-      }
-    }
-    else if ($type == "delete") {
-      foreach ($this->input->post('tb_chktblubahstatus') as $chkitem) {
-      $arrchk = explode("~", $chkitem);
-      $ID = $arrchk[0];
-      $result = $this->db->delete('t_ubah_status', array('ID' => $ID));
-        if ($result == false) {
-          $error += 1;
-          $message .= "Could not be processed data";
-        }
-      }
-      if ($error == 0) {
-        $func->main->get_log("delete", "t_ubah_status");
-        echo "MSG#OK#Successfully to be processed#". site_url() . "/status/listdata/post";
-      } else {
-        echo "MSG#ERR#" . $message . "#";
-      }
-    }
-    else if ($type == "get") {
+    if ($type == "get") {
       if ($act == "t_cocostskms") {
         $SQL = "SELECT A.NO_BL_AWB AS 'NO BL/AWB', A.JUMLAH AS 'JUMLAH KEMASAN', func_name(IFNULL(A.KD_KEMASAN,'-'),'KEMASAN') AS 'JENIS KEMASAN',
                 A.NO_CONT_ASAL AS 'CONTAINER ASAL', B.NM_ANGKUT AS 'NAMA KAPAL', B.CALL_SIGN AS 'CALL SIGN', B.NO_VOY_FLIGHT AS 'NO VOYAGE',
@@ -199,25 +89,6 @@ class M_tracking extends Model {
         } else {
           redirect(site_url(), 'refresh');
         }
-      }
-    }else if($type == "send_ubah_stat"){
-      $sendData = true;
-      if($sendData){
-        foreach($this->input->post('tb_chktblubahstatus') as $chkitem){
-          $arrchk = explode("~", $chkitem);
-          $id_stat = $arrchk[0];
-          $this->db->where(array('ID'=>$id_stat));
-          $this->db->update('t_ubah_status',array('KD_STATUS'=>'1','TGL_UBAH_STATUS'=>date('Y-m-d H:i:s')));
-        }
-      }else{
-        $error += 1;
-        $message = "Data gagal diproses";
-      }
-      if($error == 0){
-        $func->main->get_log("kirim", "t_ubah_status");
-        echo "MSG#OK#Data berhasil diproses#".site_url()."/status/listdata";
-      }else{
-        echo "MSG#ERR#".$message."#";
       }
     }
   }

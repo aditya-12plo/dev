@@ -1,13 +1,19 @@
 <?php
+
 set_time_limit(3600);
 require_once("config.php");
-#$CONF['url.wsdl'] = 'http://10.1.5.109/TPSServices/services.php';
+
 ini_set("error_reporting","0");
-$method = 'UploadUbahStatus';
+$method = 'SendUbahStatus';
 $filename = $CONF['root.dir'] . "CheckScheduler/".$method.".txt";
 $main = new main($CONF, $conn);
 $CheckFile = $main->CheckFile($filename);
 if (!$CheckFile) {
+	
+	
+	$createFile = $main->createFile($filename);
+	
+	/*
     #$createFile = $main->createFile($filename);
     $main->connect();
 
@@ -87,6 +93,10 @@ if (!$CheckFile) {
 
     $main->connect(false);
     $main->removeFile($filename);
+	
+	
+	
+	*/
 }
  else {
     echo 'Scheduler sedang berjalan, harap menghapus file ' . $method . '.txt yang ada difolder CheckScheduler.';
