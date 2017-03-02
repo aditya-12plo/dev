@@ -8,22 +8,23 @@
                     </a> </li>
             </ul>
             <div class="tab-content">
+				<?php $KD_GROUP=$this->newsession->userdata('KD_GROUP');?>
                 <div class="tab-pane p-x-lg active" id="tab1">
                     <form name="form_data" id="form_data" class="form-horizontal" role="form" action="<?php echo site_url('management/execute/' . $act . '/user/' . $ID); ?>" method="post" autocomplete="off" onsubmit="save_popup('form_data','divtbluser'); return false;">
                         <div class="form-group">
                             <label class="col-sm-2 control-label-left">ORGANISASI</label>
-                            <div class="col-sm-9">
-                                <input type="hidden" class="form-control" name="DATA[KD_ORGANISASI]" id="KD_ORGANISASI" wajib="yes" placeholder="NPWP ORGANISASI" readonly="readonly" value="<?php echo $arrhdr['KD_ORGANISASI']; ?>">
-                                <input type="text" name="NAMA_ORGANISASI" id="NAMA_ORGANISASI" wajib="yes" class="form-control" placeholder="NAMA ORGANISASI" value="<?php echo strtoupper($arrhdr['NAMA_ORGANISASI']); ?>" readonly>
-                            </div>
+                            <div class="col-sm-<?php if($KD_GROUP=="SPA"){echo "9";}else{echo "10";}?>">
+                                <input type="hidden" class="form-control" name="DATA[KD_ORGANISASI]" id="KD_ORGANISASI" wajib="yes" placeholder="NPWP ORGANISASI" readonly="readonly" value="<?php if($KD_GROUP=="ADM"){echo $this->newsession->userdata('KD_ORGANISASI');}else{echo $arrhdr['KD_ORGANISASI'];} ?>">
+                                <input type="text" name="NAMA_ORGANISASI" id="NAMA_ORGANISASI" wajib="yes" class="form-control" placeholder="NAMA ORGANISASI" value="<?php if($KD_GROUP=="ADM"){echo strtoupper($this->newsession->userdata('NM_PERSH'));}else{echo strtoupper($arrhdr['NAMA_ORGANISASI']);} ?>" readonly>
+                            </div><?php if($KD_GROUP=="SPA"){?>
                             <div class="col-sm-1" style="padding-top:2px">
                                 <button type="button" class="btn btn-primary btn-sm" onclick="popup_searchtwo('popup/popup_search/organisasi/KD_ORGANISASI|NAMA_ORGANISASI/2','','60','600')"> <span class="icon-magnifier"></span></button>
-                            </div>
+                            </div><?php }?>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label-left">USERLOGIN</label>
+                            <label class="col-sm-2 control-label-left">USERNAME</label>
                             <div class="col-sm-10">
-                                <input type="text" name="DATA[USERLOGIN]" id="USERLOGIN" wajib="yes" class="form-control" placeholder="USERLOGIN" value="<?php echo $arrhdr['USERLOGIN']; ?>">
+                                <input type="text" name="USERLOGIN" id="USERLOGIN" wajib="yes" class="form-control" placeholder="USERNAME" value="<?php echo $arrhdr['USERLOGIN']; ?>" <?php echo ($act=="update") ? "readonly" : ""; ?>>
                             </div>
                         </div>
                         <div class="form-group">
@@ -47,10 +48,10 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label-left">EMAIL</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="DATA[EMAIL]" id="EMAIL" wajib="yes" placeholder="EMAIL"  value="<?php echo $arrhdr['EMAIL']; ?>">
+                                <input type="text" class="form-control" name="EMAIL" id="EMAIL" wajib="yes" placeholder="EMAIL"  value="<?php echo $arrhdr['EMAIL']; ?>" <?php echo ($act=="update") ? "readonly" : ""; ?>>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <!--div class="form-group">
                             <label class="col-sm-2 control-label-left">GUDANG</label>
                             <div class="col-sm-3">
                                 <input type="text" class="form-control" name="DATA[KD_GUDANG]" id="KD_GUDANG" placeholder="KODE" readonly="readonly" value="<?php echo $arrhdr['KD_GUDANG']; ?>">
@@ -62,7 +63,7 @@
                             <div class="col-sm-1" style="padding-top:2px">
                                 <button type="button" class="btn btn-primary btn-sm" onclick="popup_searchtwo('popup/popup_search/gudang/KD_GUDANG|NAMA_GUDANG|KD_TPS/2','','60','600')"> <span class="icon-magnifier"></span></button>
                             </div>
-                        </div>
+                        </div-->
                         <div class="form-group">
                             <label class="col-sm-2 control-label-left">GROUP</label>
                             <div class="col-sm-10"> <?php echo form_dropdown('DATA[KD_GROUP]', $arr_group, $arrhdr['KD_GROUP'], 'id="KD_GROUP" wajib="yes" class="form-control"'); ?> </div>
@@ -90,4 +91,51 @@
             $('#KD_GUDANG').val(ui.item.KD_GUDANG);
         });
     });
+document.getElementById('USERLOGIN').onclick = function() {document.getElementById('USERLOGIN').readOnly = false;};
+document.getElementById('EMAIL').onclick = function() {document.getElementById('EMAIL').readOnly = false;};
+$(document).ready(function() {
+	jQuery.validator.addMethod("noSpace", function(value, element) {
+	return value.indexOf(" ") < 0 && value !== "";
+	}, "Tidak boleh menggunakan spasi");
+	jQuery.validator.addMethod("regex",function(value, element, regexp) {
+	var re = new RegExp(regexp);
+	return this.optional(element) || re.test(value);
+	}, "Please check your input.");
+	$("#form_data").validate({
+		rules: {
+			USERLOGIN: {
+				required: true,
+				noSpace: true,
+				remote: {
+					url: "<?php echo site_url();?>/management/uname",
+					type: "post",
+					data: {
+						login: function(){
+							return $('#form_data :input[name="USERLOGIN"]').val();
+						}
+					}
+				}
+			},
+			EMAIL: {
+				remote: {
+					url: "<?php echo site_url();?>/management/umail",
+					type: "post",
+					data: {
+						login: function(){
+							return $('#form_data :input[name="EMAIL"]').val();
+						}
+					}
+				}
+			}
+		},
+		messages:{
+			USERLOGIN:{
+				remote: jQuery.validator.format("username sudah ada.")
+			},
+			EMAIL:{
+				remote: jQuery.validator.format("email sudah ada.")
+			}
+		}
+    });
+});
 </script> 

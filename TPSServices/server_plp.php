@@ -10,38 +10,52 @@ require_once ($CONF['root.dir'] . 'Libraries/xml2array.php' );
 $server = new soap_server();
 
 // initialize WSDL support
-$server->configureWSDL('TPSOnline', 'urn:TPSOnlinewsdl');
+$server->configureWSDL('TPSServices Web Service', 'http://services.beacukai.go.id/');
 
 // place schema at namespace with prefix tns
-$server->wsdl->schemaTargetNamespace = 'urn:TPSOnlinewsdl';
-$server->register('receivePLP', // method name
-        array('string' => 'xsd:string', 'string0' => 'xsd:string', 'string1' => 'xsd:string'),
-        array('return' => 'xsd:string'), // output
-        'urn:receivePLPwsdl', // namespace
-        'urn:TPSOnline', // soapaction
+$server->wsdl->schemaTargetNamespace = 'http://services.beacukai.go.id/';
+$server->register('UploadMohonPLP', // method name
+        array('fStream' => 'xsd:string', 'Username' => 'xsd:string', 'Password' => 'xsd:string'),
+        // input parameter
+        array('UploadMohonPLPResult' => 'xsd:string'), // output
+        'http://services.beacukai.go.id/', // namespace 
+        'http://services.beacukai.go.id/UploadMohonPLP', // soapaction
         'rpc', // style
         'encoded', // use
-        'Receive PLP'// documentation
+        'Fungsi untuk Upload data permohonan PLP '// documentation
 );
 
-$server->register('sendresponPLPasal', // method name
-        array('string' => 'xsd:string', 'string0' => 'xsd:string', 'string1' => 'xsd:string'),
-        array('return' => 'xsd:string'), // output
-        'urn:sendresponPLPasalwsdl', // namespace
-        'urn:TPSOnline', // soapaction
+$server->register('GetResponPLP', // method name
+        array('UserName' => 'xsd:string', 'Password' => 'xsd:string', 'Kd_asp' => 'xsd:string'),
+        // input parameter
+        array('GetResponPLPResult' => 'xsd:string'), // output
+        'http://services.beacukai.go.id/', // namespace
+        'http://services.beacukai.go.id/GetResponPLP', // soapaction
         'rpc', // style
         'encoded', // use
-        'send respon PLP Asal'// documentation
+        'Fungsi untuk mendownload data Respon PLP yang sudah diproses, filter yang digunakan adalah kode TPS'// documentation
 );
 
-$server->register('sendresponPLPtujuan', // method name
-        array('string' => 'xsd:string', 'string0' => 'xsd:string', 'string1' => 'xsd:string'),
-        array('return' => 'xsd:string'), // output
-        'urn:sendresponPLPtujuanwsdl', // namespace
-        'urn:TPSOnline', // soapaction
+$server->register('GetResponPLPTujuan', // method name
+        array('UserName' => 'xsd:string', 'Password' => 'xsd:string', 'Kd_asp' => 'xsd:string'),
+        // input parameter
+        array('GetResponPLPTujuanResult' => 'xsd:string'), // output
+        'http://services.beacukai.go.id/', // namespace
+        'http://services.beacukai.go.id/GetResponPLPTujuan', // soapaction
         'rpc', // style
         'encoded', // use
-        'send respon PLP Tujuan'// documentation
+        'Fungsi untuk mendownload data Respon PLP yang sudah disetujui, oleh TPS Tujuan, filter yang digunakan adalah kode TPS'// documentation
+);
+
+$server->register('UploadBatalPLP', // method name
+        array('fStream' => 'xsd:string', 'Username' => 'xsd:string', 'Password' => 'xsd:string'),
+        // input parameter
+        array('UploadBatalPLPResult' => 'xsd:string'), // output
+        'http://services.beacukai.go.id/', // namespace
+        'http://services.beacukai.go.id/UploadBatalPLP', // soapaction
+        'rpc', // style
+        'encoded', // use
+        'Fungsi untuk Upload data pembatalan PLP '// documentation
 );
 
 $server->register('receivebatalPLP', // method name
@@ -54,332 +68,316 @@ $server->register('receivebatalPLP', // method name
         'Receive Batal PLP'// documentation
 );
 
-function receivePLP($string, $string0, $string1) {
+$server->register('GetResponBatalPLP', // method name
+        array('UserName' => 'xsd:string', 'Password' => 'xsd:string', 'Kd_asp' => 'xsd:string'),
+        // input parameter
+        array('GetResponBatalPLPResult' => 'xsd:string'), // output
+        'http://services.beacukai.go.id/', // namespace
+        'http://services.beacukai.go.id/GetResponBatalPLP', // soapaction
+        'rpc', // style
+        'encoded', // use
+        'Fungsi untuk mengambil data persetujuan pembatalan PLP'// documentation
+);
+
+$server->register('GetResponBatalPLPTujuan', // method name
+        array('UserName' => 'xsd:string', 'Password' => 'xsd:string', 'Kd_asp' => 'xsd:string'),
+        // input parameter
+        array('GetResponBatalPLPTujuanResult' => 'xsd:string'), // output
+        'http://services.beacukai.go.id/', // namespace
+        'http://services.beacukai.go.id/GetResponBatalPLPTujuan', // soapaction
+        'rpc', // style
+        'encoded', // use
+        'Fungsi untuk mengambil data persetujuan pembatalan PLP'// documentation
+);
+
+$server->register('CoarriCodeco_Container', // method name
+        array('fStream' => 'xsd:string', 'Username' => 'xsd:string', 'Password' => 'xsd:string'),
+        // input parameter
+        array('CoarriCodeco_ContainerResult' => 'xsd:string'), // output
+        'http://services.beacukai.go.id/', // namespace
+        'http://services.beacukai.go.id/CoarriCodeco_Container', // soapaction
+        'rpc', // style
+        'encoded', // use
+        'Fungsi untuk insert data Coarri-Codeco Container(Baru, dengan penambahan kolom pada detil container)'// documentation
+);
+
+$server->register('CoarriCodeco_Kemasan', // method name
+        array('fStream' => 'xsd:string', 'Username' => 'xsd:string', 'Password' => 'xsd:string'),
+        // input parameter
+        array('CoarriCodeco_KemasanResult' => 'xsd:string'), // output
+        'http://services.beacukai.go.id/', // namespace
+        'http://services.beacukai.go.id/CoarriCodeco_Kemasan', // soapaction
+        'rpc', // style
+        'encoded', // use
+        'Fungsi untuk insert data Coarri Kemasan (Baru, dengan penambahan kolom pada detil kemasan)'// documentation
+);
+
+function UploadMohonPLP($fStream, $Username, $Password) {
     global $CONF, $conn;
     $conn->connect();
-    $userName = $string;
-    $password = $string0;
-    $xml = str_replace('&', ' ', $string1);
+    $IDLogServices = insertLogServices($UserName, $Password, $CONF['url.wsdl'], 'UploadMohonPLP', $fStream);
 
-    $IDLogServices = insertLogServices($userName, $xml, '', '', 'ReceivedPLP');
-
-    $checkUser = checkUser($userName, $password, $IDLogServices);
-    
-    //$KD_ORG_SENDER = $checkUser['kdorganisasi']; //tps asal/pengirim plp
-    //$KD_ORG_RECEIVER = 2; //beacukai
-
-    if (!$checkUser['return']) {
-        $conn->disconnect();
-        $return = $checkUser['message'];
-        return $return;
-    }
-
-
-    if ($xml != '') {
-        $xml = xml2ary($xml);        
-        $HEADER = $xml['DOCUMENT']['_c']['LOADPLP']['_c']['HEADER']['_c'];
-        $CONT = $xml['DOCUMENT']['_c']['LOADPLP']['_c']['DETIL']['_c']['CONT'];        
-        $countCont = count($CONT);
-
-		$inserthdr = "INSERT INTO t_request_plp_hdr (KD_KPBC,TIPE_DATA,KD_TPS_ASAL,REF_NUMBER,NO_SURAT,TGL_SURAT,KD_GUDANG_ASAL,KD_TPS_TUJUAN,KD_GUDANG_TUJUAN,
-													 KD_ALASAN_PLP,YOR_ASAL,YOR_TUJUAN,NM_ANGKUT,NO_VOY_FLIGHT,TGL_TIBA,NO_BC11,TGL_BC11,NM_PEMOHON,TGL_STATUS) 
-					  VALUES ('".$HEADER['KD_KANTOR']['_v']."','".$HEADER['TIPE_DATA']['_v']."','".$HEADER['KD_TPS_ASAL']['_v']."','".$HEADER['REF_NUMBER']['_v']."','".$HEADER['NO_SURAT']['_v']."',STR_TO_DATE('".$HEADER['TGL_SURAT']['_v']."','%d%m%Y'),'".$HEADER['GUDANG_ASAL']['_v']."','".$HEADER['KD_TPS_TUJUAN']['_v']."', '".$HEADER['GUDANG_TUJUAN']['_v']."','".$HEADER['KD_ALASAN_PLP']['_v']."', ".(int)$HEADER['YOR_ASAL']['_v'].",".(int)$HEADER['YOR_TUJUAN']['_v'].", '".$HEADER['NM_ANGKUT']['_v']."','".$HEADER['NO_VOY_FLIGHT']['_v']."',STR_TO_DATE('".$HEADER['TGL_TIBA']['_v']."','%d%m%Y'), '".$HEADER['NO_BC11']['_v']."',STR_TO_DATE('".$HEADER['TGL_BC11']['_v']."','%d%m%Y'),'".$HEADER['NM_PEMOHON']['_v']."',NOW())";
-		//echo $inserthdr;die();
-		$Execute = $conn->execute($inserthdr);
-		$ID = mysql_insert_id();
-
-		if($ID!=""){			
-			$cont = '';
-			$sqlcek = "SELECT A.ID,A.NO_UBAH_STATUS FROM t_ubah_status A INNER JOIN t_no_kontainer B ON B.NO_UBAH_STATUS=A.NO_UBAH_STATUS WHERE A.NO_VOY_FLIGHT='".$HEADER['NO_VOY_FLIGHT']['_v']."' AND A.NO_BC11='".$HEADER['NO_BC11']['_v']."' AND DATE_FORMAT(A.TGL_BC11,'%d%m%Y') = '".$HEADER['TGL_BC11']['_v']."' AND UPPER(A.NAMA_KAPAL) = '".strtoupper($HEADER['NM_ANGKUT']['_v'])."' ";
-        	$Querycek = $conn->query($sqlcek);
-        	$NO_UBAH_STATUS = '';
-			if ($Querycek->size() > 0) {
-				$Querycek->next();
-				$IDCEK = $Querycek->get("ID");
-				$NO_UBAH_STATUS = $Querycek->get("NO_UBAH_STATUS");
-				$sqlupdate = "UPDATE t_ubah_status SET KD_STATUS = '400', TGL_UBAH_STATUS = NOW() WHERE ID = ".$IDCEK;
-				$Executupdate = $conn->execute($sqlupdate); 
-			}	
-
-			if ($countCont > 1) {
-	            for ($c = 0; $c < $countCont; $c++) {	                
-	                $insertdtl = "INSERT INTO t_request_plp_cont (ID,NO_CONT,KD_CONT_UKURAN) VALUES (".$ID.",'".$CONT[$c]['_c']['NO_CONT']['_v']."','".$CONT[$c]['_c']['UK_CONT']['_v']."')";
-	                $Executedtl = $conn->execute($insertdtl);              
-	                if($Executedtl){
-	                	$cont .='<CONT>'.$CONT[$c]['_c']['NO_CONT']['_v'].'</CONT>';
-	                	if($NO_UBAH_STATUS!=""){
-	                		$sqlupdatecont = "UPDATE t_no_kontainer SET STATUS = '1' WHERE NO_UBAH_STATUS = '".$NO_UBAH_STATUS."' AND NO_CONT= '".$CONT[$c]['_c']['NO_CONT']['_v']."'";
-							$Executupdate = $conn->execute($sqlupdatecont); 
-	                	}             	
-	                }
-	            }
-	        } elseif ($countCont == 1) {	            
-	            	$insertdtl = "INSERT INTO t_request_plp_cont (ID,NO_CONT,KD_CONT_UKURAN) VALUES (".$ID.",'".$CONT['_c']['NO_CONT']['_v']."','".$CONT['_c']['UK_CONT']['_v']."')";
-	                $Executedtl = $conn->execute($insertdtl);	            
-	                if($Executedtl){
-	                	$cont .='<CONT>'.$CONT['_c']['NO_CONT']['_v'].'</CONT>';
-
-	                	if($NO_UBAH_STATUS!=""){
-	                		$sqlupdatecont = "UPDATE t_no_kontainer SET STATUS = '1' WHERE NO_UBAH_STATUS = '".$NO_UBAH_STATUS."' AND NO_CONT= '".$CONT['_c']['NO_CONT']['_v']."'";
-							$Executupdate = $conn->execute($sqlupdatecont); 
-	                	}
-	                }
-	        }
-	        $return = '<?xml version="1.0" encoding="UTF-8"?>';
-	        $return .= '<DOCUMENT>';
-	        $return .= '<RESPON>Berhasil</RESPON>';
-	        $return .= '<DETIL>';
-	        $return .= $cont;
-	        $return .= '</DETIL>';
-	        $return .= '</DOCUMENT>';
-		}else{
-			$return = '<?xml version="1.0" encoding="UTF-8"?>';
-	        $return .= '<DOCUMENT>';
-	        $return .= '<RESPON>GAGAL</RESPON>';
-	        $return .= '</DOCUMENT>';
-		}    
-
-        //$SQLmailbox = "INSERT INTO postbox (SNRF, KD_APRF, KD_ORG_SENDER, KD_ORG_RECEIVER, STR_DATA, KD_STATUS, TGL_STATUS)
-                        //VALUES (NULL, 'SENTAJUPLP','" . $KD_ORG_SENDER . "','" . $KD_ORG_RECEIVER . "','" . $xml . "','100',NOW())";
-        //$Executemailbox = $conn->execute($SQLmailbox);
-        $idpostbox = '';// mysql_insert_id();
-
-
+    $SOAPAction = 'http://services.beacukai.go.id/UploadMohonPLP';
+    $xml = '<?xml version="1.0" encoding="utf-8"?>
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+              <soap:Body>
+                <UploadMohonPLP xmlns="http://services.beacukai.go.id/">
+                  <fStream>'.htmlspecialchars($fStream).'</fStream>
+                  <Username>'.$Username.'</Username>
+                  <Password>'.$Password.'</Password>
+                </UploadMohonPLP>
+              </soap:Body>
+            </soap:Envelope>';
+    $Send = SendCurl($xml, $CONF['url.wsdl'], $SOAPAction);
+    if ($Send['response'] != '') {
+        $arr1 = 'UploadMohonPLPResponse';
+        $arr2 = 'UploadMohonPLPResult';
+        $response = xml2ary($Send['response']);
+        $return = $response['soap:Envelope']['_c']['soap:Body']['_c'][$arr1]['_c'][$arr2]['_v'];
     } else {
-        $return = '<?xml version="1.0" encoding="UTF-8"?>';
-        $return .= '<DOCUMENT>';
-        $return .= '<RESPON>string1 BELUM TERDEFINISI</RESPON>';
-        $return .= '</DOCUMENT>';
-        $idpostbox = '';
+        $return = '';
     }
-    
-    $xmlResponse = $return;
-    updateLogServices($IDLogServices, $xmlResponse, '',$idpostbox);
 
+    updateLogServices($IDLogServices, $return);
     $conn->disconnect();
     return $return;
 }
 
-function sendresponPLPasal($string, $string0, $string1) {
+function GetResponPLP($UserName, $Password, $Kd_asp) {
     global $CONF, $conn;
     $conn->connect();
-    $userName = $string;
-    $password = $string0;
-    $kdtps = $string1;
+    $IDLogServices = insertLogServices($UserName, $Password, $CONF['url.wsdl'], 'GetResponPLP', $Kd_asp);
 
-    $IDLogServices = insertLogServices($userName, $kdtps, '', '', 'SendresponPLPasal');
-    $checkUser = checkUser($userName, $password, $IDLogServices);
-    
-    $KD_ORG_SENDER = 2; //beacukai
-    $KD_ORG_RECEIVER = $checkUser['kdorganisasi']; //tps asal/pengirim plp
-
-    if (!$checkUser['return']) {
-        $conn->disconnect();
-        $return = $checkUser['message'];
-        return $return;
-    }
-
-    $SQLData = "SELECT ID,STR_DATA FROM mailbox WHERE KD_ORG_SENDER = ".$KD_ORG_SENDER." AND KD_ORG_RECEIVER = ".$KD_ORG_RECEIVER." AND KD_APRF = 'GETRESPLPASAL' AND KD_STATUS = '200' limit 1";
-    $Query = $conn->query($SQLData);
-    if ($Query->size() > 0) {
-    	$Query->next();        
-    	$return = $Query->get("STR_DATA");
-    	$iddata = $Query->get("ID");
-    	$SQLupdate = "UPDATE mailbox SET KD_STATUS = '300' WHERE ID = '" . $iddata . "'";
-    	$Execute = $conn->execute($SQLupdate);
-    }else{
-    	$return = '<?xml version="1.0" encoding="UTF-8"?>';
-        $return .= '<DOCUMENT>';
-        $return .= '<RESPON>Data Tidak ditemukan</RESPON>';
-        $return .= '</DOCUMENT>';
-        $iddata = '';
-    }
-    $xmlResponse = $return;
-    updateLogServices($IDLogServices, $xmlResponse, 'GET RESPON PLP ASAL DARI CFS', $iddata);    
-    return $return;
- }
-
-function sendresponPLPtujuan($string, $string0, $string1) {
-    global $CONF, $conn;
-    $conn->connect();
-    $userName = $string;
-    $password = $string0;
-    $kdtps = $string1;
-
-    $IDLogServices = insertLogServices($userName, $kdtps, '', '', 'SendresponPLPtujuan');
-    $checkUser = checkUser($userName, $password, $IDLogServices);
-    
-    $KD_ORG_SENDER = 2; //beacukai
-    $KD_ORG_RECEIVER = $checkUser['kdorganisasi']; //tps asal/pengirim plp
-
-    if (!$checkUser['return']) {
-        $conn->disconnect();
-        $return = $checkUser['message'];
-        return $return;
-    }
-
-    $SQLData = "SELECT ID,STR_DATA FROM mailbox WHERE KD_ORG_SENDER = ".$KD_ORG_SENDER." AND KD_ORG_RECEIVER = ".$KD_ORG_RECEIVER." AND KD_APRF = 'GETRESPLPTUJUAN' AND KD_STATUS = '200' limit 1";
-    $Query = $conn->query($SQLData);
-    if ($Query->size() > 0) {
-    	$Query->next();        
-    	$return = $Query->get("STR_DATA");
-    	$iddata = $Query->get("ID");
-    	$SQLupdate = "UPDATE mailbox SET KD_STATUS = '300' WHERE ID = '" . $iddata . "'";
-    	$Execute = $conn->execute($SQLupdate);
-    }else{
-    	$return = '<?xml version="1.0" encoding="UTF-8"?>';
-        $return .= '<DOCUMENT>';
-        $return .= '<RESPON>Data Tidak ditemukan</RESPON>';
-        $return .= '</DOCUMENT>';
-        $iddata = '';
-    }
-    $xmlResponse = $return;
-    updateLogServices($IDLogServices, $xmlResponse, 'GET RESPON PLP TUJUAN DARI CFS', $iddata);    
-    return $return;
-}
-
-function receivebatalPLP($string, $string0, $string1) {
-    global $CONF, $conn;
-    $conn->connect();
-    $userName = $string;
-    $password = $string0;
-    $xml = str_replace('&', ' ', $string1);
-
-    $IDLogServices = insertLogServices($userName, $xml, '', '', 'ReceivedbatalPLP');
-
-    $checkUser = checkUser($userName, $password, $IDLogServices);
-    
-    //$KD_ORG_SENDER = $checkUser['kdorganisasi']; //tps asal/pengirim plp
-    //$KD_ORG_RECEIVER = 2; //beacukai
-
-    if (!$checkUser['return']) {
-        $conn->disconnect();
-        $return = $checkUser['message'];
-        return $return;
-    }
-
-
-    if ($xml != '') {
-        $xml = xml2ary($xml);        
-        $HEADER = $xml['DOCUMENT']['_c']['BATALPLP']['_c']['HEADER']['_c'];
-        $CONT = $xml['DOCUMENT']['_c']['BATALPLP']['_c']['DETIL']['_c']['CONT'];        
-        $countCont = count($CONT);
-
-        $sqlcekrespon = "SELECT A.ID,B.KD_GUDANG_ASAL FROM t_respon_plp_asal_hdr A INNER JOIN t_request_plp_hdr B ON B.REF_NUMBER = A.REF_NUMBER WHERE A.NO_PLP = '".$HEADER['NO_PLP']['_v']."' AND DATE_FORMAT(A.TGL_PLP,'%d%m%Y') = '".$HEADER['TGL_PLP']['_v']."' AND A.KD_TPS= '".$HEADER['KD_TPS']['_v']."' AND A.REF_NUMBER='".$HEADER['REF_NUMBER']['_v']."'";        
-
-        $Querycekrespon = $conn->query($sqlcekrespon);
-        if ($Querycekrespon->size() > 0) {
-        	$Querycekrespon->next();
-			$IDRESPON = $Querycekrespon->get("ID");
-			$KD_GD_ASAL = $Querycekrespon->get("KD_GUDANG_ASAL");
-        }else{
-        	$return = '<?xml version="1.0" encoding="UTF-8"?>';
-	        $return .= '<DOCUMENT>';
-	        $return .= '<RESPON>GAGAL</RESPON>';
-	        $return .= '</DOCUMENT>';
-	        $xmlResponse = $return;
-    		updateLogServices($IDLogServices, $xmlResponse, 'Anda tidak memiliki hak akses','');
-    		return $return;
-        }
-
-
-		$inserthdr = "INSERT INTO t_request_batal_plp_hdr (KD_RESPON_PLP_ASAL,TIPE_DATA,KD_KPBC,NO_SURAT,TGL_SURAT,KD_TPS,KD_GUDANG,NM_PEMOHON,ALASAN,
-													 REF_NUMBER,TGL_STATUS) 
-					  VALUES (".$IDRESPON.",'".$HEADER['TIPE_DATA']['_v']."','".$HEADER['KD_KANTOR']['_v']."','".$HEADER['NO_SURAT']['_v']."',STR_TO_DATE('".$HEADER['TGL_SURAT']['_v']."','%d%m%Y'),'".$HEADER['KD_TPS']['_v']."','".$KD_GD_ASAL."', '".$HEADER['NM_PEMOHON']['_v']."','".$HEADER['ALASAN']['_v']."', '".$HEADER['REF_NUMBER']['_v']."',NOW())";
-		
-		$Execute = $conn->execute($inserthdr);
-		$ID = mysql_insert_id();
-		
-		if($ID!=""){			
-			$cont = '';
-			$sqlcek = "SELECT A.ID,A.NO_UBAH_STATUS FROM t_ubah_status A INNER JOIN t_no_kontainer B ON B.NO_UBAH_STATUS=A.NO_UBAH_STATUS WHERE  A.NO_BC11='".$HEADER['NO_BC11']['_v']."' AND DATE_FORMAT(A.TGL_BC11,'%d%m%Y') = '".$HEADER['TGL_BC11']['_v']."'   ";
-        	$Querycek = $conn->query($sqlcek);
-        	$NO_UBAH_STATUS = '';
-			if ($Querycek->size() > 0) {
-				$Querycek->next();
-				$IDCEK = $Querycek->get("ID");
-				$NO_UBAH_STATUS = $Querycek->get("NO_UBAH_STATUS");
-				$sqlupdate = "UPDATE t_ubah_status SET KD_STATUS = '500', TGL_UBAH_STATUS = NOW() WHERE ID = ".$IDCEK;
-				$Executupdate = $conn->execute($sqlupdate); 
-			}	
-
-			if ($countCont > 1) {
-	            for ($c = 0; $c < $countCont; $c++) {	                
-	                $insertdtl = "INSERT INTO t_request_batal_plp_cont (ID,NO_CONT,KD_CONT_UKURAN) VALUES (".$ID.",'".$CONT[$c]['_c']['NO_CONT']['_v']."','".$CONT[$c]['_c']['UK_CONT']['_v']."')";
-	                $Executedtl = $conn->execute($insertdtl);              
-	                if($Executedtl){
-	                	$cont .='<CONT>'.$CONT[$c]['_c']['NO_CONT']['_v'].'</CONT>';
-	                	if($NO_UBAH_STATUS!=""){
-	                		$sqlupdatecont = "UPDATE t_no_kontainer SET STATUS = '2' WHERE NO_UBAH_STATUS = '".$NO_UBAH_STATUS."' AND NO_CONT= '".$CONT[$c]['_c']['NO_CONT']['_v']."'";
-							$Executupdate = $conn->execute($sqlupdatecont); 
-	                	}             	
-	                }
-	            }
-	        } elseif ($countCont == 1) {	            
-	            	$insertdtl = "INSERT INTO t_request_batal_plp_cont (ID,NO_CONT,KD_CONT_UKURAN) VALUES (".$ID.",'".$CONT['_c']['NO_CONT']['_v']."','".$CONT['_c']['UK_CONT']['_v']."')";
-	                $Executedtl = $conn->execute($insertdtl);	            
-	                if($Executedtl){
-	                	$cont .='<CONT>'.$CONT['_c']['NO_CONT']['_v'].'</CONT>';
-
-	                	if($NO_UBAH_STATUS!=""){
-	                		$sqlupdatecont = "UPDATE t_no_kontainer SET STATUS = '2' WHERE NO_UBAH_STATUS = '".$NO_UBAH_STATUS."' AND NO_CONT= '".$CONT['_c']['NO_CONT']['_v']."'";
-							$Executupdate = $conn->execute($sqlupdatecont); 
-	                	}
-	                }
-	        }
-
-	        $return = '<?xml version="1.0" encoding="UTF-8"?>';
-	        $return .= '<DOCUMENT>';
-	        $return .= '<RESPON>Berhasil</RESPON>';
-	        $return .= '<DETIL>';
-	        $return .= $cont;
-	        $return .= '</DETIL>';
-	        $return .= '</DOCUMENT>';
-		}else{
-			$return = '<?xml version="1.0" encoding="UTF-8"?>';
-	        $return .= '<DOCUMENT>';
-	        $return .= '<RESPON>GAGAL</RESPON>';
-	        $return .= '</DOCUMENT>';
-		}
-	    
-	    
-
-        //$SQLmailbox = "INSERT INTO postbox (SNRF, KD_APRF, KD_ORG_SENDER, KD_ORG_RECEIVER, STR_DATA, KD_STATUS, TGL_STATUS)
-                        //VALUES (NULL, 'SENTAJUPLP','" . $KD_ORG_SENDER . "','" . $KD_ORG_RECEIVER . "','" . $xml . "','100',NOW())";
-        //$Executemailbox = $conn->execute($SQLmailbox);
-        $idpostbox = '';// mysql_insert_id();
-
-
+    $SOAPAction = 'http://services.beacukai.go.id/GetResponPLP';
+    $xml = '<?xml version="1.0" encoding="utf-8"?>
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+              <soap:Body>
+                <GetResponPLP xmlns="http://services.beacukai.go.id/">
+                  <UserName>'.$UserName.'</UserName>
+                  <Password>'.$Password.'</Password>
+                  <Kd_asp>'.$Kd_asp.'</Kd_asp>
+                </GetResponPLP>
+              </soap:Body>
+            </soap:Envelope>';
+    $Send = SendCurl($xml, $CONF['url.wsdl'], $SOAPAction);
+    if ($Send['response'] != '') {
+        $arr1 = 'GetResponPLPResponse';
+        $arr2 = 'GetResponPLPResult';
+        $response = xml2ary($Send['response']);
+        $return = $response['soap:Envelope']['_c']['soap:Body']['_c'][$arr1]['_c'][$arr2]['_v'];
     } else {
-        $return = '<?xml version="1.0" encoding="UTF-8"?>';
-        $return .= '<DOCUMENT>';
-        $return .= '<RESPON>string1 BELUM TERDEFINISI</RESPON>';
-        $return .= '</DOCUMENT>';
-        $idpostbox = '';
+        $return = '';
     }
-    
-    $xmlResponse = $return;
-    updateLogServices($IDLogServices, $xmlResponse, '',$idpostbox);
-
+    updateLogServices($IDLogServices, $return);
     $conn->disconnect();
     return $return;
 }
 
-function insertLogServices($userName, $xmlRequest, $xmlResponse, $remarks, $method = '') {
+function GetResponPLPTujuan($UserName, $Password, $Kd_asp) {
+    global $CONF, $conn;
+    $conn->connect();
+    $IDLogServices = insertLogServices($UserName, $Password, $CONF['url.wsdl'], 'GetResponPLPTujuan', $Kd_asp);
 
+    $SOAPAction = 'http://services.beacukai.go.id/GetResponPLPTujuan';
+    $xml = '<?xml version="1.0" encoding="utf-8"?>
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+              <soap:Body>
+                <GetResponPLPTujuan xmlns="http://services.beacukai.go.id/">
+                  <UserName>'.$UserName.'</UserName>
+                  <Password>'.$Password.'</Password>
+                  <Kd_asp>'.$Kd_asp.'</Kd_asp>
+                </GetResponPLPTujuan>
+              </soap:Body>
+            </soap:Envelope>';
+    $Send = SendCurl($xml, $CONF['url.wsdl'], $SOAPAction);
+    if ($Send['response'] != '') {
+        $arr1 = 'GetResponPLPTujuanResponse';
+        $arr2 = 'GetResponPLPTujuanResult';
+        $response = xml2ary($Send['response']);
+        $return = $response['soap:Envelope']['_c']['soap:Body']['_c'][$arr1]['_c'][$arr2]['_v'];
+    } else {
+        $return = '';
+    }
+    updateLogServices($IDLogServices, $return);
+    $conn->disconnect();
+    return $return;
+}
+
+function UploadBatalPLP($fStream, $Username, $Password) {
+    global $CONF, $conn;
+    $conn->connect();
+    $IDLogServices = insertLogServices($UserName, $Password, $CONF['url.wsdl'], 'UploadBatalPLP', $fStream);
+
+    $SOAPAction = 'http://services.beacukai.go.id/UploadBatalPLP';
+    $xml = '<?xml version="1.0" encoding="utf-8"?>
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+              <soap:Body>
+                <UploadBatalPLP xmlns="http://services.beacukai.go.id/">
+                  <fStream>'.htmlspecialchars($fStream).'</fStream>
+                  <Username>'.$Username.'</Username>
+                  <Password>'.$Password.'</Password>
+                </UploadBatalPLP>
+              </soap:Body>
+            </soap:Envelope>';
+    $Send = SendCurl($xml, $CONF['url.wsdl'], $SOAPAction);
+    if ($Send['response'] != '') {
+        $arr1 = 'UploadBatalPLPResponse';
+        $arr2 = 'UploadBatalPLPResult';
+        $response = xml2ary($Send['response']);
+        $return = $response['soap:Envelope']['_c']['soap:Body']['_c'][$arr1]['_c'][$arr2]['_v'];
+    } else {
+        $return = '';
+    }
+    
+    updateLogServices($IDLogServices, $return);
+    $conn->disconnect();
+    return $return;
+}
+
+function GetResponBatalPLP($UserName, $Password, $Kd_asp) {
+    global $CONF, $conn;
+    $conn->connect();
+    $IDLogServices = insertLogServices($UserName, $Password, $CONF['url.wsdl'], 'GetResponBatalPLP', $Kd_asp);
+
+    $SOAPAction = 'http://services.beacukai.go.id/GetResponBatalPLP';
+    $xml = '<?xml version="1.0" encoding="utf-8"?>
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+              <soap:Body>
+                <GetResponBatalPLP xmlns="http://services.beacukai.go.id/">
+                  <Username>'.$UserName.'</Username>
+                  <Password>'.$Password.'</Password>
+                  <Kd_asp>'.$Kd_asp.'</Kd_asp>
+                </GetResponBatalPLP>
+              </soap:Body>
+            </soap:Envelope>';
+    $Send = SendCurl($xml, $CONF['url.wsdl'], $SOAPAction);
+    if ($Send['response'] != '') {
+        $arr1 = 'GetResponBatalPLPResponse';
+        $arr2 = 'GetResponBatalPLPResult';
+        $response = xml2ary($Send['response']);
+        $return = $response['soap:Envelope']['_c']['soap:Body']['_c'][$arr1]['_c'][$arr2]['_v'];
+    } else {
+        $return = '';
+    }
+    updateLogServices($IDLogServices, $return);
+    $conn->disconnect();
+    return $return;
+}
+
+function GetResponBatalPLPTujuan($UserName, $Password, $Kd_asp) {
+    global $CONF, $conn;
+    $conn->connect();
+    $IDLogServices = insertLogServices($UserName, $Password, $CONF['url.wsdl'], 'GetResponBatalPLPTujuan', $Kd_asp);
+
+    $SOAPAction = 'http://services.beacukai.go.id/GetResponBatalPLPTujuan';
+    $xml = '<?xml version="1.0" encoding="utf-8"?>
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+              <soap:Body>
+                <GetResponBatalPLPTujuan xmlns="http://services.beacukai.go.id/">
+                  <Username>'.$UserName.'</Username>
+                  <Password>'.$Password.'</Password>
+                  <Kd_asp>'.$Kd_asp.'</Kd_asp>
+                </GetResponBatalPLPTujuan>
+              </soap:Body>
+            </soap:Envelope>';
+    $Send = SendCurl($xml, $CONF['url.wsdl'], $SOAPAction);
+    if ($Send['response'] != '') {
+        $arr1 = 'GetResponBatalPLPTujuanResponse';
+        $arr2 = 'GetResponBatalPLPTujuanResult';
+        $response = xml2ary($Send['response']);
+        $return = $response['soap:Envelope']['_c']['soap:Body']['_c'][$arr1]['_c'][$arr2]['_v'];
+    } else {
+        $return = '';
+    }
+    updateLogServices($IDLogServices, $return);
+    $conn->disconnect();
+    return $return;
+}
+
+function CoarriCodeco_Container($fStream, $Username, $Password) {
+    global $CONF, $conn;
+    $conn->connect();
+    $IDLogServices = insertLogServices($Username, $Password, $CONF['url.wsdl'], 'CoarriCodeco_Container', $fStream);
+
+    $SOAPAction = 'http://services.beacukai.go.id/CoarriCodeco_Container';
+    $xml = '<?xml version="1.0" encoding="utf-8"?>
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                <soap:Body>
+                    <CoarriCodeco_Container xmlns="http://services.beacukai.go.id/">
+                        <fStream>' . htmlspecialchars($fStream) . '</fStream>
+                        <Username>' . $Username . '</Username>
+                        <Password>' . $Password . '</Password>
+                    </CoarriCodeco_Container>
+                </soap:Body>
+            </soap:Envelope>';
+    $Send = SendCurl($xml, $CONF['url.wsdl'], $SOAPAction);
+    if ($Send['response'] != '') {
+        $arr1 = 'CoarriCodeco_ContainerResponse';
+        $arr2 = 'CoarriCodeco_ContainerResult';
+        $response = xml2ary($Send['response']);
+        $return = $response['soap:Envelope']['_c']['soap:Body']['_c'][$arr1]['_c'][$arr2]['_v'];
+    } else {
+        $return = '';
+    }
+
+    updateLogServices($IDLogServices, $return);
+    $conn->disconnect();
+    return $return;
+}
+
+function CoarriCodeco_Kemasan($fStream, $Username, $Password) {
+    global $CONF, $conn;
+    $conn->connect();
+    $IDLogServices = insertLogServices($Username, $Password, $CONF['url.wsdl'], 'CoarriCodeco_Kemasan', $fStream);
+
+    $SOAPAction = 'http://services.beacukai.go.id/CoarriCodeco_Kemasan';
+    $xml = '<?xml version="1.0" encoding="utf-8"?>
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                <soap:Body>
+                    <CoarriCodeco_Kemasan xmlns="http://services.beacukai.go.id/">
+                        <fStream>' . htmlspecialchars($fStream) . '</fStream>
+                        <Username>' . $Username . '</Username>
+                        <Password>' . $Password . '</Password>
+                    </CoarriCodeco_Kemasan>
+                </soap:Body>
+            </soap:Envelope>';
+    $Send = SendCurl($xml, $CONF['url.wsdl'], $SOAPAction);
+    if ($Send['response'] != '') {
+        $arr1 = 'CoarriCodeco_KemasanResponse';
+        $arr2 = 'CoarriCodeco_KemasanResult';
+        $response = xml2ary($Send['response']);
+        $return = $response['soap:Envelope']['_c']['soap:Body']['_c'][$arr1]['_c'][$arr2]['_v'];
+    } else {
+        $return = '';
+    }
+
+    updateLogServices($IDLogServices, $return);
+    $conn->disconnect();
+    return $return;
+}
+ 
+function insertLogServices($userName, $Password, $url, $method, $xmlRequest = '', $xmlResponse = '') {
     global $CONF, $conn;
     $ipAddress = getIP();
-    $method = $method == '' ? 'NULL' : "'" . $method . "'";
     $userName = $userName == '' ? 'NULL' : "'" . $userName . "'";
+    $Password = $Password == '' ? 'NULL' : "'" . $Password . "'";
+    $url = $url == '' ? 'NULL' : "'" . $url . "'";
+    $method = $method == '' ? 'NULL' : "'" . $method . "'";
     $xmlRequest = $xmlRequest == '' ? 'NULL' : "'" . $xmlRequest . "'";
     $xmlResponse = $xmlResponse == '' ? 'NULL' : "'" . $xmlResponse . "'";
-    $remarks = $remarks == '' ? 'NULL' : "'" . $remarks . "'";
-    $SQL = "INSERT INTO app_log_server (METHOD, USERNAME, XML_REQUEST, XML_RESPONSE, IPADDRESS, REMARKS, WK_REKAM)
-            VALUES (" . $method . ", " . $userName . ", " . $xmlRequest . ", " . $xmlResponse . ", '" . $ipAddress . "', " . $remarks . ", NOW())";
-     
+    $SQL = "INSERT INTO app_log_services (USERNAME, PASSWORD, URL, METHOD, REQUEST, RESPONSE, IP_ADDRESS, WK_REKAM)
+            VALUES (" . $userName . ", " . $Password . ", " . $url . ", " . $method . ", " . $xmlRequest . ", " . $xmlResponse . ", '" . $ipAddress . "', NOW())";
     $Execute = $conn->execute($SQL);
     $ID = mysql_insert_id();
     return $ID;
+}
+
+function updateLogServices($ID, $xmlResponse = '') {
+    global $CONF, $conn;
+    $xmlResponse = $xmlResponse == '' ? 'NULL' : "'" . $xmlResponse . "'";
+    $SQL = "UPDATE app_log_services SET RESPONSE = " . $xmlResponse . "
+            WHERE ID = '" . $ID . "'";
+    $Execute = $conn->execute($SQL);
 }
 
 function getIP($type = 0) {
@@ -403,14 +401,37 @@ function getIP($type = 0) {
     }
 }
 
-function updateLogServices($ID, $xmlResponse, $remarks,$iddata) {
-    global $CONF, $conn;
-    $xmlResponse = $xmlResponse == '' ? 'NULL' : "'" . $xmlResponse . "'";
-    $remarks = $remarks == '' ? 'NULL' : "'" . $remarks . "'";
-    $iddata = $iddata == '' ? 'NULL' : "'" . $iddata . "'";
-    $SQL = "UPDATE app_log_server SET XML_RESPONSE = " . $xmlResponse . ", REMARKS = " . $remarks . ", IDDATA = " . $iddata . "
-            WHERE ID = '" . $ID . "'";
-    $Execute = $conn->execute($SQL);
+function SendCurl($xml, $url, $SOAPAction, $proxy = "", $port = "443") {
+    $header[] = 'Content-Type: text/xml';
+    $header[] = 'SOAPAction: "' . $SOAPAction . '"';
+    $header[] = 'Content-length: ' . strlen($xml);
+    $header[] = 'Connection: close';
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    //        curl_setopt($ch, CURLOPT_PORT, $port);
+    //        curl_setopt($ch, CURLOPT_PROXY, $proxy);
+    curl_setopt($ch, CURLOPT_VERBOSE, 0);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_SSLVERSION, 3);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+    $response = curl_exec($ch);
+    if (!curl_errno($ch)) {
+        $return['return'] = TRUE;
+        $return['info'] = curl_getinfo($ch);
+        $return['response'] = $response;
+    } else {
+        $return['return'] = FALSE;
+        $return['info'] = curl_error($ch);
+        $return['response'] = '';
+    }
+    return $return;
 }
 
 function checkUser($user, $password, $IDLogServices) {

@@ -15,7 +15,7 @@ jQuery.extend(jQuery.validator.messages, {
 	equalTo: "Mohon isi nilai yang sama lagi.",
 	accept: "Silakan isi nilai dengan ekstensi yang valid.",
 	maxlength: $.validator.format("Mohon isi paling banyak {0} karakter"),
-	minlength: $.validator.format("Mohon isi setidaknya {0} karakter."),
+	minlength: $.validator.format("Mohon isi {0} karakter."),
 	rangelength: $.validator.format("Silakan isi nilai yang isisi antara {0} dan {1} karakter"),
 	range: $.validator.format("Mohon isi nilai antara {0} dan {1}."),
 	max: $.validator.format("Silakan isi nilai kurang dari atau sama dengan {0}."),

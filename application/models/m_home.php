@@ -5,10 +5,11 @@ class M_home extends Model{
 	function login($uid_, $pwd_, $adm=FALSE){
 		$query = "SELECT A.ID AS USERID, A.USERLOGIN, A.PASSWORD, A.NM_LENGKAP, A.HANDPHONE, A.KD_ORGANISASI, A.KD_GROUP, A.KD_TPS, A.KD_GUDANG,
 				  A.KD_STATUS, B.NPWP, B.NAMA AS NM_PERSH, B.ALAMAT AS ALAMAT_PERSH, B.NOTELP, B.NOFAX, B.EMAIL, B.KD_TIPE_ORGANISASI,
-				  C.NAMA AS NM_GROUP, D.NAMA_GUDANG AS NM_GUDANG, E.NAMA_TPS, E.KD_KPBC, A.LAST_LOGIN, A.WK_REKAM,
+				  C.NAMA AS NM_GROUP,F.NAMA AS NM_TIPE_GROUP, D.NAMA_GUDANG AS NM_GUDANG, E.NAMA_TPS, E.KD_KPBC, A.LAST_LOGIN, A.WK_REKAM,
 				  ADDDATE(A.WK_REKAM, INTERVAL 3 MONTH) AS NEXT_3_MONTH, NOW() AS WK_NOW
 				  FROM app_user A
 				  INNER JOIN t_organisasi B ON A.KD_ORGANISASI = B.ID
+					INNER JOIN reff_tipe_organisasi F ON B.KD_TIPE_ORGANISASI = F.ID
 				  INNER JOIN app_group C ON A.KD_GROUP = C.ID
 				  LEFT JOIN reff_gudang D ON A.KD_GUDANG = D.KD_GUDANG
 				  LEFT JOIN reff_tps E ON E.KD_TPS=A.KD_TPS
@@ -45,6 +46,7 @@ class M_home extends Model{
 						$datses['NOFAX'] = $row['NOFAX'];
 						$datses['EMAIL'] = $row['EMAIL'];
 						$datses['TIPE_ORGANISASI'] = $row['KD_TIPE_ORGANISASI'];
+						$datses['NM_TIPE_GROUP'] = $row['NM_TIPE_GROUP'];
 						$datses['NM_GROUP'] = $row['NM_GROUP'];
 						$datses['NM_GUDANG'] = $row['NM_GUDANG'];
 						$datses['NM_TPS'] = $row['NAMA_TPS'];
@@ -57,7 +59,7 @@ class M_home extends Model{
 				}
 				else{
 					foreach($data->result_array() as $row){
-						$datses['LOGGED'] = false;
+						$datses['LOGGED'] = true;
 						$datses['IP'] = $_SERVER['REMOTE_ADDR'];
 						$datses['USERLOGIN'] = $row['USERLOGIN'];
 						$datses['PASSWORD'] = $pwd_;
@@ -76,6 +78,7 @@ class M_home extends Model{
 						$datses['NOFAX'] = $row['NOFAX'];
 						$datses['EMAIL'] = $row['EMAIL'];
 						$datses['TIPE_ORGANISASI'] = $row['KD_TIPE_ORGANISASI'];
+						$datses['NM_TIPE_GROUP'] = $row['NM_TIPE_GROUP'];
 						$datses['NM_GROUP'] = $row['NM_GROUP'];
 						$datses['NM_GUDANG'] = $row['NM_GUDANG'];
 						$datses['NM_TPS'] = $row['NAMA_TPS'];
@@ -149,7 +152,8 @@ class M_home extends Model{
 	}
 
 	function reset_password($toemail){
-		$this->db->where("email",$toemail);
+		$array = array('email' => $toemail, 'KD_STATUS' => 'ACTIVE');
+		$this->db->where($array);
 		$queryr=$this->db->get('app_user');
 		$userInfo = $queryr->row();
 		if($queryr->num_rows() != "1"){
@@ -209,12 +213,19 @@ class M_home extends Model{
 		$DATA['EMAIL'] = $this->input->post('email');
 		$DATA['HANDPHONE'] = $this->input->post('telpon');
 		$DATA['PASSWORD'] = md5($this->input->post('password'));
-		$DATA['KD_GROUP'] = $this->input->post('role');
+		$DATA['KD_GROUP'] = 'ADM';
 		$DATA['KD_STATUS'] = 'INACTIVE';
-		$DATA['WK_REKAM'] = date('Y-m-d H:i:s');
+		//$DATA['WK_REKAM'] = date('Y-m-d H:i:s');
+		$npwp1=str_replace("-","",$this->input->post('npwpcompany'));$npwp=str_replace(".","",$npwp1);
+		//$DATA_ORG['NPWP'] = $this->input->post('npwpcompany');
+		$queryOR = "SELECT * FROM app_user A INNER JOIN t_organisasi B ON A.KD_ORGANISASI = B.ID WHERE A.KD_STATUS='ACTIVE' AND B.NPWP=".$this->db->escape($npwp);
+		$cekOR = $this->db->query($queryOR);
+		if($cekOR->num_rows() > 0){
+			return 3;
+		}else{
 		if($this->input->post('kd_company')==''){
 			$DATA_ORG['NAMA']=$this->input->post('company');
-			$DATA_ORG['NPWP'] = $this->input->post('npwpcompany');
+			$DATA_ORG['NPWP'] = $npwp;
 			$DATA_ORG['ALAMAT'] = $this->input->post('alamatcompany');
 			$DATA_ORG['EMAIL'] = $this->input->post('emailcompany');
 			$DATA_ORG['NOTELP'] = $this->input->post('telponcompany');
@@ -225,42 +236,48 @@ class M_home extends Model{
 		}else{
 			$DATA['KD_ORGANISASI']=$this->input->post('kd_company');
 		}
-		$exec = $this->db->insert('APP_USER', $DATA);
-		if(!$exec){
-			return 0;
-			#echo "MSG#OK#Data berhasil diproses#".base_url()."application.php/dashboard";
-		}else{
-			$message = '';
-			$message .= '<strong>Terimakasih telah melakukan pendaftaran CFS Center.</strong><br>';
-			$message .= '<strong>Silakan menunggu email permberitahuan approve dari Admin.</strong>';
-			$toemail = $this->input->post('email');
-			$fromemail="cfs@edi-indonesia.co.id";
-			$fromname="Admin CFS Center";
-			$subject="User CFS Center";
-			$this->load->helper('email');
-			$config = array(
-				'protocol'  => 'smtp',
-				'smtp_host' => 'mail2.edi-indonesia.co.id',
-				'smtp_port' => 25,
-				'smtp_user' => '',
-				'smtp_pass' => '',
-				'mailtype'  => 'html',
-				'charset'   => 'iso-8859-1',
-				'wrapchars' => 100,
-				'crlf'      => "\r\n",
-				'newline'   => "\r\n",
-				'start_tls' => TRUE
-			);
-			$this->load->library('email', $config);
-			$this->email->from($fromemail, $fromname);
-			$this->email->to($toemail);
-			//$this->email->bcc('bobi@edi-indonesia.co.id');
-			$this->email->subject($subject);
-			$this->email->message($message);
-			if(!$this->email->send()){
-				return 2;
+		/*$query = "SELECT * FROM app_user A INNER JOIN t_organisasi B ON A.KD_ORGANISASI = B.ID WHERE A.KD_STATUS='ACTIVE' AND A.KD_ORGANISASI='".$DATA['KD_ORGANISASI']."'";
+		$cek = $this->db->query($query);
+		if($cek->num_rows() > 0){
+			return 3;
+		}else{*/
+			$exec = $this->db->insert('APP_USER', $DATA);
+			if(!$exec){
+				return 0;
+				#echo "MSG#OK#Data berhasil diproses#".base_url()."application.php/dashboard";
 			}else{
-				return 1;
+				$message = '';
+				$message .= '<strong>Terimakasih telah melakukan pendaftaran CFS Center.</strong><br>';
+				$message .= '<strong>Silakan menunggu email permberitahuan approve dari Admin.</strong>';
+				$toemail = $this->input->post('email');
+				$fromemail="cfs@edi-indonesia.co.id";
+				$fromname="Admin CFS Center";
+				$subject="User CFS Center";
+				$this->load->helper('email');
+				$config = array(
+					'protocol'  => 'smtp',
+					'smtp_host' => 'mail2.edi-indonesia.co.id',
+					'smtp_port' => 25,
+					'smtp_user' => '',
+					'smtp_pass' => '',
+					'mailtype'  => 'html',
+					'charset'   => 'iso-8859-1',
+					'wrapchars' => 100,
+					'crlf'      => "\r\n",
+					'newline'   => "\r\n",
+					'start_tls' => TRUE
+				);
+				$this->load->library('email', $config);
+				$this->email->from($fromemail, $fromname);
+				$this->email->to($toemail);
+				//$this->email->bcc('bobi@edi-indonesia.co.id');
+				$this->email->subject($subject);
+				$this->email->message($message);
+				if(!$this->email->send()){
+					return 2;
+				}else{
+					return 1;
+				}
 			}
 		}
 	}
@@ -291,6 +308,7 @@ class M_home extends Model{
 					if($DATA['PASS_NEW']==$DATA['PASS_CONFIRM']){
 						$ARRDATA['PASSWORD'] = md5($DATA['PASS_NEW']);
 						$ARRDATA['WK_REKAM'] = date('Y-m-d H:i:s');
+						$ARRDATA['KETERANGAN'] = NULL;
 						$this->db->where(array('ID' => $rs->USERID));
 						$exec = $this->db->update('app_user', $ARRDATA);
 						if($exec){

@@ -7,12 +7,12 @@ class M_management extends Model {
 
 	function autocomplete($type,$act,$get){
 		$post = $this->input->post('term');
-		if($type=="app_group"){
-			if($act=="nama"){        
+		if($type=="reff_tipe_organisasi"){
+			if($act=="nama"){
 			  if (!$post) return;
 			  $SQL = "SELECT ID,NAMA
-			  FROM app_group
-			  WHERE NAMA LIKE '%".$post."%' LIMIT 5"; 
+			  FROM reff_tipe_organisasi
+			  WHERE NAMA LIKE '%".$post."%' LIMIT 5";
 			  $result = $this->db->query($SQL);
 			  $banyakData = $result->num_rows();
 			  $arrayDataTemp = array();
@@ -22,7 +22,25 @@ class M_management extends Model {
 				  $NAMA = strtoupper($row->NAMA);
 				  $arrayDataTemp[] = array("value"=>$NAMA,"NAMANYA"=>$KODE);
 				}
-			  } 
+			  }
+			}
+			echo json_encode($arrayDataTemp);
+		}elseif($type=="app_group"){
+			if($act=="nama"){
+			  if (!$post) return;
+			  $SQL = "SELECT ID,NAMA
+			  FROM app_group
+			  WHERE NAMA LIKE '%".$post."%' LIMIT 5";
+			  $result = $this->db->query($SQL);
+			  $banyakData = $result->num_rows();
+			  $arrayDataTemp = array();
+			  if($banyakData > 0){
+				foreach($result->result() as $row){
+				  $KODE = strtoupper($row->ID);
+				  $NAMA = strtoupper($row->NAMA);
+				  $arrayDataTemp[] = array("value"=>$NAMA,"NAMANYA"=>$KODE);
+				}
+			  }
 			}
 			echo json_encode($arrayDataTemp);
 		}
@@ -56,11 +74,13 @@ class M_management extends Model {
                 redirect(site_url(), 'refresh');
             }
         } else if ($act == "groupmenu") {
-            $SQL = "SELECT  A.KD_GROUP AS ID,B.NAMA,C.JUDUL_MENU,A.HAK_AKSES, C.URUTAN 
+            $arrhdr = explode("~", $id);
+            $SQL = "SELECT  A.KD_TIPE_ORGANISASI AS ID, D.NAMA, A.KD_GROUP AS 'GROUP', B.NAMA AS 'NAMA GROUP',C.JUDUL_MENU,A.HAK_AKSES, C.URUTAN
                 FROM app_group_menu A
                 INNER JOIN app_group B ON A.KD_GROUP=B.ID
                 INNER JOIN app_menu C ON C.ID = A.KD_MENU
-                WHERE A.KD_GROUP=" . $this->db->escape($id);
+                INNER JOIN reff_tipe_organisasi D ON A.KD_TIPE_ORGANISASI=D.ID
+                WHERE A.KD_GROUP=" . $this->db->escape($arrhdr[0]). "AND A.KD_TIPE_ORGANISASI=" . $this->db->escape($arrhdr[1]);
             $result = $func->main->get_result($SQL);
             if ($result) {
                 foreach ($SQL->result_array() as $row => $value) {
@@ -200,14 +220,13 @@ class M_management extends Model {
             }
             return $data;
         } else if ($act == "access_groupmenu") {
-            
-                $SQL = "SELECT B.ID, B.ID_PARENT, B.JUDUL_MENU, B.URL_CI, B.URUTAN, B.TIPE, B.TARGET,
-                        B.ACTION, B.CLS_ICON AS ICON, C.KD_MENU AS MENU_ACT, C.HAK_AKSES AS AKSES_ACT
-                        FROM app_menu B
-                        LEFT JOIN (SELECT KD_MENU, HAK_AKSES FROM app_group_menu
-                        WHERE KD_GROUP = '" . $id . "') C ON C.KD_MENU=B.ID
-                        ORDER BY B.ID_PARENT, B.URUTAN ASC";
-            
+            $arrhdr = explode("~", $id);
+			$SQL = "SELECT B.ID, B.ID_PARENT, B.JUDUL_MENU, B.URL_CI, B.URUTAN, B.TIPE, B.TARGET,
+					B.ACTION, B.CLS_ICON AS ICON, C.KD_MENU AS MENU_ACT, C.HAK_AKSES AS AKSES_ACT
+					FROM app_menu B
+					LEFT JOIN (SELECT KD_MENU, HAK_AKSES FROM app_group_menu
+					WHERE KD_GROUP = '" . $arrhdr[0] . "' AND KD_TIPE_ORGANISASI = '" . $arrhdr[1] . "') C ON C.KD_MENU=B.ID
+					ORDER BY B.ID_PARENT, B.URUTAN ASC";
             $result = $this->db->query($SQL);
             if ($result->num_rows() > 0) {
                 foreach ($result->result_array() as $row) {
@@ -372,21 +391,22 @@ class M_management extends Model {
                     echo "MSG#ERR#" . $message . "#";
                 }
             } else if ($act == "groupmenu") {
-                $KD_GROUP = $this->input->post('ID');
+                $KD_TIPE_ORGANISASI = $this->input->post('ID');
+                $KD_GROUP = $this->input->post('GROUP');
                 $KD_MENU = $this->input->post('KD_MENU');
                 $HAK_AKSES = $this->input->post('HAK_AKSES');
                 $SQL = "";
                 if (count($KD_MENU) > 0) {
-                   
+
                         for ($a = 0; $a < count($KD_MENU); $a++) {
-                            $SQL .= "(" . $this->db->escape($KD_GROUP) . ", " . $this->db->escape($KD_MENU[$a]) . ", " . $this->db->escape($HAK_AKSES[$a]) . "),";
+                            $SQL .= "(" . $this->db->escape($KD_TIPE_ORGANISASI) . ", " . $this->db->escape($KD_GROUP) . ", " . $this->db->escape($KD_MENU[$a]) . ", " . $this->db->escape($HAK_AKSES[$a]) . "),";
                         }
-                        $SQL = "INSERT INTO app_group_menu (KD_GROUP, KD_MENU, HAK_AKSES) VALUES " . substr($SQL, 0, -1);
+                        $SQL = "INSERT INTO app_group_menu (KD_TIPE_ORGANISASI, KD_GROUP, KD_MENU, HAK_AKSES) VALUES " . substr($SQL, 0, -1);
                         if (!$this->db->simple_query($SQL)) {
                             $error += 1;
                             $message = "Data gagal diproses";
                         }
-                    
+
                 }
                 if ($error == 0) {
                     $func->main->get_log("add", "app_group_menu");
@@ -458,9 +478,11 @@ class M_management extends Model {
                     else
                         $DATA[$a] = $b;
                 }
+                $DATA['USERLOGIN'] = $this->input->post('USERLOGIN');
+                $DATA['EMAIL'] = $this->input->post('EMAIL');
                 $DATA['PASSWORD'] = md5($DATA['PASSWORD']);
                 $DATA['WK_REKAM'] = date("Y-m-d H:i:s");
-                //$DATA['CHILD_USER'] = $this->newsession->userdata('ID');
+                $DATA['CHILD_USER'] = $this->newsession->userdata('ID');
                 $result = $this->db->insert('app_user', $DATA);
                 if ($result) {
                     $func->main->get_log("add", "app_user");
@@ -515,17 +537,18 @@ class M_management extends Model {
                     echo "MSG#ERR#" . $message . "#";
                 }
             } else if ($act == "groupmenu") {
-                $KD_GROUP = $this->input->post('ID');
+                $KD_TIPE_ORGANISASI = $this->input->post('ID');
+                $KD_GROUP = $this->input->post('GROUP');
                 $KD_MENU = $this->input->post('KD_MENU');
                 $HAK_AKSES = $this->input->post('HAK_AKSES');
                 $SQL = "";
                 if (count($KD_MENU) > 0) {
-                    $result = $this->db->delete('app_group_menu', array('KD_GROUP' => $KD_GROUP));
+                    $result = $this->db->delete('app_group_menu', array('KD_TIPE_ORGANISASI' => $KD_TIPE_ORGANISASI,'KD_GROUP' => $KD_GROUP));
                     if ($result) {
                         for ($a = 0; $a < count($KD_MENU); $a++) {
-                            $SQL .= "(" . $this->db->escape($KD_GROUP) . ", " . $this->db->escape($KD_MENU[$a]) . ", " . $this->db->escape($HAK_AKSES[$a]) . "),";
+                            $SQL .= "(" . $this->db->escape($KD_TIPE_ORGANISASI) . ", " . $this->db->escape($KD_GROUP) . ", " . $this->db->escape($KD_MENU[$a]) . ", " . $this->db->escape($HAK_AKSES[$a]) . "),";
                         }
-                        $SQL = "INSERT INTO app_group_menu (KD_GROUP, KD_MENU, HAK_AKSES) VALUES " . substr($SQL, 0, -1);
+                        $SQL = "INSERT INTO app_group_menu (KD_TIPE_ORGANISASI, KD_GROUP, KD_MENU, HAK_AKSES) VALUES " . substr($SQL, 0, -1);
                         if (!$this->db->simple_query($SQL)) {
                             $error += 1;
                             $message = "Data gagal diproses";
@@ -593,6 +616,8 @@ class M_management extends Model {
                     else
                         $DATA[$a] = $b;
                 }
+                $DATA['USERLOGIN'] = $this->input->post('USERLOGIN');
+                $DATA['EMAIL'] = $this->input->post('EMAIL');
                 if ($DATA['PASSWORD'] == "")
                     unset($DATA['PASSWORD']);
                 else
@@ -744,8 +769,9 @@ class M_management extends Model {
             } else if ($act == "groupmenu") {
                 foreach ($this->input->post('tb_chktblgroupmenu') as $chkitem) {
                     $arrchk = explode("~", $chkitem);
-                    $ID = $arrchk[0];
-                    $result = $this->db->delete('app_group_menu', array('KD_GROUP' => $ID));
+                    $ID = $arrchk[1];
+                    $GROUP = $arrchk[0];
+                    $result = $this->db->delete('app_group_menu', array('KD_TIPE_ORGANISASI' => $ID,'KD_GROUP' => $GROUP));
                     if (!$result) {
                         $error += 1;
                         $message .= "Could not be processed data";
@@ -807,11 +833,11 @@ class M_management extends Model {
                 } else {
                     echo "MSG#ERR#" . $message . "#";
                 }
-            }        
+            }
         } else if ($type == "approve") {
             if ($act == "user") {
                 $error = 0;
-				foreach($this->input->post('tb_chktblnewuser') as $chkitem){            
+				foreach($this->input->post('tb_chktblnewuser') as $chkitem){
 					$arrchk = explode("~", $chkitem);
 					$id_stat = $arrchk[0];
 					$this->db->where(array('ID'=>$id_stat));
@@ -852,7 +878,7 @@ class M_management extends Model {
 						$error += 1;
 						$message .= "Could not sending mail";
 					}
-				} 
+				}
 				if (!$result) {
 					$error += 1;
 					$message .= "Could not be processed data";
@@ -872,9 +898,9 @@ class M_management extends Model {
                         LEFT JOIN t_organisasi B ON A.KD_ORGANISASI = B.ID
                         LEFT JOIN app_group C ON C.ID = A.KD_GROUP
                         WHERE A.ID =".$this->db->escape($id);
-                    
+
                   $result = $func->main->get_result($SQL);
-                  if ($result) { 
+                  if ($result) {
                     foreach ($SQL->result_array() as $row => $value) {
                       $arrdata = $value;
                     }
@@ -900,7 +926,7 @@ class M_management extends Model {
 				$message_mail .= '<strong>Kami menolak permohonan akun Anda dengan alasan :</strong><br><br>';
 				$message_mail .= '<strong>'.$this->input->post('alasan').'</strong><br><br>';
 				$message_mail .= '<strong>Silahkan klik link dibawah untuk permohonan ulang</strong><br>';
-				$message_mail .= $link;                    
+				$message_mail .= $link;
 				$toemail = $row->EMAIL;
 				$fromemail="cfs@edi-indonesia.co.id";
 				$fromname="Admin CFS Center";
@@ -942,11 +968,11 @@ class M_management extends Model {
             }
         }
     }
-	
+
 	function group($act, $id) {
         $func = get_instance();
         $this->load->library('newtable');
-        $this->newtable->breadcrumb('Dashboard', site_url());
+        $this->newtable->breadcrumb('Home', site_url());
         $this->newtable->breadcrumb('User Management', 'javascript:void(0)');
         $this->newtable->breadcrumb('Group', 'javascript:void(0)');
         $judul = "GROUP";
@@ -979,7 +1005,7 @@ class M_management extends Model {
     function menu($act, $id) {
         $func = get_instance();
         $this->load->library('newtable');
-        $this->newtable->breadcrumb('Dashboard', site_url());
+        $this->newtable->breadcrumb('Home', site_url());
         $this->newtable->breadcrumb('User Managament', 'javascript:void(0)');
         $this->newtable->breadcrumb('Menu', 'javascript:void(0)');
         $judul = "MENU";
@@ -1012,7 +1038,7 @@ class M_management extends Model {
     function privilege($act, $id) {
         $func = get_instance();
         $this->load->library('newtable');
-        $this->newtable->breadcrumb('Dashboard', site_url(), 'icon-home');
+        $this->newtable->breadcrumb('Home', site_url(), '');
         $this->newtable->breadcrumb('User Management', 'javascript:void(0)', '');
         $this->newtable->breadcrumb('Privilege', 'javascript:void(0)', '');
         $judul = "DAFTAR HAK AKSES";
@@ -1061,7 +1087,7 @@ class M_management extends Model {
  function groupmenu($act, $id) {
         $func = get_instance();
         $this->load->library('newtable');
-        $this->newtable->breadcrumb('Dashboard', site_url(), 'icon-home');
+        $this->newtable->breadcrumb('Home', site_url(), '');
         $this->newtable->breadcrumb('User Management', 'javascript:void(0)', '');
         $this->newtable->breadcrumb('Group Menu', 'javascript:void(0)', '');
         $judul = "DAFTAR HAK AKSES";
@@ -1074,20 +1100,22 @@ class M_management extends Model {
         if ($KD_GROUP == "ADM") {
             $addsql .= " AND B.KD_GROUP IN ('USR')";
         }
- $SQL = "SELECT A.KD_GROUP, A.KD_GROUP AS 'NAMA GROUP',
+		$SQL = "SELECT A.KD_GROUP, A.KD_TIPE_ORGANISASI, B.NAMA AS 'TIPE ORGANISASI', D.NAMA AS 'NAMA GROUP', 
                 GROUP_CONCAT(IFNULL(C.JUDUL_MENU,'-'),' [ ',A.HAK_AKSES,' ] ' ORDER BY C.URUTAN SEPARATOR '<BR>') AS URL
                 FROM app_group_menu A
                 INNER JOIN app_menu C ON C.ID = A.KD_MENU
-                WHERE 1=1" . $addsql . " GROUP BY A.KD_GROUP";
-         
+                INNER JOIN app_group D ON D.ID = A.KD_GROUP
+                INNER JOIN reff_tipe_organisasi B ON B.ID = A.KD_TIPE_ORGANISASI
+                WHERE 1=1" . $addsql . " GROUP BY A.KD_TIPE_ORGANISASI, A.KD_GROUP";
+
         #echo $SQL; die();
         $proses = array('ADD' => array('ADD_MODAL', "management/groupmenu/add", '0', '', 'icon-plus', '', '1'),
             'EDIT' => array('EDIT_MODAL', "management/groupmenu/edit", '1', '', 'icon-pencil', '', '1'),
             'DELETE' => array('DELETE', site_url() . "/management/execute/delete/groupmenu", 'ALL', '', 'icon-trash', '', '1'));
         $this->newtable->search(array(array('B.USERLOGIN', 'USERLOGIN'), array('C.JUDUL_MENU', 'JUDUL MENU'), array('A.HAK_AKSES', 'HAK AKSES')));
         $this->newtable->action(site_url() . "/management/groupmenu");
-        $this->newtable->hiddens(array("KD_GROUP"));
-        $this->newtable->keys(array("KD_GROUP"));
+        $this->newtable->hiddens(array("KD_GROUP","KD_TIPE_ORGANISASI"));
+        $this->newtable->keys(array("KD_GROUP","KD_TIPE_ORGANISASI"));
         $this->newtable->multiple_search(true);
         $this->newtable->tipe_proses('button');
         $this->newtable->show_chk(true);
@@ -1110,7 +1138,7 @@ class M_management extends Model {
     function privilege_skema($act, $id) {
         $func = get_instance();
         $this->load->library('newtable');
-        $this->newtable->breadcrumb('Dashboard', site_url(), 'icon-home');
+        $this->newtable->breadcrumb('Home', site_url(), '');
         $this->newtable->breadcrumb('User Management', 'javascript:void(0)', '');
         $this->newtable->breadcrumb('Privilege Skema', 'javascript:void(0)', '');
         $judul = "DAFTAR HAK AKSES";
@@ -1159,24 +1187,27 @@ class M_management extends Model {
     function user($act, $id) {
         $func = get_instance();
         $this->load->library('newtable');
-        $this->newtable->breadcrumb('Dashboard', site_url());
+        $this->newtable->breadcrumb('Home', site_url());
         $this->newtable->breadcrumb('User Management', 'javascript:void(0)');
         $this->newtable->breadcrumb('User', 'javascript:void(0)');
         $judul = "DAFTAR USER";
         $KD_GROUP = $this->newsession->userdata('KD_GROUP');
         $KD_ORGANISASI = $this->newsession->userdata('KD_ORGANISASI');
-        /*if ($KD_GROUP != "SPA") {
-            $addsql = " AND A.KD_ORGANISASI = " . $this->db->escape($KD_ORGANISASI);
-        }*/
-        $SQL = "SELECT B.NAMA AS 'ORGANISASI', A.USERLOGIN ,A.NM_LENGKAP AS 'NAMA LENGKAP' ,A.HANDPHONE ,A.EMAIL ,C.NAMA AS 'NAMA GROUP',
-	  		  CONCAT('KODE TPS : ',A.KD_TPS,'<BR>KODE GUDANG : ',A.KD_GUDANG) AS 'GUDANG TPS', A.KD_STATUS AS STATUS, A.ID
+        $ID = $this->newsession->userdata('ID');
+        if ($KD_GROUP != "SPA") {
+            $addsql = " AND A.CHILD_USER = " . $this->db->escape($ID);
+			$proses = array('ADD' => array('ADD_MODAL', "management/user/add", '0', '', 'icon-plus', '', '1'),
+            'EDIT' => array('EDIT_MODAL', "management/user/edit", '1', '', 'icon-pencil', '', '1'));
+        }else{
+	        $proses = array('ADD' => array('ADD_MODAL', "management/user/add", '0', '', 'icon-plus', '', '1'),
+            'EDIT' => array('EDIT_MODAL', "management/user/edit", '1', '', 'icon-pencil', '', '1'),
+            'DELETE' => array('DELETE', site_url() . "/management/execute/delete/user", 'ALL', '', 'icon-trash', '', '1'));
+		}
+        $SQL = "SELECT B.NAMA AS 'ORGANISASI', A.USERLOGIN ,A.NM_LENGKAP AS 'NAMA LENGKAP' ,A.HANDPHONE ,A.EMAIL ,C.NAMA AS 'NAMA GROUP', A.KD_STATUS AS STATUS, A.ID
 			  FROM app_user A
 			  INNER JOIN T_ORGANISASI B ON B.ID = A.KD_ORGANISASI
 			  INNER JOIN APP_GROUP C ON C.ID = A.KD_GROUP
 			  WHERE 1=1 AND A.KD_STATUS IN ('ACTIVE','BLOCKED') " . $addsql;
-        $proses = array('ADD' => array('ADD_MODAL', "management/user/add", '0', '', 'icon-plus', '', '1'),
-            'EDIT' => array('EDIT_MODAL', "management/user/edit", '1', '', 'icon-pencil', '', '1'),
-            'DELETE' => array('DELETE', site_url() . "/management/execute/delete/user", 'ALL', '', 'icon-trash', '', '1'));
 		$check = (grant()=="W")?true:false;
 		$this->newtable->show_chk($check);
 		$this->newtable->show_menu($check);
@@ -1204,21 +1235,21 @@ class M_management extends Model {
     function newuser($act, $id) {
         $func = get_instance();
         $this->load->library('newtable');
-        $this->newtable->breadcrumb('Dashboard', site_url());
+        $this->newtable->breadcrumb('Home', site_url());
         $this->newtable->breadcrumb('User Management', 'javascript:void(0)');
         $this->newtable->breadcrumb('New User', 'javascript:void(0)');
         $judul = "DAFTAR USER BARU";
-        $KD_GROUP = $this->newsession->userdata('KD_GROUP');        
+        $KD_GROUP = $this->newsession->userdata('KD_GROUP');
         if ($KD_GROUP != "SPA") {
             redirect(base_url('index.php'), 'refresh');
         }
-		#CONCAT('KODE TPS : ',A.KD_TPS,'<BR>KODE GUDANG : ',A.KD_GUDANG) AS 'GUDANG TPS', 
+		#CONCAT('KODE TPS : ',A.KD_TPS,'<BR>KODE GUDANG : ',A.KD_GUDANG) AS 'GUDANG TPS',
         $SQL = "SELECT B.NAMA AS 'ORGANISASI', A.USERLOGIN ,A.NM_LENGKAP AS 'NAMA LENGKAP' ,A.HANDPHONE ,A.EMAIL ,C.NAMA AS 'NAMA GROUP',
               A.KD_STATUS AS STATUS, A.ID
               FROM app_user A
               INNER JOIN T_ORGANISASI B ON B.ID = A.KD_ORGANISASI
               INNER JOIN APP_GROUP C ON C.ID = A.KD_GROUP
-              WHERE 1=1 AND A.KD_STATUS = 'INACTIVE' ";
+              WHERE 1=1 AND A.KD_STATUS = 'INACTIVE' AND A.WK_REKAM IS NULL";
         $proses = array('APPROVE' => array('GET_POST',site_url()."/management/execute/approve/user", 'ALL','','icon-share-alt'),
                         'REJECT' => array('EDIT_MODAL',"management/newuser/reject", '1', '', 'icon-pencil', '', ''));
         $this->newtable->search(array(array('A.USERLOGIN', 'USERLOGIN'), array('A.NM_LENGKAP', 'NAMA')));
@@ -1247,7 +1278,7 @@ class M_management extends Model {
     function organisasi($act, $id) {
         $func = get_instance();
         $this->load->library('newtable');
-        $this->newtable->breadcrumb('Dashboard', site_url());
+        $this->newtable->breadcrumb('Home', site_url());
         $this->newtable->breadcrumb('User Management', 'javascript:void(0)');
         $this->newtable->breadcrumb('Organisasi', 'javascript:void(0)');
         $judul = "DAFTAR ORGANISASI";
@@ -1284,7 +1315,7 @@ class M_management extends Model {
     function log_activity($act, $id) {
         $func = get_instance();
         $this->load->library('newtable');
-        $this->newtable->breadcrumb('Dashboard', site_url());
+        $this->newtable->breadcrumb('Home', site_url());
         $this->newtable->breadcrumb('User Management', 'javascript:void(0)');
         $this->newtable->breadcrumb('Log Activity ', 'javascript:void(0)');
         $judul = "DAFTAR ORGANISASI";

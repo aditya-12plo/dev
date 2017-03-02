@@ -17,9 +17,9 @@ class M_tracking extends Model {
     $KD_GROUP = $this->newsession->userdata('KD_GROUP');
     $KD_KPBC = $this->newsession->userdata('KD_KPBC');
     $addsql = '';
-    if ($KD_GROUP == "USER") {
+    /*if ($KD_GROUP == "USER") {
       $addsql .= " AND A.KD_GUDANG_ASAL = " . $this->db->escape($KD_GUDANG);
-    }else if($KD_GROUP == "CONS"){
+    }else */if($KD_GROUP != "SPA"){
       $addsql .= " AND A.KD_ORG_CONSIGNEE = '".$this->newsession->userdata('KD_ORGANISASI')."' ";
     }
     $SQL = "SELECT A.NO_BL_AWB AS 'NO BL/AWB', A.JUMLAH AS 'JUMLAH KEMASAN', func_name(IFNULL(A.KD_KEMASAN,'-'),'KEMASAN') AS 'JENIS KEMASAN',

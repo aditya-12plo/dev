@@ -832,6 +832,20 @@ function newtable_search(form,div,page,sortby,orderby,toggle){
 	});
 }
 
+function newtable_cancel(form,div,page,sortby,orderby,toggle){
+	$.ajax({
+		type: 'POST',
+		url: $("#"+form).attr("action"),
+		data: 'ajax=1&page='+page+$("#"+form).serialize(),
+		beforeSend: function(){Loading(true)},
+		complete: function(){Loading(false)},
+		success: function(data){
+			$('#'+div).html(data);
+			/*if(toggle) $('#toggle'+div).css('display','');*/
+		}
+	});
+}
+
 function td_pilih(id){
 	var arr = id.split("|");
 	var formName = arr[0];

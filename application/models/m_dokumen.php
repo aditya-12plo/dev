@@ -34,7 +34,7 @@ class M_dokumen extends Model {
 				LEFT JOIN reff_status C ON C.ID=A.KD_STATUS AND C.KD_TIPE_STATUS='REQCUSTIMP'
 				WHERE B.KD_PERMIT = 'IMP'".$addsql;
 		$proses = array(#'ADD' => array('MODAL',"dokumen/impor_request_kontainer/add", '','','md-plus-circle'),
-						'DETAIL'  => array('POPUP',"dokumen/impor_request_kontainer/detail", '1','','md-edit'));
+						'DETAIL'  => array('POPUP',"dokumen/impor_request_kontainer/detail", '1','','icon-pencil'));
 						#'DELETE'  => array('DELETE',"execute/process/delete/request_dokumen", '1','100','md-close-circle'),
 						#'PROCESS' => array('POST',"execute/process/update/send_request_dokumen", '1','100','md-mail-send'));
 		$this->newtable_edit->multiple_search(true);
@@ -87,7 +87,7 @@ class M_dokumen extends Model {
 				FROM t_permit_hdr A 
 				INNER JOIN reff_kode_dok_bc B ON B.ID=A.KD_DOK_INOUT AND B.KD_PERMIT='IMP'".$addsql;
 		#echo $SQL;die();
-		$proses = array('DETAIL' => array('POPUP',"dokumen/impor_kontainer/detail", '1','','md-zoom-in'));
+		$proses = array('DETAIL' => array('POPUP',"dokumen/impor_kontainer/detail", '1','','icon-pencil'));
 						#'GENERATE' => array('POST',"execute/process/update/create_xml_impor", 'ALL','','md-code-setting'));
 		$this->newtable_edit->multiple_search(true);
 		$this->newtable_edit->show_chk($check);
@@ -139,7 +139,7 @@ class M_dokumen extends Model {
 				LEFT JOIN reff_status C ON C.ID=A.KD_STATUS AND C.KD_TIPE_STATUS='REQCUSTIMP'
 				WHERE B.KD_PERMIT = 'EXP'".$addsql;
 		$proses = array('REQUEST' => array('ADD_MODAL',"dokumen/ekspor_request_kontainer/add", '','','md-plus-circle'),
-						'UPDATE'  => array('POPUP',"dokumen/ekspor_request_kontainer/update", '1','100','md-edit'),
+						'UPDATE'  => array('POPUP',"dokumen/ekspor_request_kontainer/update", '1','100','icon-pencil'),
 						'DELETE'  => array('DELETE',"process/delete/request_dokumen", '1','100','md-close-circle'),
 						'PROCESS' => array('POST',"execute/process/update/send_request_dokumen", '1','100','md-mail-send'));
 		$this->newtable_edit->multiple_search(true);
@@ -190,7 +190,7 @@ class M_dokumen extends Model {
 				CONCAT('<center>',A.JML_CONT,'</center>') AS 'JUMLAH', A.TGL_STATUS, A.ID
 				FROM t_permit_hdr A
 				INNER JOIN reff_kode_dok_bc B ON B.ID=A.KD_DOK_INOUT AND B.KD_PERMIT='EXP'".$addsql;
-		$proses = array('DETAIL' => array('POPUP',"dokumen/ekspor_kontainer/detail", '1','','md-zoom-in'));
+		$proses = array('DETAIL' => array('POPUP',"dokumen/ekspor_kontainer/detail", '1','','icon-pencil'));
 		$this->newtable_edit->multiple_search(true);
 		$this->newtable_edit->show_chk($check);
 		$this->newtable_edit->show_menu($check);

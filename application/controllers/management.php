@@ -23,21 +23,22 @@ class Management extends Controller {
         $add_header .= '<script src="' . base_url() . 'assets/js/jquery.min.js"></script>';
         $add_header .= '<script src="' . base_url() . 'assets/js/jquery-ui.min.js"></script>';
         $add_header .= '<script src="' . base_url() . 'assets/js/newtable.js"></script>';
-        $add_header .= '<script src="' . base_url() . 'assets/js/main.js"></script>';
         $add_header .= '<script src="' . base_url() . 'assets/vendor/sweetalert/dist/sweetalert.min.js"></script>';
         $add_header .= '<script src="' . base_url() . 'assets/vendor/noty/js/noty/packaged/jquery.noty.packaged.min.js"></script>';
         $add_header .= '<script src="' . base_url() . 'assets/js/helpers/noty-defaults.js"></script>';
         $add_header .= '<script src="' . base_url() . 'assets/js/alerts.js"></script>';
-        $add_script = '<script src="' . base_url() . 'assets/js/app.min.js"></script>';
-        $add_script .= '<script src="' . base_url() . 'assets/js/jquery-ui.js"></script>';
-        $add_script .= '<script src="' . base_url() . 'assets/js/ui/notifications.js"></script>';
-        $add_script .= '<script src="' . base_url() . 'assets/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>';
+        $add_header .= '<script src="' . base_url() . 'assets/js/app.min.js"></script>';
+        $add_header .= '<script src="' . base_url() . 'assets/js/main.js"></script>';
+        $add_header .= '<script src="' . base_url() . 'assets/js/jquery-ui.js"></script>';
+        $add_header .= '<script src="' . base_url() . 'assets/js/ui/notifications.js"></script>';
+		$add_header .= '<script src="'.base_url().'assets/js/jquery.validate.js"></script>';
+		$add_header .= '<script src="'.base_url().'assets/js/messages_id.js"></script>';
+        $add_header .= '<script src="' . base_url() . 'assets/vendor/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>';
         if ($this->newsession->userdata('LOGGED')) {
             if ($this->content == "") {
                 $this->content = $this->load->view('content/dashboard/index', '', true);
             }
             $data = array('_add_header_' => $add_header,
-                '_add_script_' => $add_script,
                 '_tittle_' => 'TPS ONLINE',
                 '_header_' => $this->load->view('content/header', '', true),
                 '_breadcrumbs_' => $this->load->view('content/breadcrumbs', '', true),
@@ -50,6 +51,25 @@ class Management extends Controller {
             redirect(base_url('index.php'), 'refresh');
         }
     }
+
+	public function uname(){
+		$uname=array('USERLOGIN' => $this->input->post('USERLOGIN'),'KD_STATUS !=' => 'BLOCKED');
+		$queryr = $this->db->get_where('app_user', $uname);
+		if($queryr->num_rows() > 0){
+			echo 'false';
+		}else {
+			echo 'true';
+		}
+	}
+	public function umail(){
+		$umail=array('EMAIL' => $this->input->post('EMAIL'),'KD_STATUS !=' => 'BLOCKED');
+		$queryr = $this->db->get_where('app_user', $umail);
+		if($queryr->num_rows() > 0){
+			echo 'false';
+		}else {
+			echo 'true';
+		}
+	}
 
     function execute($type="", $act="", $id="", $met="") {
         if (!$this->newsession->userdata('LOGGED')) {

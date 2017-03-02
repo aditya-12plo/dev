@@ -16,37 +16,37 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label-left">NPWP</label>
                   <div class="col-sm-10">
-                    <input type="text" name="DATA[NPWP]" id="NPWP" wajib="yes" class="form-control" placeholder="NPWP" value="<?php echo $arr_org['NPWP']; ?>">
+                    <input type="text" name="DATA[NPWP]" id="NPWP" wajib="yes" class="form-control" placeholder="NPWP" value="<?php echo $arr_org['NPWP']; ?>"<?php if($this->newsession->userdata('KD_GROUP')=="USR"){echo "readonly";}?>>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-sm-2 control-label-left">NAMA</label>
                   <div class="col-sm-10">
-                    <input type="text" name="DATA[NAMA]" id="NAMA" wajib="yes" class="form-control" placeholder="NAMA" value="<?php echo $arr_org['NAMA']; ?>">
+                    <input type="text" name="DATA[NAMA]" id="NAMA" wajib="yes" class="form-control" placeholder="NAMA" value="<?php echo $arr_org['NAMA']; ?>"<?php if($this->newsession->userdata('KD_GROUP')=="USR"){echo "readonly";}?>>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-sm-2 control-label-left">ALAMAT</label>
                   <div class="col-sm-10">
-                  	<textarea name="DATA[ALAMAT]" id="ALAMAT" wajib="yes" class="form-control" placeholder="ALAMAT"><?php echo $arr_org['ALAMAT']; ?></textarea>
+                  	<textarea name="DATA[ALAMAT]" id="ALAMAT" wajib="yes" class="form-control" placeholder="ALAMAT"<?php if($this->newsession->userdata('KD_GROUP')=="USR"){echo "readonly";}?>><?php echo $arr_org['ALAMAT']; ?></textarea>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-sm-2 control-label-left">NO. TELEPON</label>
                   <div class="col-sm-10">
-                    <input type="text" name="DATA[NOTELP]" id="NOTELP" wajib="yes" class="form-control" placeholder="NO. TELEPON" value="<?php echo $arr_org['NOTELP']; ?>">
+                    <input type="text" name="DATA[NOTELP]" id="NOTELP" wajib="yes" class="form-control" placeholder="NO. TELEPON" value="<?php echo $arr_org['NOTELP']; ?>"<?php if($this->newsession->userdata('KD_GROUP')=="USR"){echo "readonly";}?>>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-sm-2 control-label-left">NO. FAX</label>
                   <div class="col-sm-10">
-                    <input type="text" name="DATA[NOFAX]" id="NOFAX" wajib="yes" class="form-control" placeholder="NO. FAX" value="<?php echo $arr_org['NOFAX']; ?>">
+                    <input type="text" name="DATA[NOFAX]" id="NOFAX" wajib="yes" class="form-control" placeholder="NO. FAX" value="<?php echo $arr_org['NOFAX']; ?>"<?php if($this->newsession->userdata('KD_GROUP')=="USR"){echo "readonly";}?>>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-sm-2 control-label-left">EMAIL</label>
                   <div class="col-sm-10">
-                    <input type="text" name="DATA[EMAIL]" id="EMAIL_PROFILE" wajib="yes" class="form-control" placeholder="EMAIL" value="<?php echo $arr_org['EMAIL']; ?>">
+                    <input type="text" name="DATA[EMAIL]" id="EMAIL_PROFILE" wajib="yes" class="form-control" placeholder="EMAIL" value="<?php echo $arr_org['EMAIL']; ?>"<?php if($this->newsession->userdata('KD_GROUP')=="USR"){echo "readonly";}?>>
                   </div>
                 </div>
               </div>

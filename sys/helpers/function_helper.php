@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 if(!function_exists('format_terbilang'))
 {
 	function format_terbilang($num,$dec=4){
@@ -22,22 +22,22 @@ if(!function_exists('format_terbilang'))
 			"Milyar",
 			"Triliun",
 			"Biliun" // remember limitation of float
-			
+
 		);
 		$w = "";
-	
+
 		if ($num <0 ) {
 			$w  = "Minus ";
 			//make positive
 			$num *= -1;
 		}
-	
+
 		$snum = number_format($num,$dec,",",".");
 	   // die($snum);
 		$strnum =  explode(".",substr($snum,0,strrpos($snum,",")));
 		//parse decimalnya
 		$koma = substr($snum,strrpos($snum,",")+1);
-	
+
 		$isone = substr($num,0,1)  ==1;
 		if (count($strnum)==1) {
 			$num = $strnum[0];
@@ -97,7 +97,7 @@ if(!function_exists('set_setting')){
 		$status = 'N';
 		$KD_ORG = $ci->newsession->userdata('KD_ORGANISASI');
 		$KD_GROUP = $ci->newsession->userdata('KD_GROUP');
-		if($KD_GROUP=="SPA") 
+		if($KD_GROUP=="SPA")
 			$status = 'Y';
 		$SQL = "SELECT KD_STATUS FROM app_setting
 				WHERE KD_ORG_SENDER = ".$ci->db->escape($KD_ORG)."
@@ -146,14 +146,15 @@ if(!function_exists('grant')){
 		$ci->load->database();
 		$iduser = $ci->newsession->userdata('ID');
 		$kd_group = $ci->newsession->userdata('KD_GROUP');
-		$furi = substr($ci->uri->slash_segment(1).$ci->uri->slash_segment(2),0,-1);	
+		$tipe_org = $ci->newsession->userdata('TIPE_ORGANISASI');
+		$furi = substr($ci->uri->slash_segment(1).$ci->uri->slash_segment(2),0,-1);
 		$return = "";
 		if($kd_group=="SPA"){
 			$return = 'W';
 		}else{
 			$query = "SELECT A.ID, B.HAK_AKSES
 					  FROM app_menu A
-					  INNER JOIN app_user_menu B ON B.KD_MENU=A.ID 
+					  INNER JOIN app_user_menu B ON B.KD_MENU=A.ID
 					  WHERE B.KD_USER = '".$iduser."'
 					  AND A.URL_CI = '".$furi."'";
 
@@ -161,16 +162,16 @@ if(!function_exists('grant')){
 						SELECT A.ID, B.HAK_AKSES
 						FROM app_menu A
 						INNER JOIN app_group_menu B ON B.KD_MENU=A.ID
-						WHERE B.KD_GROUP = '".$kd_group."' AND A.URL_CI = '".$furi."'
+						WHERE B.KD_GROUP = '".$kd_group."' AND B.KD_TIPE_ORGANISASI = '".$tipe_org."' AND A.URL_CI = '".$furi."'
 						UNION
 						SELECT AU.ID, BU.HAK_AKSES
 						FROM app_menu AU
 						INNER JOIN app_user_menu BU ON BU.KD_MENU=AU.ID
 						WHERE BU.KD_USER = '".$iduser."' AND AU.URL_CI = '".$furi."'
 						)X
-						ORDER BY X.HAK_AKSES 
+						ORDER BY X.HAK_AKSES
 						LIMIT 1";
-			$result = $ci->db->query($query); 
+			$result = $ci->db->query($query);
 			if($result->num_rows() > 0){
 				$akses = $result->row()->HAK_AKSES;
 				$return = $akses;
@@ -247,13 +248,13 @@ if (!function_exists('FormatRupiah'))
 	function FormatRupiah($angka,$decimal){
 		$rupiah = number_format($angka,$decimal,'.',',');
 		return $rupiah;
-	}	
+	}
 }
 
 if (!function_exists('FormatDate2')){
 	function FormatDate2($vardate){
 		$pecah1 = explode("-", $vardate);
-		
+
 		$arrayBulan = array("", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli",
 							"Agustus", "September", "Oktober", "November", "Desember");
 		$bulan = $arrayBulan[intval($pecah1[1])];
@@ -266,7 +267,7 @@ if (!function_exists('FormatDate2')){
 if (!function_exists('format_npwp')){
 	function format_npwp($n){
 		$length = strlen($n);
-		if($length == 15){			
+		if($length == 15){
 			$npwp = substr($n,0,2);
 			$npwp .= ".";
 			$npwp .= substr($n,2,3);
@@ -294,7 +295,7 @@ if(!function_exists('str_xml')){
 			$return = str_replace("'","&apos;",$return);
 			$return = str_replace("\"","&quot;",$return);
 			$return = str_replace("<","&lt;",$return);
-			$return = str_replace(">","&gt;",$return);	
+			$return = str_replace(">","&gt;",$return);
 			$return = trim($return);
 		}
 		return $return;

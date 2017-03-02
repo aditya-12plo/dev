@@ -4,7 +4,7 @@ class Ppbarang extends Controller {
 	function Ppbarang(){
 		parent::Controller();
 	}
-	
+
 	function index(){
 		$add_header  = '<link rel="stylesheet" href="'.base_url().'assets/vendor/sweetalert/dist/sweetalert.css">';
 		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/app.min.css">';
@@ -31,51 +31,40 @@ class Ppbarang extends Controller {
 				$this->content = $this->load->view('content/dashboard/index','',true);
 			}
 			$data = array('_add_header_'   => $add_header,
-						  '_add_script_'   => $add_script,
-						  '_tittle_'  	   => 'CFS CENTER',
-						  '_header_'  	   => $this->load->view('content/header','',true),
-						  '_breadcrumbs_'  => $this->load->view('content/breadcrumbs','',true),
-						  '_menus_'   	   => $this->load->view('content/menus','',true),
-						  '_content_' 	   => (grant()=="")?$this->load->view('content/error','',true):$this->content,
-						  '_footer_'  	   => $this->load->view('content/footer','',true),
-						  '_features_'     => $this->load->view('content/features','',true));
+					'_add_script_'   => $add_script,
+					'_tittle_'  	   => 'CFS CENTER',
+					'_header_'  	   => $this->load->view('content/header','',true),
+					'_breadcrumbs_'  => $this->load->view('content/breadcrumbs','',true),
+					'_menus_'   	   => $this->load->view('content/menus','',true),
+					'_content_' 	   => (grant()=="")?$this->load->view('content/error','',true):$this->content,
+					'_footer_'  	   => $this->load->view('content/footer','',true),
+					'_features_'     => $this->load->view('content/features','',true));
 			$this->parser->parse('index', $data);
 		}else{
 			redirect(base_url('index.php'),'refresh');
 		}
 	}
 
-	public function listdata($act,$id){
+	public function listdata($act="",$id=""){
 		if (!$this->newsession->userdata('LOGGED')){
 			$this->index();
 			return;
 		}
 		$id = ($id!="")?$id:$this->input->post('id');
+		$this->load->model('m_ppbarang');
 		if($act=="add"){
-			$this->load->model('m_execute');
-			$this->newtable->breadcrumb('Dashboard', site_url());
-			$this->newtable->breadcrumb('PLP', 'javascript:void(0)');
-			$this->newtable->breadcrumb('Pengajuan', site_url('plp/pengajuan'));
-			$this->newtable->breadcrumb('Entry Pengajuan PLP', 'javascript:void(0)');
-			$data['page_title'] = 'ENTRY PENGAJUAN PLP';
-			$data['action'] = 'save';
-			$data['arrdata'] = $this->m_execute->get_data('kapal',$id);
-			$data['table_kontainer'] = $this->pengajuan_discharge_kontainer($act,$id);
-			$this->content = $this->load->view('content/plp/pengajuan',$data,true);
-			$this->index();
-		}
-		if($act=="detail"){
+			$data['title'] = 'ENTRY DATA';
+			$data['act'] = 'save';
+			echo $this->load->view('content/ppbarang/add',$data,true);
+		}else	if($act=="detail"){
 			$arrid = explode('~',$id);
 			$this->load->model('m_execute');
-			$this->load->model('m_ppbarang');
 			$data['title'] = 'DETAIL PENGAJUAN PLP';
 			$data['arrdata'] = $this->m_execute->get_data('request_plp',$arrid[1]);
 			$data['table_kontainer'] = $this->m_ppbarang->execute('detail','t_request_plp_hdr',$arrid[1]);
 			//print_r($data['table_kontainer']);
-			echo $this->load->view('content/plp/pengajuan_detail',$data,true);
-		}
-		else{
-			$this->load->model("m_ppbarang");
+			echo $this->load->view('content/ppbarang/detail',$data,true);
+		}else{
 			$arrdata = $this->m_ppbarang->listdata($act, $id);
 			$data = $this->load->view('content/newtable', $arrdata, true);
 			if($this->input->post("ajax")||$act=="post"){
@@ -83,13 +72,11 @@ class Ppbarang extends Controller {
 			}else{
 				$this->content = $data;
 				$this->index();
-			}	
+			}
 		}
 	}
 
-
-	function execute($type="",$act="", $id="")
-	{
+	function execute($type="",$act="", $id=""){
 		if (!$this->newsession->userdata('LOGGED')) {
 			$this->index();
 			return;
@@ -97,17 +84,10 @@ class Ppbarang extends Controller {
 			if (strtolower($_SERVER['REQUEST_METHOD']) != "post") {
 				redirect(base_url());
 				exit();
-			}
-			else{
-
+			}else{
 				$this->load->model("m_ppbarang");
-			$this->m_ppbarang->execute($type,$act,$id);
-
-
-
+				$this->m_ppbarang->execute($type,$act,$id);
 			}
 		}
 	}
-
-
 }

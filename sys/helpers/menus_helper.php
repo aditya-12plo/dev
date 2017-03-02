@@ -8,16 +8,16 @@ if ( ! function_exists('menu_content')){
 		$segs = substr($ci->uri->slash_segment(1).$ci->uri->slash_segment(2),0,-1);
 
 		if(($ci->newsession->userdata('TIPE_ORGANISASI')=="SPA")&&($ci->newsession->userdata('KD_GROUP')=="SPA")){
-			$SQL = "SELECT B.ID, B.ID_PARENT, B.JUDUL_MENU, B.URL, B.URL_CI, B.URUTAN, B.TIPE, B.TARGET, 
+			$SQL = "SELECT B.ID, B.ID_PARENT, B.JUDUL_MENU, B.URL, B.URL_CI, B.URUTAN, B.TIPE, B.TARGET,
 					B.ACTION, B.CLS_ICON AS ICON
 					FROM app_menu B
-					ORDER BY B.ID_PARENT, B.URUTAN ASC"; 
+					ORDER BY B.ID_PARENT, B.URUTAN ASC";
 		}else{
 			$SQL = "SELECT * FROM (
 						SELECT B.ID, B.ID_PARENT, B.JUDUL_MENU, B.URL, B.URL_CI, B.URUTAN, B.TIPE, B.TARGET, B.ACTION, B.CLS_ICON AS ICON
 						FROM app_group_menu A
 						INNER JOIN app_menu B ON A.KD_MENU = B.ID
-						WHERE A.KD_GROUP= '".$ci->newsession->userdata('TIPE_ORGANISASI')."' 
+						WHERE A.KD_GROUP= '".$ci->newsession->userdata('KD_GROUP')."' AND A.KD_TIPE_ORGANISASI= '".$ci->newsession->userdata('TIPE_ORGANISASI')."'
 						UNION
 						SELECT BU.ID, BU.ID_PARENT, BU.JUDUL_MENU, BU.URL, BU.URL_CI, BU.URUTAN, BU.TIPE, BU.TARGET, BU.ACTION, BU.CLS_ICON AS ICON
 						FROM app_user_menu AU
@@ -27,14 +27,14 @@ if ( ! function_exists('menu_content')){
 					ORDER BY X.ID_PARENT, X.URUTAN ASC;";
 					//echo $SQL;die();
 
-			/*$SQL = "SELECT B.ID, B.ID_PARENT, B.JUDUL_MENU, B.URL, B.URL_CI, B.URUTAN, B.TIPE, B.TARGET, 
+			/*$SQL = "SELECT B.ID, B.ID_PARENT, B.JUDUL_MENU, B.URL, B.URL_CI, B.URUTAN, B.TIPE, B.TARGET,
 					B.ACTION, B.CLS_ICON AS ICON
-					FROM app_user_menu A 
+					FROM app_user_menu A
 					INNER JOIN app_menu B ON A.KD_MENU = B.ID
 					WHERE A.KD_USER = '" .$_SESSION['ID']. "'
 					ORDER BY B.ID_PARENT, B.URUTAN ASC"; 	*/
 		}
-		
+
 		$result = $ci->db->query($SQL);
 		if($result->num_rows() > 0){
 			foreach($result->result_array() as $row){
@@ -47,12 +47,12 @@ if ( ! function_exists('menu_content')){
 											"JUDUL_MENU" => $row['JUDUL_MENU'],
 											"URL"	 	 => $row['URL'],
 											"URL_CI"	 => $row['URL_CI'],
-											"URUTAN" 	 => $row['URUTAN'],	
+											"URUTAN" 	 => $row['URUTAN'],
 											"TIPE"	 	 => $row['TIPE'],
 											"TARGET"	 => $row['TARGET'],
 											"ACTION"	 => $row['ACTION'],
 											"ICON"	 	 => $row['ICON']
-											);	
+											);
 			}
 			$content .= get_menu($data,$segs);
 		}
@@ -104,7 +104,7 @@ if(!function_exists('get_menu')){
 			$html = "";
 			return false;
 		}
-		
+
 	}
 }
 

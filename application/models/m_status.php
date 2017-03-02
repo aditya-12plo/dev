@@ -13,13 +13,18 @@ function listdata($act, $id) {
     $data['title'] = 'DATA PEMBERITAHUAN LCL';
     $judul = "PEMBERITAHUAN LCL";
     //$KD_TPS = $this->newsession->userdata('KD_TPS');
+    $ID_USER = $this->newsession->userdata('ID');
     $KD_GUDANG = $this->newsession->userdata('KD_GUDANG');
     $KD_GROUP = $this->newsession->userdata('KD_GROUP');
+    $TIPE_ORGANISASI = $this->newsession->userdata('KD_ORGANISASI');
     $addsql = '';
-    if ($KD_GROUP == "USER") {
+    /*if ($KD_GROUP == "USER") {
       $addsql .= " AND   A.KD_GUDANG_ASAL = " . $this->db->escape($KD_GUDANG);
-    }else if($KD_GROUP == "FWD"){
-      $addsql .= " AND A.ID_USER = '".$this->newsession->userdata('ID')."' ";
+    }*/
+	if ($KD_GROUP == "ADM") {
+      $addsql .= " AND F.KD_ORGANISASI = " . $this->db->escape($TIPE_ORGANISASI);
+    }else if($KD_GROUP == "USR"){
+      $addsql .= " AND A.ID_USER = " . $this->db->escape($ID_USER);
     }
   $SQL = "SELECT A.ID,A.NO_UBAH_STATUS,A.NO_UBAH_STATUS AS 'NO. PEMBERITAHUAN LCL' , 
           DATE_FORMAT(A.TGL_UBAH_STATUS,'%d-%m-%Y') AS 'TGL. PEMBERITAHUAN LCL',
@@ -28,8 +33,9 @@ function listdata($act, $id) {
           CONCAT('NAMA KAPAL : ',A.NAMA_KAPAL,'<BR>CALL SIGN : ',A.CALL_SIGN,'<BR>TGL. TIBA : ',DATE_FORMAT(A.TGL_TIBA,'%d-%m-%Y'),'<BR>NO. VOYAGE : ',A.NO_VOY_FLIGHT) AS 'NAMA KAPAL',A.KD_STATUS,
           CONCAT(G.NAMA,'<BR>',DATE_FORMAT(A.TGL_UBAH_STATUS,'%d-%m-%Y %H:%i:%s')) AS STATUS
           FROM t_ubah_status A INNER JOIN reff_gudang C ON A.KD_GUDANG_ASAL=C.KD_GUDANG INNER JOIN reff_tps B ON C.KD_TPS=B.KD_TPS 
-          INNER JOIN reff_gudang E ON A.KD_GUDANG_TUJUAN=E.KD_GUDANG INNER JOIN reff_tps D ON E.KD_TPS=D.KD_TPS INNER JOIN app_user F 
-          ON A.ID_USER=F.ID
+          INNER JOIN reff_gudang E ON A.KD_GUDANG_TUJUAN=E.KD_GUDANG 
+		  INNER JOIN reff_tps D ON E.KD_TPS=D.KD_TPS 
+		  INNER JOIN app_user F ON A.ID_USER=F.ID
           LEFT JOIN reff_status G ON G.ID = A.KD_STATUS AND G.KD_TIPE_STATUS = 'UBHSTAT' 
           WHERE 1=1" . $addsql; //print_r($SQL);die();   
 

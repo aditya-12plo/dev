@@ -9,7 +9,7 @@ class Home extends Controller {
 	function index(){
 		$add_header  = '<link rel="stylesheet" href="'.base_url().'assets/vendor/sweetalert/dist/sweetalert.css">';
 		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/app.min.css">';
-$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/bootstrap-extend.min.css">';
+		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/bootstrap-extend.min.css">';
 		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/jquery-ui.css">';
 		$add_header .= '<link rel="stylesheet" href="'.base_url().'assets/vendor/themes/twitter/twitter.css">';
 		$add_header .= '<script src="'.base_url().'assets/js/jquery.min.js"></script>';
@@ -19,6 +19,7 @@ $add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/bootstrap-
 		$add_header .= '<script src="'.base_url().'assets/js/jquery-ui.js"></script>';
 		$add_header .= '<script src="'.base_url().'assets/js/ui/notifications.js"></script>';
 		$add_header .= '<script src="'.base_url().'assets/js/jquery.validate.js"></script>';
+		$add_header .= '<script src="'.base_url().'assets/js/jquery.maskedinput.js"></script>';
 		$add_header .= '<script src="'.base_url().'assets/js/messages_id.js"></script>';
 		$add_header .= '<script src="'.base_url().'assets/vendor/sweetalert/dist/sweetalert.min.js"></script>';
 		if($this->newsession->userdata('LOGGED')){
@@ -131,6 +132,8 @@ $add_header .= '<link rel="stylesheet" href="'.base_url().'assets/css/bootstrap-
 					$rr = $this->m_home->signup();
 					if($rr==0){
 						$this->session->set_flashdata('result_error', "Data gagal diproses. ");
+					}elseif($rr==3){
+						$this->session->set_flashdata('result_error', "Data gagal diproses. Perusahaan Anda sudah terdaftar.");
 					}elseif($rr==2){
 						$this->session->set_flashdata('result', "Data berhasil diproses. Silahkan cek email Anda. Mailer Error.");
 					}else{

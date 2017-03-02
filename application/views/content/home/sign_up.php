@@ -24,37 +24,37 @@
                   <label class="control-label-left col-sm-4 text-uppercase">NAMA PERUSAHAAN</label>
                   <div class="col-sm-8">
                     <input name="kd_company" id="kd_company" type="hidden" class="form-control input-lg">
-                    <input name="company" id="company" type="text" class="form-control input-lg" required>
+                    <input name="company" id="company" type="text" class="form-control input-lg" onkeyup="cek();" maxlength="100" required>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label-left col-sm-4 text-uppercase">ALAMAT PERUSAHAAN</label>
                   <div class="col-sm-8">
-                    <textarea class="form-control input-lg" name="alamatcompany" id="alamatcompany" required></textarea>
+                    <textarea class="form-control input-lg" name="alamatcompany" id="alamatcompany" onkeyup="cek();" required></textarea>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label-left col-sm-4 text-uppercase">EMAIL PERUSAHAAN</label>
                   <div class="col-sm-8">
-                    <input name="emailcompany" id="emailcompany" type="email" class="form-control input-lg" required>
+                    <input name="emailcompany" id="emailcompany" type="email" class="form-control input-lg" maxlength="100" required>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label-left col-sm-4 text-uppercase">NPWP PERUSAHAAN</label>
                   <div class="col-sm-8">
-                    <input name="npwpcompany" id="npwpcompany" type="text" class="form-control input-lg number" maxlength="15" required>
+                    <input name="npwpcompany" id="npwpcompany" type="text" class="form-control input-lg" required>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label-left col-sm-4 text-uppercase">NO TELPON PERUSAHAAN</label>
                   <div class="col-sm-8">
-                    <input name="telponcompany" id="telponcompany" type="text" class="form-control input-lg" required>
+                    <input name="telponcompany" id="telponcompany" type="text" class="form-control input-lg" onkeyup="cek();" maxlength="20" required>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label-left col-sm-4 text-uppercase">NO FAX PERUSAHAAN</label>
                   <div class="col-sm-8">
-                    <input name="faxcompany" id="faxcompany" type="text" class="form-control input-lg " required>
+                    <input name="faxcompany" id="faxcompany" onkeyup="cek();" type="text" class="form-control input-lg " maxlength="20" required>
                   </div>
                 </div>
               </div>
@@ -68,25 +68,25 @@
                 <div class="form-group">
                   <label class="control-label-left col-sm-4 text-uppercase">NAMA LENGKAP</label>
                   <div class="col-sm-8">
-                    <input name="fullname" id="fullname" type="text" class="form-control input-lg" required>
+                    <input name="fullname" id="fullname" type="text" onkeyup="cek();" class="form-control input-lg" maxlength="100" required>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label-left col-sm-4 text-uppercase">USERNAME</label>
                   <div class="col-sm-8">
-                    <input name="username" id="username" type="text" class="form-control input-lg" required>
+                    <input name="username" onkeyup="cek();" id="username" type="text" class="form-control input-lg" maxlength="20" required>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label-left col-sm-4 text-uppercase">EMAIL</label>
                   <div class="col-sm-8">
-                    <input name="email" id="email" type="email" class="form-control input-lg" required>
+                    <input name="email" id="email" type="email" class="form-control input-lg" maxlength="100" required>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label-left col-sm-4 text-uppercase">NO HANDPHONE</label>
                   <div class="col-sm-8">
-                    <input name="telpon" id="telpon" type="text" class="form-control input-lg " required>
+                    <input name="telpon" id="telpon" type="text" class="form-control input-lg" onkeyup="cek();" maxlength="20" required>
                   </div>
                 </div>
                 <div class="form-group">
@@ -142,14 +142,45 @@
       $('#telponcompany').val(ui.item.NOTELP);
       $('#faxcompany').val(ui.item.NOFAX);
     });
+	
   });
-  jQuery.validator.addMethod("noSpace", function(value, element) {
+
+  function cek() {
+    var company = document.getElementById('company');
+    company.value = company.value.replace(/[^a-zA-Z0-9. ]+/, ''); 
+	var alamatcompany = document.getElementById('alamatcompany');
+    alamatcompany.value = alamatcompany.value.replace(/[^a-zA-Z0-9. -]+/, '');
+//var npwpcompany = document.getElementById('npwpcompany');
+  //  npwpcompany.value = npwpcompany.value.replace(/[^0-9+]+/, '');
+var telponcompany = document.getElementById('telponcompany');
+    telponcompany.value = telponcompany.value.replace(/[^0-9+]+/, '');
+var telpon = document.getElementById('telpon');
+    telpon.value = telpon.value.replace(/[^0-9+]+/, '');
+var faxcompany = document.getElementById('faxcompany');
+    faxcompany.value = faxcompany.value.replace(/[^0-9+]+/, '');
+var fullname = document.getElementById('fullname');
+    fullname.value = fullname.value.replace(/[^a-zA-Z. ]+/, '');
+var username = document.getElementById('username');
+    username.value = username.value.replace(/[^a-zA-Z0-9_-]+/, '');
+
+	
+	};
+  jQuery(function($){
+      $("#npwpcompany").mask("99.999.999.9-999.999");
+  });
+  
+/*  jQuery.validator.addMethod("noSpace", function(value, element) {
     return value.indexOf(" ") < 0 && value !== "";
   }, "Tidak boleh menggunakan spasi");
+  jQuery.validator.addMethod("regex",function(value, element, regexp) {
+    var re = new RegExp(regexp);
+    return this.optional(element) || re.test(value);
+  }, "Please check your input.");    */
   $("#formlogin").validate({
 			rules: {
         username: {
-					noSpace: true,
+					//noSpace: true,
+					//regex: "^[a-zA-Z.\\s]{1,40}$",
           remote: {
             url: "<?php echo site_url();?>/home/uname",
             type: "post",
@@ -175,8 +206,19 @@
 					equalTo: "#password"
 				},
 				npwpcompany: {
-					minlength: 15
+					//minlength: 15
+					required: true
 				}
+      },
+      onfocusout: function (element)
+      {
+          if (!this.checkable(element) && (element.name in this.submitted || !this.optional(element)))
+          {
+              var currentObj = this;
+              var currentElement = element;
+              var delay = function () { currentObj.element(currentElement); };
+              setTimeout(delay, 0);
+          }
       },
       messages:{
         username:{

@@ -40,7 +40,7 @@ $username = $string;
 $password = $string0;
 
 
-	$IDLogServices = insertLogServices($username, '', '', '', 'GetUbahStatus');
+	$IDLogServices = insertLogServices($username, '', '', '', 'SENDPERUBAHANLCL');
 
 $SQLUSER = "SELECT B.KD_TPS
             FROM app_user_ws A INNER JOIN t_organisasi B ON A.KD_ORGANISASI = B.ID
@@ -71,11 +71,11 @@ $SQLHEADER = "SELECT A.NO_UBAH_STATUS, A.KD_GUDANG_ASAL, A.KD_GUDANG_TUJUAN,
 $QueryHeader = $conn->query($SQLHEADER);
  if ($QueryHeader->size() > 0) {
 
-		$message = '<?xml version="1.0" encoding="UTF-8"?>';
-        $message .= '<DOCUMENT>';
-        $message .= '<RESPON>';
-		
+
 	while ($QueryHeader->next()) {
+$message = '<?xml version="1.0" encoding="UTF-8"?>';
+$message .= '<DOCUMENT>';
+$message .= '<PERUBAHANLCL>';
 $message .= '<HEADER>';
 $message .= '<NO_UBAH_STATUS>'.$QueryHeader->get("NO_UBAH_STATUS").'</NO_UBAH_STATUS>';
 $message .= '<KD_GUDANG_ASAL>'.$QueryHeader->get("KD_GUDANG_ASAL").'</KD_GUDANG_ASAL>';
@@ -107,24 +107,26 @@ $message .= '<WK_REKAM>'.$QueryKontainer->get("WK_REKAM").'</WK_REKAM>';
 $message .= '</KONTAINER>';	
 }
 $message .= '</DETAIL>';
+$message .= '</PERUBAHANLCL>';
+$message .= '</DOCUMENT>';
 	}		
-        $message .= '</RESPON>';
-        $message .= '</DOCUMENT>';
+
 $return = $message;
  }
 else
 {
 		$message = '<?xml version="1.0" encoding="UTF-8"?>';
         $message .= '<DOCUMENT>';
-        $message .= '<RESPON>DATA TIDAK ADA.</RESPON>';
+        $message .= '<PERUBAHANLCL>DATA TIDAK ADA.</PERUBAHANLCL>';
         $message .= '</DOCUMENT>';
 		$return = $message;
         $logServices = updateLogServices($IDLogServices, $message, 'DATA TIDAK ADA.');
 }		
 		}
 
-    $xmlResponse = $message != '' ? $message : $return;
-    updateLogServices($IDLogServices, $xmlResponse, $remarks);
+    $xmlRequest = $message != '' ? $message : $return;
+	$remarks	= 'DATA BERHASIL DIKIRIM';
+    updateLogServices($IDLogServices, $xmlRequest, $remarks);
 
     $conn->disconnect();
     return $return;
@@ -191,11 +193,11 @@ function insertLogServices($userName, $xmlRequest, $xmlResponse, $remarks, $meth
     return $ID;
 }
 
-function updateLogServices($ID, $xmlResponse, $remarks) {
+function updateLogServices($ID, $xmlRequest, $remarks) {
     global $CONF, $conn;
-    $xmlResponse = $xmlResponse == '' ? 'NULL' : "'" . $xmlResponse . "'";
+    $xmlRequest = $xmlRequest == '' ? 'NULL' : "'" . $xmlRequest . "'";
     $remarks = $remarks == '' ? 'NULL' : "'" . $remarks . "'";
-    $SQL = "UPDATE app_log_server SET XML_RESPONSE = " . $xmlResponse . ", REMARKS = " . $remarks . "
+    $SQL = "UPDATE app_log_server SET XML_REQUEST = " . $xmlRequest . ", REMARKS = " . $remarks . "
             WHERE ID = '" . $ID . "'";
     $Execute = $conn->execute($SQL);
 }
