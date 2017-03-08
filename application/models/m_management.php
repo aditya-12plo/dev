@@ -1084,7 +1084,7 @@ class M_management extends Model {
             return $arrdata;
     }
 
- function groupmenu($act, $id) {
+	function groupmenu($act, $id) {
         $func = get_instance();
         $this->load->library('newtable');
         $this->newtable->breadcrumb('Home', site_url(), '');
@@ -1207,7 +1207,7 @@ class M_management extends Model {
 			  FROM app_user A
 			  INNER JOIN T_ORGANISASI B ON B.ID = A.KD_ORGANISASI
 			  INNER JOIN APP_GROUP C ON C.ID = A.KD_GROUP
-			  WHERE 1=1 AND A.KD_STATUS IN ('ACTIVE','BLOCKED') " . $addsql;
+			  WHERE 1=1" . $addsql;
 		$check = (grant()=="W")?true:false;
 		$this->newtable->show_chk($check);
 		$this->newtable->show_menu($check);

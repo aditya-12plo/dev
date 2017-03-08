@@ -24,7 +24,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label-left">USERNAME</label>
                             <div class="col-sm-10">
-                                <input type="text" name="USERLOGIN" id="USERLOGIN" wajib="yes" class="form-control" placeholder="USERNAME" value="<?php echo $arrhdr['USERLOGIN']; ?>" <?php echo ($act=="update") ? "readonly" : ""; ?>>
+                                <input type="text" name="USERLOGIN" id="USERLOGIN" wajib="yes" class="form-control" placeholder="USERNAME" value="<?php echo ($KD_GROUP=="ADM") ? ($act=="save") ? $this->newsession->userdata('KD_ORGANISASI')."." : "" : ""; echo $arrhdr['USERLOGIN']; ?>" <?php echo ($act=="update") ? "readonly" : ""; ?>>
                             </div>
                         </div>
                         <div class="form-group">
@@ -82,6 +82,21 @@
     </div>
 </div>
 <script>
+<?php if($KD_GROUP=="ADM"){
+echo "var readOnlyLength = $('#KD_ORGANISASI').val().length + 1;
+//var readOnlyLength = $('#field').val().length;
+ $('#output').text(readOnlyLength);
+
+$('#USERLOGIN').on('keypress, keydown', function(event) {
+    var \$field = $(this);
+    $('#output').text(event.which + '-' + this.selectionStart);
+    if ((event.which != 37 && (event.which != 39))
+        && ((this.selectionStart < readOnlyLength)
+        || ((this.selectionStart == readOnlyLength) && (event.which == 8)))) {
+        return false;
+    }
+});";        
+}?> 
     $(function(){
         autocomplete('NAMA_ORGANISASI','/tps/autocomplete/mst_org',function(event, ui){
             $('#KD_ORGANISASI').val(ui.item.KD_ORGANISASI);
@@ -94,6 +109,9 @@
 document.getElementById('USERLOGIN').onclick = function() {document.getElementById('USERLOGIN').readOnly = false;};
 document.getElementById('EMAIL').onclick = function() {document.getElementById('EMAIL').readOnly = false;};
 $(document).ready(function() {
+	jQuery.validator.addMethod("isi", function(value, element) {
+	return value !== "<?php echo $this->newsession->userdata('KD_ORGANISASI')."."; ?>";
+	}, "username tidak valid");
 	jQuery.validator.addMethod("noSpace", function(value, element) {
 	return value.indexOf(" ") < 0 && value !== "";
 	}, "Tidak boleh menggunakan spasi");
@@ -105,6 +123,8 @@ $(document).ready(function() {
 		rules: {
 			USERLOGIN: {
 				required: true,
+				<?php if($KD_GROUP=="ADM"){
+				echo "isi: true,";}?>
 				noSpace: true,
 				remote: {
 					url: "<?php echo site_url();?>/management/uname",

@@ -6,8 +6,8 @@ require_once ('config.php' );
 require_once ($CONF['root.dir'] . 'Libraries/nusoap/nusoap.php' );
 require_once ($CONF['root.dir'] . 'Libraries/xml2array.php' );
 
-// create instance
-$server = new soap_server();
+// create instance sdf
+$server = new soap_server(); 
 
 // initialize WSDL support
 $server->configureWSDL('TPSServices Web Service', 'http://services.beacukai.go.id/');

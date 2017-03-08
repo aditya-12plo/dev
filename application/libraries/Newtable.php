@@ -372,6 +372,7 @@ class Newtable {
 							$arrvalcari[] = $b;
 							$arrelement = $this->keycari[$a];
 							$field = $arrelement[0];
+							$field2 = $arrelement[3];
 							$type = $arrelement[2];
 							if($type=="DATERANGE"){
 								if(count($cari)>0){
@@ -395,6 +396,20 @@ class Newtable {
 										$tercari .= " AND DATE_FORMAT($field,'%Y%m%d') >= DATE_FORMAT(STR_TO_DATE('$cari[0]','%d-%m-%Y'),'%Y%m%d')";
 									}else if($cari[1]!=""){
 										$tercari .= " AND DATE_FORMAT($field,'%Y%m%d') <= DATE_FORMAT(STR_TO_DATE('$cari[1]','%d-%m-%Y'),'%Y%m%d')";
+									}
+								}
+							}else if($type=="TESDATE"){
+								if(count($cari)>0){
+									if(($cari[0]!="")&&($cari[1]!="")){
+										$paramcari1 = explode('-',$cari[0]);
+										$paramcari2 = explode('-',$cari[1]);
+										$tercari .= " AND $field = '$paramcari1[2]-$paramcari1[1]-$paramcari1[0]' AND $field2 = '$paramcari2[2]-$paramcari2[1]-$paramcari2[0]'";
+									}else if($cari[0]!=""){
+										$paramcari1 = explode('-',$cari[0]);
+										$tercari .= " AND $field = '$paramcari1[2]-$paramcari1[1]-$paramcari1[0]'";
+									}else if($cari[1]!=""){
+										$paramcari2 = explode('-',$cari[1]);
+										$tercari .= " AND $field2 = '$paramcari2[2]-$paramcari2[1]-$paramcari2[0]'";
 									}
 								}
 							}else{
@@ -512,6 +527,16 @@ class Newtable {
 						$out .=	'	</div>';
 						$out .=	'	<div class="col-sm-5">';
 						$out .=	'		<input type="text" name="form['.$a.'][]" id="'.rand(pow(10,$a)).'" class="drp form-control '.$a.'" value="'.$arrvalcari[$a][1].'" placeholder="END DATE" tag="'.$b[2].'">';
+						$out .=	'	</div>';
+						$out .=	'</div>';
+					}else if($b[2]=="TESDATE"){
+						$out .=	'<div class="form-group">';
+						$out .=	'<label class="col-sm-2 control-label-left">'.$b[1].'</label>';
+						$out .=	'	<div class="col-sm-5">';
+						$out .=	'		<input type="text" name="form['.$a.'][]" id="'.rand(pow(10,$a)).'" class="drp form-control '.$a.'" value="'.$arrvalcari[$a][0].'" placeholder="'.$b[1].'" tag="'.$b[2].'">';
+						$out .=	'	</div>';
+						$out .=	'	<div class="col-sm-5">';
+						$out .=	'		<input type="text" name="form['.$a.'][]" id="'.rand(pow(10,$a)).'" class="drp form-control '.$a.'" value="'.$arrvalcari[$a][1].'" placeholder="'.$b[4].'" tag="'.$b[2].'">';
 						$out .=	'	</div>';
 						$out .=	'</div>';
 					}else if($b[2]=="DATESAJA"){

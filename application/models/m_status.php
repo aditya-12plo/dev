@@ -52,7 +52,7 @@ function listdata($act, $id) {
       if(!$check) $proses = '';
       $this->newtable->multiple_search(true);
       $this->newtable->show_search(true);
-      $this->newtable->search(array(array('NO_VOY_FLIGHT','NO. VOYAGE'),array('TGL_TIBA','TGL. TIBA','DATERANGE')));
+      $this->newtable->search(array(array('NO_UBAH_STATUS','NO. PEMBERITAHUAN LCL'),array('TGL_TIBA','TGL. TIBA','TESDATE','TGL_BC11','TGL. BC 1.1')));
       $this->newtable->action(site_url() . "/status/listdata");
       $this->newtable->detail(array('POPUP', "status/listdata/detail"));
       $this->newtable->tipe_proses('button');

@@ -1,7 +1,7 @@
 <div class="panel">
   <div class="panel-group panel-group-continuous" id="AccordionContinuous" aria-multiselectable="true" role="tablist">
     <div class="panel">
-      <div class="panel-heading" id="HeadingContinuousOne" role="tab"> <a class="panel-title" data-parent="#AccordionContinuous" data-toggle="collapse" href="#CollapseContinuousOne" aria-controls="CollapseContinuousOne" aria-expanded="false"> <i class="icon fa fa-ship margin-0" aria-hidden="true"></i> DISCHARGE</a> </div>
+   <!--   <div class="panel-heading" id="HeadingContinuousOne" role="tab"> <a class="panel-title" data-parent="#AccordionContinuous" data-toggle="collapse" href="#CollapseContinuousOne" aria-controls="CollapseContinuousOne" aria-expanded="false"> <i class="icon fa fa-ship margin-0" aria-hidden="true"></i> DISCHARGE</a> </div> -->
       <div class="panel-collapse collapse" id="CollapseContinuousOne" aria-labelledby="HeadingContinuousOne" role="tabpanel">
         <div class="panel-body">
             <div class="panel">
