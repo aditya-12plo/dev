@@ -94,6 +94,8 @@ class Home extends Controller {
 
 	function sign_up(){
 		if($this->content==""){
+			#$q = $this->db->query("select ID from app_user order by ID desc limit 1");
+			#$data['idm'] = $q->row();			
 			$this->content = $this->load->view('content/home/sign_up','',true);
 		}
 		$this->index();

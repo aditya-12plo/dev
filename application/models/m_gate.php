@@ -392,7 +392,7 @@ class M_gate extends Model{
 		$this->newtable->breadcrumb('Gate In', 'javascript:void(0)','');
 		$check = (grant()=="W")?true:false;
 		if($KD_GROUP!="SPA"){
-			$addsql .= " AND A.KD_TPS = ".$this->db->escape($KD_TPS)." AND A.KD_GUDANG = ".$this->db->escape($KD_GUDANG);
+			$addsql .= " AND B.KD_TPS = ".$this->db->escape($KD_TPS)." AND B.KD_GUDANG = ".$this->db->escape($KD_GUDANG);
 		}
 		if(!$this->input->post('ajax')){
 			$addsql .= " AND A.TGL_TIBA >= DATE_ADD(CURDATE(), INTERVAL -7 DAY)";

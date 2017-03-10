@@ -74,7 +74,7 @@
                 <div class="form-group">
                   <label class="control-label-left col-sm-4 text-uppercase">USERNAME</label>
                   <div class="col-sm-8">
-                    <input name="username" onkeyup="cek();" id="username" type="text" class="form-control input-lg" maxlength="20" required>
+                    <input name="username" onkeyup="cek();" id="username" type="text" class="form-control input-lg" maxlength="20" required><!--value="<?php #echo $idm->ID;?>" -->
                   </div>
                 </div>
                 <div class="form-group">
