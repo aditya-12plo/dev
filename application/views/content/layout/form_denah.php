@@ -16,7 +16,7 @@
 	background-color:#3F51B5;
 }
 </style>
-<link rel="stylesheet" href="<?php echo base_url() ?>assets/css/style.css">
+<link rel="stylesheet" href="<?php echo base_url() ?>assets/css/custom.css">
 <body onload="createTable()">
 <div class="panel">
 	<div class="panel-body">
